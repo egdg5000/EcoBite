@@ -35,9 +35,10 @@
       ],
       [
         "expo-font",
-      {
-        "fonts": "./assets/fonts/ABeeZee_Regular.ttf"
-      }
+        {
+          "fonts": ["./assets/fonts/ABeeZee.ttf"],
+          "family": "ABeeZee"
+        }
       ]
     ],
     "experiments": {

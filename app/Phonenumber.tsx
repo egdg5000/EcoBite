@@ -2,9 +2,20 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CountryFlag from "react-native-country-flag";
+import { useFonts } from 'expo-font';
+
+  
 
 const PhoneNumberScreen = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
+
+  const [fontsLoaded] = useFonts({
+    'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+  });
+
+  if (!fontsLoaded) {
+    return <View><Text>Loading fonts...</Text></View>;
+  }
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.container}>
@@ -47,19 +58,19 @@ const styles = StyleSheet.create({
   backArrow: {
     fontSize: 24,
     color: "#000",
-    fontFamily: "ABeeZee-Regular",
+    fontFamily: "ABeeZee",
   },
   title: {
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 10,
-    fontFamily: "ABeeZee-Regular",
+    fontFamily: "ABeeZee",
   },
   label: {
     fontSize: 14,
     color: "gray",
     marginBottom: 5,
-    fontFamily: "ABeeZee-Regular",
+    fontFamily: "ABeeZee",
   },
   inputContainer: {
     flexDirection: "row",
@@ -77,13 +88,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginRight: 10,
-    fontFamily: "ABeeZee-Regular",
+    fontFamily: "ABeeZee",
   },
   input: {
     flex: 1,
     fontSize: 18,
-    fontFamily: "ABeeZee-Regular",
-  },
+    fontFamily: "ABeeZee",
+  },    
   submitButton: {
     position: "absolute",
     bottom: 50,
@@ -96,7 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "white",
     textAlign: "center",
-    fontFamily: "ABeeZee-Regular",
+    fontFamily: "ABeeZee",
   },
 });
 
