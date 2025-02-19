@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser } = require('../functions/userdb');
+const { registerUser, loginUser, logout } = require('../functions/userdb');
 var bodyParser = require('body-parser');
 
 var jsonParser = bodyParser.json();
@@ -18,6 +18,13 @@ router.post('/login', jsonParser, (req, res) => {
         res.status(500).json({success: false, message: 'Internal Server Error'});
     })
 });
+
+router.post('/logout'), (req,res) => {
+    logout(req, res).catch(err => {
+        console.error(err);
+        res.status(500).json({success: false, message: 'Internal Server Error'})
+    })
+}
 
 router.get('/loginStatus', (req, res) => {
     if (req.session.isLoggedIn) {

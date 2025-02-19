@@ -39,22 +39,28 @@ export default function Login() {
       username: username,
       password: password,
     })
-    const response = await fetch('http://localhost:3000/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body
-    });
+    try {
+      const response = await fetch('http://localhost:3000/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body
+      });
     
-    const data = await response.json();
-    if (!response.ok) {
-      throwError(data);
+      const data = await response.json();
+      if (!response.ok) {
+        throwError(data);
+      }
+      if (data.success){
+        setLoginText('Logged in!');
+      } else setLoginText('Login')
+    } catch (error) {
+      console.error('Network error:', error);
+      setLoginText('Network error occurred');
+    } finally {
+      setLoadingStatus(false);
     }
-    if (data.success){
-      setLoginText('Logged in!');
-    } else setLoginText('Login')
-    setLoadingStatus(false);
   };
 
   return (
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
     },
   button: {
     padding: 6, 
-    backgroundColor: 'rgb(210, 230, 255)',
+    backgroundColor: 'rgb(98, 169, 255)',
     margin: 100,
   },
 });

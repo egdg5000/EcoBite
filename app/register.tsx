@@ -64,22 +64,28 @@ export default function Register() {
       email: email,
       password: password,
     })
-    const response = await fetch('http://localhost:3000/users/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body
-    });
-    
-    const data = await response.json();
-    if (!response.ok) {
-      throwError(data);
+    try {
+      const response = await fetch('http://localhost:3000/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body
+      });
+      
+      const data = await response.json();
+      if (!response.ok) {
+        throwError(data);
+      }
+      if (data.success){
+        setRegisterText('Registered!');
+      } else setRegisterText('Register')
+    } catch (error) {
+      console.error('Network error:', error);
+      setRegisterText('Network error occurred');
+    } finally {
+      setLoadingStatus(false);
     }
-    if (data.success){
-      setRegisterText('Registered!');
-    } else setRegisterText('Register')
-    setLoadingStatus(false);
   };
 
   return (
@@ -162,7 +168,7 @@ const styles = StyleSheet.create({
     },
   button: {
     padding: 6, 
-    backgroundColor: 'rgb(210, 230, 255)',
+    backgroundColor: 'rgb(98, 169, 255)',
     margin: 100,
   },
 });
