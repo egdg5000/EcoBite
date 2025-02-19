@@ -32,6 +32,13 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      [
+        "expo-font",
+        {
+          "fonts": ["./assets/fonts/ABeeZee.ttf"],
+          "family": "ABeeZee"
+        }
       ]
     ],
     "experiments": {
