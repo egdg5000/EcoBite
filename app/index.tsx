@@ -5,15 +5,23 @@ const { width, height } = Dimensions.get("window"); // Haal de schermgrootte op
 
 const Login = () => {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    <ImageBackground
+      source={require("../assets/images/mobilebackground.jpg")}
+      style={styles.backgroundImage}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+      <View style={styles.overlay}>
+        <Image source={require("../assets/images/EcoBite2.png")} style={styles.logo} />
+        <Text style={styles.title}>Welkom</Text>
+
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.buttonText}>Aan de slag</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Text style={styles.link}>Ik heb al een account</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
@@ -34,6 +42,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 150,
+
     height: 150,
     marginBottom: 30,
   },
