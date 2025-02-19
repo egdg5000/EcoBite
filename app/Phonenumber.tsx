@@ -11,18 +11,20 @@ const PhoneNumberScreen = () => {
       <TouchableOpacity style={styles.backButton}>
         <Text style={styles.backArrow}>{"<"}</Text>
       </TouchableOpacity>
-      <Text style={styles.title}>Vul uw mobiele nummer in</Text>
-      <Text style={styles.label}>Mobiele nummer</Text>
-      <View style={styles.inputContainer}>
-        <CountryFlag isoCode="NL" size={25} style={styles.flag} />
-        <Text style={styles.countryCode}>+31</Text>
-        <TextInput
-          style={styles.input}
-          keyboardType="phone-pad"
-          placeholder=""
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-        />
+      <View style={styles.contentWrapper}>
+        <Text style={styles.title}>Vul uw mobiele nummer in</Text>
+        <Text style={styles.label}>Mobiele nummer</Text>
+        <View style={styles.inputContainer}>
+          <CountryFlag isoCode="NL" size={25} style={styles.flag} />
+          <Text style={styles.countryCode}>+31</Text>
+          <TextInput
+            style={styles.input}
+            keyboardType="phone-pad"
+            placeholder=""
+            value={phoneNumber}
+            onChangeText={setPhoneNumber}
+          />
+        </View>
       </View>
       <TouchableOpacity style={styles.submitButton}>
         <Text style={styles.submitText}>{">"}</Text>
@@ -34,41 +36,46 @@ const PhoneNumberScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     padding: 20,
+    paddingTop: 80,
     backgroundColor: "rgba(255, 255, 255, 0.3)",
     backdropFilter: "blur(10px)",
   },
   backButton: {
     position: "absolute",
-    top: 50,
+    top: 40,
     left: 20,
   },
   backArrow: {
-    fontSize: 24,
-    color: "#000",
-    fontFamily: "ABeeZee-Regular",
+    fontSize: 32,
+    color: "#333",
+    fontFamily: "ABeeZee",
+  },
+  contentWrapper: {
+    marginTop: 40,
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: "bold",
-    marginBottom: 10,
-    fontFamily: "ABeeZee-Regular",
+    marginBottom: 20,
+    fontFamily: "ABeeZee",
   },
   label: {
     fontSize: 14,
     color: "gray",
     marginBottom: 5,
-    fontFamily: "ABeeZee-Regular",
+    fontFamily: "ABeeZee",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
-    padding: 10,
+    padding: 12,
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#ddd",
+    marginTop: 10,
   },
   flag: {
     marginRight: 10,
@@ -77,17 +84,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginRight: 10,
-    fontFamily: "ABeeZee-Regular",
+    fontFamily: "ABeeZee",
   },
   input: {
     flex: 1,
     fontSize: 18,
-    fontFamily: "ABeeZee-Regular",
+    fontFamily: "ABeeZee",
   },
   submitButton: {
     position: "absolute",
     bottom: 50,
-    alignSelf: "center",
+    right: 20,
     backgroundColor: "#4CAF50",
     padding: 15,
     borderRadius: 50,
@@ -96,7 +103,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "white",
     textAlign: "center",
-    fontFamily: "ABeeZee-Regular",
+    fontFamily: "ABeeZee",
   },
 });
 
