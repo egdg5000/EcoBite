@@ -62,8 +62,12 @@ async function loginUser(req, res) {
 }
 
 async function logout(req, res){
-    req.session.destroy();
-    res.status(200).json({success: true, message: 'Logout successful'});
+    if (req.session.isLoggedIn){
+        req.session.destroy();
+        res.status(200).json({success: true, message: 'Logout successful'});
+    } else {
+        res.status(400).json({success: false, message: 'User not logged in'})
+    }
 }
 
 async function hashpassword(password) {

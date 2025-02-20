@@ -19,12 +19,12 @@ router.post('/login', jsonParser, (req, res) => {
     })
 });
 
-router.post('/logout'), (req,res) => {
+router.post('/logout', (req,res) => {
     logout(req, res).catch(err => {
         console.error(err);
         res.status(500).json({success: false, message: 'Internal Server Error'})
     })
-}
+});
 
 router.get('/loginStatus', (req, res) => {
     if (req.session.isLoggedIn) {
