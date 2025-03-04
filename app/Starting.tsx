@@ -84,9 +84,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   backgroundImage: {
-    position: 'absolute', // Zet de afbeelding vast op de achtergrond
+    position: 'absolute',
     width: '100%',
-    height: '100%',
+    height: '80%', // Verklein de afbeelding zodat er meer witruimte onder is
+    top: '-25%', // Verplaats de afbeelding iets omhoog
   },
   overlay: {
     flex: 1,
