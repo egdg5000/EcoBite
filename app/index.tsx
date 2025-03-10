@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Image, Dimensions } from "react-native";
+import { Link } from "expo-router";
 
 const { width, height } = Dimensions.get("window"); // Haal de schermgrootte op
 
@@ -13,9 +14,11 @@ const Login = () => {
         <Image source={require("../assets/images/EcoBite2.png")} style={styles.logo} />
         <Text style={styles.title}>Welkom</Text>
 
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Aan de slag</Text>
-        </TouchableOpacity>
+        <Link href='/Starting' asChild>
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Aan de slag</Text>
+          </TouchableOpacity>
+        </Link>
 
         <TouchableOpacity>
           <Text style={styles.link}>Ik heb al een account</Text>

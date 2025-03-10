@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from "reac
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CountryFlag from "react-native-country-flag";
 import { useFonts } from 'expo-font';
+import { Link } from 'expo-router';
 
   
 
@@ -19,9 +20,11 @@ const PhoneNumberScreen = () => {
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity style={styles.backButton}>
-        <Text style={styles.backArrow}>{"<"}</Text>
-      </TouchableOpacity>
+      <Link href='/Starting' asChild>
+        <TouchableOpacity style={styles.backButton}>
+          <Text style={styles.backArrow}>{"<"}</Text>
+        </TouchableOpacity>
+      </Link>
       <View style={styles.contentWrapper}>
         <Text style={styles.title}>Vul uw mobiele nummer in</Text>
         <Text style={styles.label}>Mobiele nummer</Text>
@@ -37,9 +40,11 @@ const PhoneNumberScreen = () => {
           />
         </View>
       </View>
-      <TouchableOpacity style={styles.submitButton}>
-        <Text style={styles.submitText}>{">"}</Text>
-      </TouchableOpacity>
+      <Link href='/' asChild>
+        <TouchableOpacity style={styles.submitButton}>
+          <Text style={styles.submitText}>{">"}</Text>
+        </TouchableOpacity>
+      </Link>
     </KeyboardAwareScrollView>
   );
 };

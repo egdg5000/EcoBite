@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
+import { Link } from 'expo-router';
 
 const EcoBiteScreen = () => {
   // Fonts inladen via Expo
@@ -41,9 +42,11 @@ const EcoBiteScreen = () => {
         {/* Knoppen onderaan de pagina vastzetten */}
         <View style={styles.buttonContainer}>
           {/* Aan de slag-knop */}
-          <TouchableOpacity style={styles.startButton}>
-            <Text style={styles.startButtonText}>Aan de slag</Text>
-          </TouchableOpacity>
+            <Link href="/phonenumber" asChild>
+              <TouchableOpacity style={styles.startButton}>
+                <Text style={styles.startButtonText}>Aan de slag</Text>
+              </TouchableOpacity>
+            </Link>
 
           {/* Registreren met Google */}
           <TouchableOpacity style={styles.googleButton}>
