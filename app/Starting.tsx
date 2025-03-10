@@ -42,7 +42,7 @@ const EcoBiteScreen = () => {
         {/* Knoppen onderaan de pagina vastzetten */}
         <View style={styles.buttonContainer}>
           {/* Aan de slag-knop */}
-            <Link href="/Phonenumber" asChild>
+            <Link href="/phonenumber" asChild>
               <TouchableOpacity style={styles.startButton}>
                 <Text style={styles.startButtonText}>Aan de slag</Text>
               </TouchableOpacity>

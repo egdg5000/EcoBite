@@ -20,7 +20,7 @@ const PhoneNumberScreen = () => {
 
   return (
     <KeyboardAwareScrollView contentContainerStyle={styles.container}>
-      <Link href='/Starting' asChild>
+      <Link href='/starting' asChild>
         <TouchableOpacity style={styles.backButton}>
           <Text style={styles.backArrow}>{"<"}</Text>
         </TouchableOpacity>
