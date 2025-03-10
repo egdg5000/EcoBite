@@ -40,7 +40,7 @@ const PhoneNumberScreen = () => {
           />
         </View>
       </View>
-      <Link href='/' asChild>
+      <Link href='/code_verification' asChild>
         <TouchableOpacity style={styles.submitButton}>
           <Text style={styles.submitText}>{">"}</Text>
         </TouchableOpacity>
