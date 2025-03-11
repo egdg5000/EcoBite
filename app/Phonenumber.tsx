@@ -49,18 +49,6 @@ const PhoneNumberScreen = () => {
   );
 };
 
-const sendVerificationCode = async () => {
-  try {
-    const confirmation = await auth().signInWithPhoneNumber("+31" + phoneNumber);
-    router.push({
-      pathname: "/code_verification",
-      params: { verificationId: confirmation.verificationId, phoneNumber: "+31" + phoneNumber }
-    });
-  } catch (error) {
-    Alert.alert("Fout", "Kan geen verificatiecode verzenden.");
-  }
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
