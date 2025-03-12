@@ -4,12 +4,7 @@ import auth from "@react-native-firebase/auth";
 import { useFonts } from 'expo-font';
 import { useRouter } from 'expo-router';
 
-const VerificationScreen = ({ route }) => {
-  const { verificationId, phoneNumber } = route.params;
-  const [code, setCode] = useState("");
-  const [resendDisabled, setResendDisabled] = useState(false); // Om de knop tijdelijk uit te schakelen
-  const [newVerificationId, setNewVerificationId] = useState(verificationId);
-  const router = useRouter();
+const VerificationScreen = () => {
 
   const [fontsLoaded] = useFonts({
     'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
@@ -18,54 +13,6 @@ const VerificationScreen = ({ route }) => {
   if (!fontsLoaded) {
     return <View><Text>Loading fonts...</Text></View>;
   }
-
-  const confirmCode = async () => {
-    try {
-      const credential = auth.PhoneAuthProvider.credential(newVerificationId, code);
-      await auth().signInWithCredential(credential);
-      Alert.alert("Succes", "Je bent ingelogd!");
-      router.push('/phonenumber'); // Ga naar de homepagina
-    } catch (error) {
-      Alert.alert("Fout", "De code is incorrect. Probeer opnieuw.");
-    }
-  };
-
-  const resendCode = async () => {
-    try {
-      setResendDisabled(true); // Schakel de knop tijdelijk uit
-      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
-      setNewVerificationId(confirmation.verificationId);
-      Alert.alert("Verzonden", "Een nieuwe code is verstuurd.");
-    } catch (error) {
-      Alert.alert("Fout", "Kan geen nieuwe code verzenden.");
-      setResendDisabled(false);
-    }
-  };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Vul uw 4-cijferige code in</Text>
-      <Text style={styles.subtitle}>Uw code is verzonden naar uw telefoon</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType="number-pad"
-        maxLength={4}
-        placeholder="- - - -"
-        value={code}
-        onChangeText={setCode}
-      />
-      <TouchableOpacity style={styles.submitButton} onPress={confirmCode}>
-        <Text style={styles.submitText}>{">"}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.resendButton, resendDisabled && styles.disabledButton]}
-        onPress={resendCode}
-        disabled={resendDisabled}
-      >
-        <Text style={styles.resendText}>Verzend opnieuw</Text>
-      </TouchableOpacity>
-    </View>
-  );
 };
 
 const styles = StyleSheet.create({
