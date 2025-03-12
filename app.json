@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "EcoBite",
-    "slug": "eco-bite",
+    "slug": "test-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,7 +15,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.edg5000.testapp"
     },
     "web": {
       "bundler": "metro",
@@ -36,11 +37,18 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/ABeeZee.ttf"],
+          "fonts": [
+            "./assets/fonts/ABeeZee.ttf"
+          ],
           "family": "ABeeZee"
         }
       ]
     ],
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#53B175"
+    },
     "experiments": {
       "typedRoutes": true
     },
