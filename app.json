@@ -16,8 +16,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.edg5000.testapp"
+      }
     },
     "web": {
       "bundler": "metro",
