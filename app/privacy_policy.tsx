@@ -1,7 +1,16 @@
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
+import { useFonts } from 'expo-font';
 
 export default function PrivacyPolicyScreen() {
+  const [fontsLoaded] = useFonts({
+    'ABeeZee': require('../assets/fonts/ABeeZee.ttf'), // Laad het lettertype
+  });
+
+  if (!fontsLoaded) {
+    return null; // Wacht tot de lettertypen geladen zijn
+  }
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Privacybeleid</Text>
@@ -79,11 +88,11 @@ export default function PrivacyPolicyScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10 },
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10, fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
   scrollContainer: { paddingBottom: 20 },
-  content: { fontSize: 16, color: '#333', marginBottom: 10 },
-  subtitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5, color: '#333' },
+  content: { fontSize: 16, color: '#333', marginBottom: 10, fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
+  subtitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5, color: '#333', fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
   section: { marginBottom: 20 },
   divider: { height: 1, backgroundColor: '#28a745', marginVertical: 10 },
-  link: { fontSize: 16, color: '#28a745', fontWeight: 'bold', textAlign: 'center'},
+  link: { fontSize: 16, color: '#28a745', fontWeight: 'bold', textAlign: 'center', fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
 });

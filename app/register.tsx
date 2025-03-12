@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Link } from "expo-router";
+import { useFonts } from 'expo-font';
 
 const RegistrationScreen = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const [fontsLoaded] = useFonts({
+        'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+      });
 
     const handleRegister = () => {
         console.log('Gebruiker geregistreerd:', { username, email, password });
@@ -43,20 +48,17 @@ const RegistrationScreen = () => {
                 onChangeText={setPassword} 
             />
             
+            <Link href="/terms" asChild>
+                <TouchableOpacity>
+                    <Text style={styles.link}>Servicevoorwaarden</Text>
+                </TouchableOpacity>
+            </Link>
 
-                <Link href="/terms" asChild>
-                    <TouchableOpacity>
-                        <Text style={styles.link}>Servicevoorwaarden</Text>
-                    </TouchableOpacity>
-                </Link>
-
-                <Link href="/privacy_policy" asChild>
-                    <TouchableOpacity>
-                        <Text style={styles.link}>Privacybeleid</Text>
-                    </TouchableOpacity>
-                </Link>
-
-
+            <Link href="/privacy_policy" asChild>
+                <TouchableOpacity>
+                    <Text style={styles.link}>Privacybeleid</Text>
+                </TouchableOpacity>
+            </Link>
 
             <TouchableOpacity style={styles.button} onPress={handleRegister}>
                 <Text style={styles.buttonText}>Registreren</Text>
@@ -82,11 +84,13 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
         color: '#333',
+        fontFamily: 'ABeeZee', 
     },
     subtitle: {
         fontSize: 14,
         color: '#666',
         marginBottom: 20,
+        fontFamily: 'ABeeZee', 
     },
     label: {
         alignSelf: 'flex-start',
@@ -94,6 +98,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#333',
         marginTop: 10,
+        fontFamily: 'ABeeZee', 
     },
     input: {
         width: '100%',
@@ -103,16 +108,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingHorizontal: 10,
         marginTop: 5,
-    },
-    terms: {
-        fontSize: 12,
-        color: '#666',
-        marginTop: 10,
-        textAlign: 'center',
+        fontFamily: 'ABeeZee', 
     },
     link: {
         color: '#28a745',
         fontWeight: 'bold',
+        fontFamily: 'ABeeZee', 
     },
     button: {
         backgroundColor: '#28a745',
@@ -126,6 +127,7 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
+        fontFamily: 'ABeeZee', 
     },
 });
 
