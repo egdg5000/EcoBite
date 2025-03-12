@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Image, Dimen
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { Link } from 'expo-router';
+import Video from 'react-native-video';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -69,7 +70,7 @@ function Splash({ children }: { children: React.ReactNode }) {
 function MainScreen() {
   return (
     <ImageBackground
-      source={require("../assets/images/mobilebackground.jpg")}
+      source={require("../assets/images/macaron.jpg")}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
   },
   link: {
     marginTop: 10,
-    color: "#4CAF50",
+    color: "#fff",
     textDecorationLine: "underline",
   },
 });
