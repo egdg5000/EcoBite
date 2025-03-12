@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
     color: "#fff",
+    fontFamily: "ABeeZee",
   },
   button: {
     backgroundColor: "#4CAF50",
@@ -131,10 +132,12 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 18,
     fontWeight: "bold",
+    fontFamily: "ABeeZee",
   },
   link: {
     marginTop: 10,
     color: "#fff",
     textDecorationLine: "underline",
+    fontFamily: "ABeeZee",
   },
 });
