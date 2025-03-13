@@ -82,9 +82,11 @@ function MainScreen() {
           </TouchableOpacity>
         </Link>
 
-        <TouchableOpacity>
-          <Text style={styles.link}>Ik heb al een account</Text>
-        </TouchableOpacity>
+        <Link href='/login' asChild>
+          <TouchableOpacity>
+            <Text style={styles.link}>Ik heb al een account</Text>
+          </TouchableOpacity>
+        </Link>
       </View>
     </ImageBackground>
   );
