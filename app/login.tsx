@@ -3,6 +3,7 @@ import {
     View, Text, TouchableOpacity, StyleSheet
 } from "react-native";
 import {Button, Input } from '@rneui/themed';
+import { Link } from 'expo-router';
 
 const LoginScreen = () => {
     const [errorMessageUsername, setErrorUsername] = useState('')
@@ -121,9 +122,11 @@ const LoginScreen = () => {
             />
 
             {/* Registreren Link */}
-            <Text style={styles.registerText}>
-                Geen account? <Text style={styles.registerLink}>Registreren</Text>
-            </Text>
+            <Link href="/register" asChild>
+                <Text style={styles.registerText}>
+                    Geen account? <Text style={styles.registerLink}>Registreren</Text>
+                </Text>
+            </Link>
         </View>
     );
 };
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 10,
         marginTop: 10,
-        paddingHorizontal: 170,
+        paddingHorizontal: 130,
     },
     loginButtonText: {
         color: "white",

@@ -70,9 +70,11 @@ const EcoBiteScreen = () => {
         {/* Footer: inloggen */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>Heeft u al een account? </Text>
-          <TouchableOpacity>
-            <Text style={styles.footerLink}>Inloggen</Text>
-          </TouchableOpacity>
+          <Link href="/login" asChild>
+            <TouchableOpacity>
+              <Text style={styles.footerLink}>Inloggen</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </SafeAreaView>
