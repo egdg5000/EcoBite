@@ -70,7 +70,7 @@ function Splash({ children }: { children: React.ReactNode }) {
 function MainScreen() {
   return (
     <ImageBackground
-      source={require("../assets/images/macaron.jpg")}
+      source={require("../assets/images/spinach.jpg")}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
