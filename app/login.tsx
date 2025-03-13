@@ -4,6 +4,7 @@ import {
 } from "react-native";
 import {Button, Input } from '@rneui/themed';
 import { Link } from 'expo-router';
+import { useFonts } from 'expo-font';
 
 const LoginScreen = () => {
     const [errorMessageUsername, setErrorUsername] = useState('')
@@ -13,6 +14,10 @@ const LoginScreen = () => {
     const [secureText, setSecureText] = useState(true);
     const [loginText, setLoginText] = useState('Login');
     const [buttonLoading, setLoadingStatus] = useState(false);
+
+    const [fontsLoaded] = useFonts({
+        'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+      });
 
     const validate = () => {
         let error = false;
@@ -144,11 +149,13 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: "bold",
         color: "#333",
+        fontFamily: 'ABeeZee', 
     },
     subtitle: {
         fontSize: 14,
         color: "#666",
         marginBottom: 20,
+        fontFamily: 'ABeeZee', 
     },
     input: {
         width: "100%",
@@ -159,6 +166,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 15,
         backgroundColor: "#fff",
         marginBottom: 15,
+        fontFamily: 'ABeeZee', 
     },
     passwordContainer: {
         flexDirection: "row",
@@ -168,6 +176,7 @@ const styles = StyleSheet.create({
     toggleText: {
         fontSize: 16,
         color: "#666",
+        fontFamily: 'ABeeZee', 
     },
     forgotPassword: {
         alignSelf: "flex-end",
@@ -188,19 +197,23 @@ const styles = StyleSheet.create({
         color: "white",
         fontSize: 18,
         fontWeight: "bold",
+        fontFamily: 'ABeeZee', 
     },
     registerText: {
         marginTop: 20,
         color: "#666",
+        fontFamily: 'ABeeZee', 
     },
     registerLink: {
         color: "#007BFF",
         fontWeight: "bold",
+        fontFamily: 'ABeeZee', 
     },
     errorMessage: {
         flex: 1,
         backgroundColor: 'blue',
         width: '100%',
+        fontFamily: 'ABeeZee', 
     },
 });
 
