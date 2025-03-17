@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { Link } from "expo-router";
+import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import {Button, Input } from '@rneui/themed';
 
+
 const RegistrationScreen = () => {
+    const {email} = useLocalSearchParams<{ email: string }>();
     const [errorMessageEmail, setErrorEmail] = useState('')
     const [errorMessageUsername, setErrorUsername] = useState('')
     const [errorMessagePassword, setErrorPassword] = useState('')
     const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
+    const [newemail, setEmail] = useState(email);
     const [password, setPassword] = useState('');
     const [registerText, setRegisterText] = useState('Register');
     const [buttonLoading, setLoadingStatus] = useState(false);
-    
 
     const [fontsLoaded] = useFonts({
         'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
@@ -29,12 +30,12 @@ const RegistrationScreen = () => {
           setErrorUsername('');
         }
     
-        if (!email) {
+        if (!newemail) {
           setErrorEmail('Please enter an email');
           error = true;
         } else {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(email)) {
+          if (!emailRegex.test(newemail)) {
             setErrorEmail('Please enter a valid email address');
             error = true;
           } else setErrorEmail('');
@@ -68,7 +69,7 @@ const RegistrationScreen = () => {
         setLoadingStatus(true);
         const body = JSON.stringify({
           username: username,
-          email: email,
+          newemail: newemail,
           password: password,
         })
         const response = await fetch('http://localhost:3000/users/register', {
@@ -100,7 +101,7 @@ const RegistrationScreen = () => {
                 id='username'
                 style={[styles.input]}
                 placeholder="Username"
-                placeholderTextColor="black"
+                placeholderTextColor="#777"
                 value={username}
                 onChangeText={setUsername}
                 errorMessage={errorMessageUsername}
@@ -117,7 +118,7 @@ const RegistrationScreen = () => {
                 id='email'
                 style={[styles.input]}
                 placeholder="Email"
-                placeholderTextColor="black"
+                placeholderTextColor="#777"
                 value={email}
                 onChangeText={setEmail}
                 errorMessage={errorMessageEmail}
@@ -134,7 +135,7 @@ const RegistrationScreen = () => {
                 id='password'
                 style={[styles.input]}
                 placeholder="Password"
-                placeholderTextColor="black"
+                placeholderTextColor="#777"
                 secureTextEntry={true}
                 value={password}
                 onChangeText={setPassword}
@@ -207,12 +208,16 @@ const styles = StyleSheet.create({
         fontFamily: 'ABeeZee', 
     },
     input: {
+        backgroundColor: '#F5F5F5',
+        paddingVertical: 12,
+        paddingHorizontal: 15,
+        borderRadius: 8,
+        fontSize: 16,
+        marginBottom: 15,
+        borderWidth: 1,
+        borderColor: '#ccc',
         width: '100%',
         height: 40,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
-        paddingHorizontal: 10,
         marginTop: 5,
         fontFamily: 'ABeeZee', 
     },

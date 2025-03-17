@@ -11,6 +11,7 @@ import {
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { Link } from 'expo-router';
+import {Button, Input } from '@rneui/themed';
 
 const EcoBiteScreen = () => {
   const [email, setEmail] = useState('');
@@ -43,7 +44,7 @@ const EcoBiteScreen = () => {
         </Text>
 
         {/* E-mail invoerveld */}
-        <TextInput
+        <Input
           style={styles.input}
           placeholder="Voer uw e-mailadres in"
           placeholderTextColor="#777"
@@ -51,10 +52,15 @@ const EcoBiteScreen = () => {
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
+          inputContainerStyle={{
+            width: '105%',
+            borderBottomColor:'transparent',
+            alignSelf: 'center'
+          }}
         />
 
         {/* Doorgaan-knop */}
-        <Link href="/Phonenumber" asChild>
+        <Link href={{ pathname: "/register", params: { email } }} asChild>
           <TouchableOpacity style={styles.startButton}>
             <Text style={styles.startButtonText}>Doorgaan</Text>
           </TouchableOpacity>
