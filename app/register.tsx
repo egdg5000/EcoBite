@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, SafeAreaView, KeyboardAvoidingView, Platform } from 'react-native';
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import {Button, Input } from '@rneui/themed';
@@ -93,92 +93,98 @@ const RegistrationScreen = () => {
     };
     
     return (
-        <View style={styles.container}>
-            <Image source={require('../assets/images/EcoBite2.png')} style={styles.logo} />
-            <Text style={styles.title}>Registreren</Text>
-            <Text style={styles.subtitle}>Vul uw gegevens in om door te gaan</Text>
-            
-            <Text style={styles.label}>Gebruikersnaam</Text>
-            <Input 
-                id='username'
-                style={[styles.input]}
-                placeholder="Username"
-                placeholderTextColor="#777"
-                value={username}
-                onChangeText={setUsername}
-                errorMessage={errorMessageUsername}
-                renderErrorMessage={true}
-                inputContainerStyle={{
-                  width: '100%',
-                  borderBottomColor:'transparent',
-                  alignSelf: 'center'
-                }}
-            />
-            
-            <Text style={styles.label}>Email</Text>
-            <Input 
-                id='email'
-                style={[styles.input]}
-                placeholder="Email"
-                placeholderTextColor="#777"
-                value={newemail}
-                onChangeText={setEmail}
-                errorMessage={errorMessageEmail}
-                renderErrorMessage={true}
-                inputContainerStyle={{
-                  width: '100%',
-                  borderBottomColor:'transparent',
-                  alignSelf: 'center'
-                }}
-            />
-            
-            <Text style={styles.label}>Wachtwoord</Text>
-            <Input 
-                id='password'
-                style={[styles.input]}
-                placeholder="Password"
-                placeholderTextColor="#777"
-                secureTextEntry={true}
-                value={password}
-                onChangeText={setPassword}
-                renderErrorMessage={true}
-                errorMessage={errorMessagePassword}
-                inputContainerStyle={{
-                  width: '100%',
-                  borderBottomColor:'transparent',
-                  alignSelf: 'center'
-                }}
-            />
-            
-            <Link href="/terms" asChild>
-                <TouchableOpacity>
-                    <Text style={styles.link}>Servicevoorwaarden</Text>
-                </TouchableOpacity>
-            </Link>
+        <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}> 
+          <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+            <View style={styles.container}>
+              <Image source={require('../assets/images/EcoBite2.png')} style={styles.logo} />
+              <Text style={styles.title}>Registreren</Text>
+              <Text style={styles.subtitle}>Vul uw gegevens in om door te gaan</Text>
+              
+              <Text style={styles.label}>Gebruikersnaam</Text>
+              <Input 
+                  id='username'
+                  style={[styles.input]}
+                  placeholder="Username"
+                  placeholderTextColor="#777"
+                  value={username}
+                  onChangeText={setUsername}
+                  errorMessage={errorMessageUsername}
+                  renderErrorMessage={true}
+                  inputContainerStyle={{
+                    width: '100%',
+                    borderBottomWidth:0,
+                    alignSelf: 'center'
+                  }}
+              />
+              
+              <Text style={styles.label}>Email</Text>
+              <Input 
+                  id='email'
+                  style={[styles.input]}
+                  placeholder="Email"
+                  placeholderTextColor="#777"
+                  value={newemail}
+                  onChangeText={setEmail}
+                  errorMessage={errorMessageEmail}
+                  renderErrorMessage={true}
+                  inputContainerStyle={{
+                    width: '100%',
+                    borderBottomWidth:0,
+                    alignSelf: 'center'
+                  }}
+              />
+              
+              <Text style={styles.label}>Wachtwoord</Text>
+              <Input 
+                  id='password'
+                  style={[styles.input]}
+                  placeholder="Password"
+                  placeholderTextColor="#777"
+                  secureTextEntry={true}
+                  value={password}
+                  onChangeText={setPassword}
+                  renderErrorMessage={true}
+                  errorMessage={errorMessagePassword}
+                  inputContainerStyle={{
+                    width: '100%',
+                    borderBottomWidth:0,
+                    alignSelf: 'center'
+                  }}
+              />
 
-            <Link href="/privacy_policy" asChild>
-                <TouchableOpacity>
-                    <Text style={styles.link}>Privacybeleid</Text>
-                </TouchableOpacity>
-            </Link>
+              <Button 
+                  loading={buttonLoading}
+                  containerStyle={{width: '100%'}}
+                  buttonStyle={styles.button}
+                  onPress={register}
+                  title={registerText}/>
+            </View>
+          </KeyboardAvoidingView>
 
-            <Button 
-                loading={buttonLoading}
-                containerStyle={{width: '100%'}}
-                buttonStyle={styles.button}
-                onPress={register}
-                title={registerText}/>
-        </View>
+            <View style={styles.linkContainer}>
+              <Link href="/terms" asChild>
+                  <TouchableOpacity>
+                      <Text style={styles.link}>Servicevoorwaarden</Text>
+                  </TouchableOpacity>
+              </Link>
+
+              <Link href="/privacy_policy" asChild>
+                  <TouchableOpacity>
+                      <Text style={styles.link}>Privacybeleid</Text>
+                  </TouchableOpacity>
+              </Link>
+            </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#fff',
         padding: 20,
+        justifyContent: 'flex-end'
     },
     logo: {
         width: 100,
@@ -202,33 +208,37 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
         color: '#333',
-        marginTop: 10,
         fontFamily: 'ABeeZee', 
     },
     input: {
         backgroundColor: '#F5F5F5',
-        paddingVertical: 12,
+        paddingVertical: 15,
         paddingHorizontal: 15,
         borderRadius: 8,
         fontSize: 16,
-        marginBottom: 15,
         borderWidth: 1,
         borderColor: '#ccc',
         width: '100%',
-        height: 40,
         marginTop: 5,
+    },
+    linkContainer: {
+      paddingTop: 100,
+      alignSelf: 'center',
+      bottom: 25,
     },
     link: {
         color: '#28a745',
         fontWeight: 'bold',
-        fontFamily: 'ABeeZee', 
+        fontFamily: 'ABeeZee',
+        textAlign: 'center',
     },
     button: {
-        backgroundColor: '#28a745',
+        backgroundColor: '#2DBE60',
         padding: 10,
         borderRadius: 5,
         marginTop: 20,
-        width: '100%',
+        width: '95%',
+        alignSelf: 'center',
         alignItems: 'center',
     },
     buttonText: {

@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
 import { Link } from 'expo-router';
 import { useFonts } from 'expo-font';
 
@@ -12,77 +12,79 @@ export default function PrivacyPolicyScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Privacybeleid</Text>
-      
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.content}>
-          Dit privacybeleid legt uit hoe we uw persoonlijke gegevens verzamelen, gebruiken en beschermen wanneer u gebruik maakt van onze app.
-        </Text>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Privacybeleid</Text>
         
-        <View style={styles.section}>
-          <Text style={styles.subtitle}>1. Gegevensverzameling</Text>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.content}>
-            Wij verzamelen alleen de gegevens die noodzakelijk zijn voor het leveren van onze diensten, zoals uw naam, e-mailadres en gegevens die u invoert of verstrekt bij het gebruik van de app (zoals ingrediënten, recepten en voorkeuren).
+            Dit privacybeleid legt uit hoe we uw persoonlijke gegevens verzamelen, gebruiken en beschermen wanneer u gebruik maakt van onze app.
           </Text>
-        </View>
+          
+          <View style={styles.section}>
+            <Text style={styles.subtitle}>1. Gegevensverzameling</Text>
+            <Text style={styles.content}>
+              Wij verzamelen alleen de gegevens die noodzakelijk zijn voor het leveren van onze diensten, zoals uw naam, e-mailadres en gegevens die u invoert of verstrekt bij het gebruik van de app (zoals ingrediënten, recepten en voorkeuren).
+            </Text>
+          </View>
 
-        <View style={styles.divider} />
-        
-        <View style={styles.section}>
-          <Text style={styles.subtitle}>2. Gebruik van Gegevens</Text>
+          <View style={styles.divider} />
+          
+          <View style={styles.section}>
+            <Text style={styles.subtitle}>2. Gebruik van Gegevens</Text>
+            <Text style={styles.content}>
+              De gegevens die we verzamelen, worden gebruikt om u een betere gebruikerservaring te bieden, zoals het aanbevelen van recepten, het verzenden van meldingen, en het verbeteren van de functionaliteit van de app. We zullen uw gegevens niet voor andere doeleinden gebruiken zonder uw toestemming.
+            </Text>
+          </View>
+
+          <View style={styles.divider} />
+          
+          <View style={styles.section}>
+            <Text style={styles.subtitle}>3. Gegevensbeveiliging</Text>
+            <Text style={styles.content}>
+              We nemen de nodige beveiligingsmaatregelen om uw persoonlijke gegevens te beschermen tegen verlies, misbruik of ongeautoriseerde toegang. Desondanks kunnen we geen absolute veiligheid garanderen, aangezien geen enkele gegevensoverdracht of opslagmethode volledig veilig is.
+            </Text>
+          </View>
+
+          <View style={styles.divider} />
+          
+          <View style={styles.section}>
+            <Text style={styles.subtitle}>4. Delen van Gegevens</Text>
+            <Text style={styles.content}>
+              We zullen uw gegevens niet delen met derden, tenzij dit wettelijk verplicht is of om onze diensten te verbeteren (bijvoorbeeld door gebruik te maken van een serviceprovider voor het leveren van bepaalde functies).
+            </Text>
+          </View>
+
+          <View style={styles.divider} />
+          
+          <View style={styles.section}>
+            <Text style={styles.subtitle}>5. Uw Rechten</Text>
+            <Text style={styles.content}>
+              U heeft het recht om uw persoonlijke gegevens in te zien, te corrigeren of te verwijderen. Neem contact met ons op als u toegang wilt krijgen tot of wijzigingen wilt aanbrengen in uw gegevens.
+            </Text>
+          </View>
+
+          <View style={styles.divider} />
+          
+          <View style={styles.section}>
+            <Text style={styles.subtitle}>6. Wijzigingen in dit Privacybeleid</Text>
+            <Text style={styles.content}>
+              We behouden ons het recht voor om dit privacybeleid op elk moment te wijzigen. Eventuele wijzigingen worden van kracht zodra ze op deze pagina worden gepubliceerd. Het is uw verantwoordelijkheid om dit beleid regelmatig te controleren.
+            </Text>
+          </View>
+
+          <View style={styles.divider} />
+          
           <Text style={styles.content}>
-            De gegevens die we verzamelen, worden gebruikt om u een betere gebruikerservaring te bieden, zoals het aanbevelen van recepten, het verzenden van meldingen, en het verbeteren van de functionaliteit van de app. We zullen uw gegevens niet voor andere doeleinden gebruiken zonder uw toestemming.
+            Door gebruik te maken van onze app, gaat u akkoord met dit privacybeleid en geeft u toestemming voor de verwerking van uw gegevens zoals beschreven.
           </Text>
-        </View>
-
-        <View style={styles.divider} />
+        </ScrollView>
         
-        <View style={styles.section}>
-          <Text style={styles.subtitle}>3. Gegevensbeveiliging</Text>
-          <Text style={styles.content}>
-            We nemen de nodige beveiligingsmaatregelen om uw persoonlijke gegevens te beschermen tegen verlies, misbruik of ongeautoriseerde toegang. Desondanks kunnen we geen absolute veiligheid garanderen, aangezien geen enkele gegevensoverdracht of opslagmethode volledig veilig is.
-          </Text>
-        </View>
-
-        <View style={styles.divider} />
-        
-        <View style={styles.section}>
-          <Text style={styles.subtitle}>4. Delen van Gegevens</Text>
-          <Text style={styles.content}>
-            We zullen uw gegevens niet delen met derden, tenzij dit wettelijk verplicht is of om onze diensten te verbeteren (bijvoorbeeld door gebruik te maken van een serviceprovider voor het leveren van bepaalde functies).
-          </Text>
-        </View>
-
-        <View style={styles.divider} />
-        
-        <View style={styles.section}>
-          <Text style={styles.subtitle}>5. Uw Rechten</Text>
-          <Text style={styles.content}>
-            U heeft het recht om uw persoonlijke gegevens in te zien, te corrigeren of te verwijderen. Neem contact met ons op als u toegang wilt krijgen tot of wijzigingen wilt aanbrengen in uw gegevens.
-          </Text>
-        </View>
-
-        <View style={styles.divider} />
-        
-        <View style={styles.section}>
-          <Text style={styles.subtitle}>6. Wijzigingen in dit Privacybeleid</Text>
-          <Text style={styles.content}>
-            We behouden ons het recht voor om dit privacybeleid op elk moment te wijzigen. Eventuele wijzigingen worden van kracht zodra ze op deze pagina worden gepubliceerd. Het is uw verantwoordelijkheid om dit beleid regelmatig te controleren.
-          </Text>
-        </View>
-
-        <View style={styles.divider} />
-        
-        <Text style={styles.content}>
-          Door gebruik te maken van onze app, gaat u akkoord met dit privacybeleid en geeft u toestemming voor de verwerking van uw gegevens zoals beschreven.
-        </Text>
-      </ScrollView>
-      
-      <Link href="/register" asChild>
-        <Text style={styles.link}>Terug naar registratie</Text>
-      </Link>
-    </View>
+        <Link href="/register" asChild>
+          <Text style={styles.link}>Terug naar registratie</Text>
+        </Link>
+      </View>
+    </SafeAreaView>
   );
 }
 

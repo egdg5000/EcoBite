@@ -37,11 +37,14 @@ const EcoBiteScreen = () => {
       {/* Overlay voor de tekst en knoppen */}
       <View style={styles.overlay}>
         {/* Titel */}
-        <Text style={styles.subtitle}>Verminder uw voedselverspilling</Text>
-        <Text style={styles.title}>
-          <Text style={styles.ecoText}>Eco</Text>
-          <Text style={styles.biteText}>Bite</Text>
-        </Text>
+        
+        <View style={styles.textContainer}>
+          <Text style={styles.subtitle}>Verminder uw voedselverspilling</Text>
+          <Text style={styles.title}>
+            <Text style={styles.ecoText}>Eco</Text>
+            <Text style={styles.biteText}>Bite</Text>
+          </Text>
+        </View>
 
         {/* E-mail invoerveld */}
         <Input
@@ -53,9 +56,10 @@ const EcoBiteScreen = () => {
           keyboardType="email-address"
           autoCapitalize="none"
           inputContainerStyle={{
-            width: '105%',
-            borderBottomColor:'transparent',
-            alignSelf: 'center'
+            width: '100%',
+            borderBottomWidth: 0,
+            alignSelf: 'center',
+            marginBottom: -10
           }}
         />
 
@@ -109,7 +113,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '80%',
-    top: '-25%',
+    top: '-20%',
+  },
+  textContainer: {
+    backgroundColor: '#fFf',
+    width: '95%',
+    alignSelf: 'center',
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 20
   },
   overlay: {
     flex: 1,
@@ -143,11 +155,10 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#F5F5F5',
-    paddingVertical: 12,
+    paddingVertical: 15,
     paddingHorizontal: 15,
     borderRadius: 8,
     fontSize: 16,
-    marginBottom: 15,
     borderWidth: 1,
     borderColor: '#ccc',
   },
@@ -156,7 +167,9 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 15,
+    alignSelf: 'center',
+    marginBottom: 30,
+    width: '95%'
   },
   startButtonText: {
     color: '#FFF',
@@ -174,6 +187,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     marginBottom: 15,
+    alignSelf: 'center',
+    width: '95%'
   },
   googleButtonText: {
     color: '#000',
@@ -188,6 +203,8 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 8,
     justifyContent: 'center',
+    alignSelf: 'center',
+    width: '95%'
   },
   facebookButtonText: {
     color: '#FFF',
