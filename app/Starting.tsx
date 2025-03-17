@@ -11,7 +11,6 @@ import {
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { Link } from 'expo-router';
-import {Button, Input } from '@rneui/themed';
 
 const EcoBiteScreen = () => {
   const [email, setEmail] = useState('');
@@ -37,7 +36,6 @@ const EcoBiteScreen = () => {
       {/* Overlay voor de tekst en knoppen */}
       <View style={styles.overlay}>
         {/* Titel */}
-        
         <View style={styles.textContainer}>
           <Text style={styles.subtitle}>Verminder uw voedselverspilling</Text>
           <Text style={styles.title}>
@@ -47,7 +45,7 @@ const EcoBiteScreen = () => {
         </View>
 
         {/* E-mail invoerveld */}
-        <Input
+        <TextInput
           style={styles.input}
           placeholder="Voer uw e-mailadres in"
           placeholderTextColor="#777"
@@ -55,16 +53,10 @@ const EcoBiteScreen = () => {
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
-          inputContainerStyle={{
-            width: '100%',
-            borderBottomWidth: 0,
-            alignSelf: 'center',
-            marginBottom: -10
-          }}
         />
 
         {/* Doorgaan-knop */}
-        <Link href={{ pathname: "/register", params: { email } }} asChild>
+        <Link href={{pathname: '/register', params: {email}}} asChild>
           <TouchableOpacity style={styles.startButton}>
             <Text style={styles.startButtonText}>Doorgaan</Text>
           </TouchableOpacity>
@@ -113,15 +105,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '80%',
-    top: '-20%',
+    top: '-25%',
   },
   textContainer: {
-    backgroundColor: '#fFf',
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    marginBottom: 10,
     width: '95%',
     alignSelf: 'center',
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 20
+    padding: 20
   },
   overlay: {
     flex: 1,
@@ -159,6 +151,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 8,
     fontSize: 16,
+    marginBottom: 15,
     borderWidth: 1,
     borderColor: '#ccc',
   },
@@ -167,9 +160,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
-    alignSelf: 'center',
-    marginBottom: 30,
-    width: '95%'
+    marginBottom: 50,
   },
   startButtonText: {
     color: '#FFF',
@@ -187,8 +178,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     marginBottom: 15,
-    alignSelf: 'center',
-    width: '95%'
   },
   googleButtonText: {
     color: '#000',
@@ -203,8 +192,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 8,
     justifyContent: 'center',
-    alignSelf: 'center',
-    width: '95%'
   },
   facebookButtonText: {
     color: '#FFF',
