@@ -3,10 +3,11 @@ import {
     View, Text, TouchableOpacity, StyleSheet
 } from "react-native";
 import {Button, Input } from '@rneui/themed';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 
 const LoginScreen = () => {
+    const router = useRouter();
     const [errorMessageUsername, setErrorUsername] = useState('')
     const [errorMessagePassword, setErrorPassword] = useState('')
     const [email, setEmail] = useState("");
@@ -62,6 +63,7 @@ const LoginScreen = () => {
         }
         if (data.success){
           setLoginText('Logged in!');
+          router.push('/home');
         } else setLoginText('Login')
         setLoadingStatus(false);
       };

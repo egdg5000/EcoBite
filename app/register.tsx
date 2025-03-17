@@ -6,6 +6,7 @@ import {Button, Input } from '@rneui/themed';
 
 
 const RegistrationScreen = () => {
+    const router = useRouter();
     const {email} = useLocalSearchParams<{ email: string }>();
     const [errorMessageEmail, setErrorEmail] = useState('')
     const [errorMessageUsername, setErrorUsername] = useState('')
@@ -69,7 +70,7 @@ const RegistrationScreen = () => {
         setLoadingStatus(true);
         const body = JSON.stringify({
           username: username,
-          newemail: newemail,
+          email: newemail,
           password: password,
         })
         const response = await fetch('http://localhost:3000/users/register', {
@@ -86,6 +87,7 @@ const RegistrationScreen = () => {
         }
         if (data.success){
           setRegisterText('Registered!');
+          router.push('/home');
         } else setRegisterText('Register')
         setLoadingStatus(false);
     };
@@ -119,7 +121,7 @@ const RegistrationScreen = () => {
                 style={[styles.input]}
                 placeholder="Email"
                 placeholderTextColor="#777"
-                value={email}
+                value={newemail}
                 onChangeText={setEmail}
                 errorMessage={errorMessageEmail}
                 renderErrorMessage={true}
@@ -166,10 +168,6 @@ const RegistrationScreen = () => {
                 buttonStyle={styles.button}
                 onPress={register}
                 title={registerText}/>
-            
-            {/* <TouchableOpacity style={styles.button} onPress={register}>
-                <Text style={styles.buttonText}>Registreren</Text>
-            </TouchableOpacity> */}
         </View>
     );
 };
@@ -219,7 +217,6 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 40,
         marginTop: 5,
-        fontFamily: 'ABeeZee', 
     },
     link: {
         color: '#28a745',
