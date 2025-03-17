@@ -106,5 +106,5 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5, color: '#333', fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
   section: { marginBottom: 20 },
   divider: { height: 1, backgroundColor: '#28a745', marginVertical: 10 },
-  link: { fontSize: 16, color: '#28a745', fontWeight: 'bold', textAlign: 'center', marginTop: 20, fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
+  link: { fontSize: 16, color: '#007BFF', fontWeight: 'bold', textAlign: 'center', marginTop: 20, fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
 });

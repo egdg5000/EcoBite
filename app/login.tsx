@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
-    View, Text, TouchableOpacity, StyleSheet
-} from "react-native";
+    View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image, KeyboardAvoidingView, Platform} from "react-native";
 import {Button, Input } from '@rneui/themed';
 import { Link, useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
@@ -69,73 +68,74 @@ const LoginScreen = () => {
       };
 
     return (
-        <View style={styles.container}>
-            {/* Titel */}
-            <Text style={styles.title}>Inloggen</Text>
-            <Text style={styles.subtitle}>Vul uw email en wachtwoord in</Text>
+        <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
+            <KeyboardAvoidingView style={{flex: 1}} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+                <View style={styles.container}>
+                    {/* Titel */}
+                    <Image source={require('../assets/images/EcoBite2.png')} style={styles.logo} />
+                    <Text style={styles.title}>Inloggen</Text>
+                    <Text style={styles.subtitle}>Vul uw email en wachtwoord in</Text>
 
-            {/* Email Input */}
-            <Input
-                style={styles.input}
-                placeholder="Email of gebruikersnaam"
-                keyboardType="email-address"
-                value={email}
-                onChangeText={setEmail}
-                autoCapitalize="none"
-                id='username'
-                placeholderTextColor="black"
-                errorMessage={errorMessageUsername}
-                renderErrorMessage={true}
-                inputContainerStyle={{
-                    width: '100%',
-                    borderBottomColor:'transparent',
-                    alignSelf: 'center'
-                }}
-            />
+                    {/* Email Input */}
+                    <Input
+                        style={styles.input}
+                        placeholder="Email of gebruikersnaam"
+                        keyboardType="email-address"
+                        value={email}
+                        onChangeText={setEmail}
+                        autoCapitalize="none"
+                        id='username'
+                        placeholderTextColor="#777"
+                        errorMessage={errorMessageUsername}
+                        renderErrorMessage={true}
+                        inputContainerStyle={{
+                            width: '100%',
+                            borderBottomColor:'transparent',
+                            alignSelf: 'center'
+                        }}
+                    />
 
-            {/* Wachtwoord Input */}
-            <View style={styles.passwordContainer}>
-                <Input id='password'
-                    style={styles.input}
-                    placeholderTextColor="black"
-                    secureTextEntry={true}
-                    value={password}
-                    renderErrorMessage={true}
-                    errorMessage={errorMessagePassword}
-                    inputContainerStyle={{
-                        width: '100%',
-                        borderBottomColor:'transparent',
-                    }}
-                    placeholder="Wachtwoord"
-                    onChangeText={setPassword}
-                    rightIcon={
-                        <TouchableOpacity onPress={() => setSecureText(!secureText)}>
-                            <Text style={styles.toggleText}>{secureText ? "show" : "hide"}</Text>
-                        </TouchableOpacity>
-                    }
-                />
-            </View>
+                    {/* Wachtwoord Input */}
+                    <View style={styles.passwordContainer}>
+                        <Input id='password'
+                            style={styles.input}
+                            placeholderTextColor="#777"
+                            secureTextEntry={true}
+                            value={password}
+                            renderErrorMessage={true}
+                            errorMessage={errorMessagePassword}
+                            inputContainerStyle={{
+                                width: '100%',
+                                borderBottomColor:'transparent',
+                            }}
+                            placeholder="Wachtwoord"
+                            onChangeText={setPassword}
+                        />
+                    </View>
 
-            {/* Wachtwoord Vergeten */}
-            <TouchableOpacity>
-                <Text style={styles.forgotPassword}>Wachtwoord vergeten?</Text>
-            </TouchableOpacity>
+                    {/* Wachtwoord Vergeten */}
+                    <TouchableOpacity>
+                        <Text style={styles.forgotPassword}>Wachtwoord vergeten?</Text>
+                    </TouchableOpacity>
 
-            <Button
-                loading={buttonLoading}
-                containerStyle={{width: '100%'}}
-                buttonStyle={styles.loginButton}
-                onPress={login}
-                title={loginText}
-            />
+                    <Button
+                        loading={buttonLoading}
+                        containerStyle={{width: '100%'}}
+                        buttonStyle={styles.loginButton}
+                        onPress={login}
+                        title={loginText}
+                    />
 
-            {/* Registreren Link */}
-            <Link href="/register" asChild>
-                <Text style={styles.registerText}>
-                    Geen account? <Text style={styles.registerLink}>Registreren</Text>
-                </Text>
-            </Link>
-        </View>
+                    {/* Registreren Link */}
+                    <Text style={styles.registerText}>Geen account?
+                        <Link href="/register" asChild>
+                            <Text style={styles.registerLink}> Registreren</Text>
+                        </Link>
+                    </Text>
+                </View>
+            </KeyboardAvoidingView>
+            <View style={{marginTop:130}}></View>
+        </SafeAreaView>
     );
 };
 
@@ -143,10 +143,15 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        alignItems: 'center',
+        backgroundColor: '#fff',
         padding: 20,
-        backgroundColor: "#F5F5F5",
+        justifyContent: 'flex-end'
+    },
+    logo: {
+        width: 100,
+        height: 100,
+        marginBottom: 20,
     },
     title: {
         fontSize: 24,
@@ -161,15 +166,15 @@ const styles = StyleSheet.create({
         fontFamily: 'ABeeZee', 
     },
     input: {
-        width: "100%",
-        height: 50,
-        borderWidth: 1,
-        borderColor: "#ddd",
-        borderRadius: 10,
+        backgroundColor: '#F5F5F5',
+        paddingVertical: 15,
         paddingHorizontal: 15,
-        backgroundColor: "#fff",
-        marginBottom: 15,
-        fontFamily: 'ABeeZee', 
+        borderRadius: 8,
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        width: '100%',
+        marginTop: 5,
     },
     passwordContainer: {
         flexDirection: "row",
@@ -187,18 +192,17 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     loginButton: {
-        backgroundColor: "#4CAF50",
-        width: "100%",
-        height: 50,
-        justifyContent: "center",
-        alignItems: "center",
-        borderRadius: 10,
-        marginTop: 10,
+        backgroundColor: '#2DBE60',
+        padding: 10,
+        borderRadius: 8,
+        marginTop: 20,
+        width: '95%',
+        alignSelf: 'center',
+        alignItems: 'center',
     },
     loginButtonText: {
         color: "white",
         fontSize: 18,
-        fontWeight: "bold",
         fontFamily: 'ABeeZee', 
     },
     registerText: {
@@ -208,7 +212,6 @@ const styles = StyleSheet.create({
     },
     registerLink: {
         color: "#007BFF",
-        fontWeight: "bold",
         fontFamily: 'ABeeZee', 
     },
     errorMessage: {

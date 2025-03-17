@@ -99,12 +99,10 @@ const RegistrationScreen = () => {
               <Image source={require('../assets/images/EcoBite2.png')} style={styles.logo} />
               <Text style={styles.title}>Registreren</Text>
               <Text style={styles.subtitle}>Vul uw gegevens in om door te gaan</Text>
-              
-              <Text style={styles.label}>Gebruikersnaam</Text>
               <Input 
                   id='username'
                   style={[styles.input]}
-                  placeholder="Username"
+                  placeholder="Gebruikersnaam"
                   placeholderTextColor="#777"
                   value={username}
                   onChangeText={setUsername}
@@ -116,8 +114,6 @@ const RegistrationScreen = () => {
                     alignSelf: 'center'
                   }}
               />
-              
-              <Text style={styles.label}>Email</Text>
               <Input 
                   id='email'
                   style={[styles.input]}
@@ -133,12 +129,10 @@ const RegistrationScreen = () => {
                     alignSelf: 'center'
                   }}
               />
-              
-              <Text style={styles.label}>Wachtwoord</Text>
               <Input 
                   id='password'
                   style={[styles.input]}
-                  placeholder="Password"
+                  placeholder="Wachtwoord"
                   placeholderTextColor="#777"
                   secureTextEntry={true}
                   value={password}
@@ -158,6 +152,11 @@ const RegistrationScreen = () => {
                   buttonStyle={styles.button}
                   onPress={register}
                   title={registerText}/>
+              <Text style={styles.loginText}>Al een account?
+                  <Link href="/login" asChild>
+                  <Text style={styles.loginLink}> Inloggen</Text>
+              </Link>
+              </Text>
             </View>
           </KeyboardAvoidingView>
 
@@ -227,7 +226,7 @@ const styles = StyleSheet.create({
       bottom: 25,
     },
     link: {
-        color: '#28a745',
+        color: '#007BFF',
         fontWeight: 'bold',
         fontFamily: 'ABeeZee',
         textAlign: 'center',
@@ -235,7 +234,7 @@ const styles = StyleSheet.create({
     button: {
         backgroundColor: '#2DBE60',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 8,
         marginTop: 20,
         width: '95%',
         alignSelf: 'center',
@@ -245,6 +244,16 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
+        fontFamily: 'ABeeZee', 
+    },
+    loginText: {
+      marginTop: 20,
+      color: "#666",
+      fontFamily: 'ABeeZee', 
+    },
+    loginLink: {
+        color: "#007BFF",
+        fontWeight: "bold",
         fontFamily: 'ABeeZee', 
     },
 });
