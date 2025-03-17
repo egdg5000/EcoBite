@@ -105,7 +105,6 @@ const RegistrationScreen = () => {
                 onChangeText={setUsername}
                 errorMessage={errorMessageUsername}
                 renderErrorMessage={true}
-                errorStyle={{marginLeft: '20%'}}
                 inputContainerStyle={{
                   width: '100%',
                   borderBottomColor:'transparent',
@@ -123,7 +122,6 @@ const RegistrationScreen = () => {
                 onChangeText={setEmail}
                 errorMessage={errorMessageEmail}
                 renderErrorMessage={true}
-                errorStyle={{marginLeft: '20%'}}
                 inputContainerStyle={{
                   width: '100%',
                   borderBottomColor:'transparent',
@@ -141,7 +139,6 @@ const RegistrationScreen = () => {
                 value={password}
                 onChangeText={setPassword}
                 renderErrorMessage={true}
-                errorStyle={{marginLeft: '20%'}}
                 errorMessage={errorMessagePassword}
                 inputContainerStyle={{
                   width: '100%',
@@ -162,15 +159,16 @@ const RegistrationScreen = () => {
                 </TouchableOpacity>
             </Link>
 
-            {/* <Button 
+            <Button 
                 loading={buttonLoading}
+                containerStyle={{width: '100%'}}
                 buttonStyle={styles.button}
                 onPress={register}
-                title={registerText}/> */}
+                title={registerText}/>
             
-            <TouchableOpacity style={styles.button} onPress={register}>
+            {/* <TouchableOpacity style={styles.button} onPress={register}>
                 <Text style={styles.buttonText}>Registreren</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 };

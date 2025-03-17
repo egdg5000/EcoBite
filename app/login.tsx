@@ -121,6 +121,7 @@ const LoginScreen = () => {
 
             <Button
                 loading={buttonLoading}
+                containerStyle={{width: '100%'}}
                 buttonStyle={styles.loginButton}
                 onPress={login}
                 title={loginText}
@@ -191,7 +192,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 10,
         marginTop: 10,
-        paddingHorizontal: 130,
     },
     loginButtonText: {
         color: "white",
