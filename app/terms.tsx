@@ -79,7 +79,7 @@ export default function TermsScreen() {
           <View style={styles.section}>
             <Text style={styles.subtitle}>7. Toepasselijk Recht en Geschillen</Text>
             <Text style={styles.content}>
-              Deze voorwaarden vallen onder de wetgeving van het Koninkrijk der Nederlanden, en eventuele geschillen zullen worden voorgelegd aan de bevoegde rechtbanken in Utrecht.
+              Deze voorwaarden vallen onder de wetgeving van het Koninkrijk der Nederlanden, en eventuele geschillen zullen worden voorgelegd aan de bevoegde rechtbanken in de gemeente Utrecht.
             </Text>
           </View>
 
