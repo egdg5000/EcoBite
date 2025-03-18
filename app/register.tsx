@@ -14,7 +14,7 @@ const RegistrationScreen = () => {
     const [username, setUsername] = useState('');
     const [newemail, setEmail] = useState(email);
     const [password, setPassword] = useState('');
-    const [registerText, setRegisterText] = useState('Register');
+    const [registerText, setRegisterText] = useState('Registreren');
     const [buttonLoading, setLoadingStatus] = useState(false);
 
     const [fontsLoaded] = useFonts({
@@ -25,30 +25,30 @@ const RegistrationScreen = () => {
         let error = false;
     
         if (!username) {
-          setErrorUsername('Please enter a username');
+          setErrorUsername('Vul uw gebruikersnaam in');
           error = true;
         } else {
           setErrorUsername('');
         }
     
         if (!newemail) {
-          setErrorEmail('Please enter an email');
+          setErrorEmail('Vul uw mailadres in');
           error = true;
         } else {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(newemail)) {
-            setErrorEmail('Please enter a valid email address');
+            setErrorEmail('Vul een geldig mailadres in');
             error = true;
           } else setErrorEmail('');
         }
     
         if (!password) {
-          setErrorPassword('Please enter a password');
+          setErrorPassword('Vul uw wachtwoord in');
           error = true;
         } else {
           const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
           if (!passwordRegex.test(password)) {
-            setErrorPassword('Password must contain at least one uppercase letter, one lowercase letter and a number, and must be at least 8 characters long.');
+            setErrorPassword('Het wachtwoord moet minstens één hoofdletter, één kleine letter en één cijfer bevatten en moet minstens 8 tekens lang zijn.');
             error = true;
           } else setErrorPassword('');
         }
@@ -57,12 +57,12 @@ const RegistrationScreen = () => {
     }
 
     const throwError = (response: any) => {
-        if (response.message === 'Username and email already in use') {
-          setErrorUsername('Username already in use');
-          setErrorEmail('Email already in use');
+        if (response.message === 'Gebruikersnaam en maildres zijn al in gebruik') {
+          setErrorUsername('Gebruikersnaam is al in gebruik');
+          setErrorEmail('Maildres is al in gebruik');
         };
-        if (response.message === 'Username already in use') setErrorUsername(response.message);
-        if (response.message === 'Email already in use') setErrorEmail(response.message);
+        if (response.message === 'Gebruikersnaam is al in gebruik') setErrorUsername(response.message);
+        if (response.message === 'Maildres is al in gebruik') setErrorEmail(response.message);
     }
     
     const register = async () => {
