@@ -37,8 +37,8 @@ const LoginScreen = () => {
       }
     
       const throwError = (response: any) => {
-        if (response.message === 'Username or email not found') setErrorUsername(response.message);
-        if (response.message === 'Incorrect password') setErrorPassword(response.message);
+        if (response.message === 'Gebruikersnaam of mailadres niet gevonden') setErrorUsername(response.message);
+        if (response.message === 'Onjuist wachtwoord') setErrorPassword(response.message);
       }
     
       const login = async () => {
@@ -62,9 +62,9 @@ const LoginScreen = () => {
           throwError(data);
         }
         if (data.success){
-          setLoginText('Logged in!');
+          setLoginText('Successvol ingelogd!');
           router.push('/home');
-        } else setLoginText('Login')
+        } else setLoginText('Inloggen')
         setLoadingStatus(false);
       };
 
