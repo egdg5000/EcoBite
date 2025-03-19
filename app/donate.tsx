@@ -65,7 +65,7 @@ const DonateScreen = () => {
     title: {
       fontSize: 28,
       fontWeight: "bold",
-      color: "#32CD32",
+      color: "#F8A44C",
       textAlign: "center",
       marginBottom: 10,
       fontFamily: "ABeeZee",
