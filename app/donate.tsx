@@ -25,7 +25,7 @@ const DonateScreen = () => {
   
           {/* Website Link */}
           <TouchableOpacity onPress={openWebsite}>
-            <Text style={styles.link}>https://voedselbankennederland.nl/</Text>
+            <Text style={styles.link}>Voedselbanken Nederland</Text>
           </TouchableOpacity>
   
           {/* Voedselbank Logo */}
