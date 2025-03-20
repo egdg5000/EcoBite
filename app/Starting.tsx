@@ -28,7 +28,7 @@ const EcoBiteScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* Achtergrondafbeelding over de hele pagina */}
       <Image
-        source={require('../assets/images/601 1.jpg')}
+        source={require('../assets/images/ingredients.jpg')}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '80%',
-    top: '-25%',
+    top: '-9%',
   },
   textContainer: {
     backgroundColor: '#FFF',
