@@ -55,12 +55,16 @@ const DonateScreen = () => {
       flex: 1,
       resizeMode: "cover",
       justifyContent: "center",
+      width: "100%",
+      height: "100%"
     },
     overlay: {
       flex: 1,
       backgroundColor: "rgba(0, 0, 0, 0.4)",
       padding: 20,
       justifyContent: "center",
+      alignItems: "center",
+      height: "100%"
     },
     title: {
       fontSize: 28,
