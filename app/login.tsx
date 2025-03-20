@@ -12,7 +12,7 @@ const LoginScreen = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [secureText, setSecureText] = useState(true);
-    const [loginText, setLoginText] = useState('Login');
+    const [loginText, setLoginText] = useState('Inloggen');
     const [buttonLoading, setLoadingStatus] = useState(false);
 
     const [fontsLoaded] = useFonts({
@@ -190,6 +190,7 @@ const styles = StyleSheet.create({
         alignSelf: "flex-end",
         color: "#007BFF",
         marginBottom: 20,
+        fontWeight: "bold"
     },
     loginButton: {
         backgroundColor: '#2DBE60',
@@ -213,6 +214,7 @@ const styles = StyleSheet.create({
     registerLink: {
         color: "#007BFF",
         fontFamily: 'ABeeZee', 
+        fontWeight: "bold"
     },
     errorMessage: {
         flex: 1,
