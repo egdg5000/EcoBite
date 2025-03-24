@@ -6,32 +6,47 @@
     <title>Email Verification</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
-  <body>
-    <div class="title-container">
-      <p class="title">Verifying email...</p>
-      <svg class="loading" viewBox="25 25 50 50">
-        <circle r="20" cy="50" cx="50"></circle>
-      </svg>
-      <svg class="checkmark">
-        <line class="line" style="--line-index: 0;" x1="15" y1="15" x2="30" y2="30"></line>
-        <line class="line" style="--line-index: 1;" x1="30" y1="30" x2="60" y2="0"></line>
-      </svg>
+<body>
+    <div class="logo-container">
+        <img src="EcoBite2.png" alt="EcoBite Logo" class="logo">
+        <h1 class="app-name"><span class="eco">Eco</span><span class="bite">Bite</span></h1>
     </div>
-      
+    
+    <div class="container">
+        <p class="title">Verifying email...</p>
+        <div class="icon-container">
+            <svg class="loading" viewBox="25 25 50 50">
+                <circle r="20" cy="50" cx="50"></circle>
+            </svg>
+            <svg class="checkmark" viewBox="0 0 64 64">
+                <polyline points="16,32 28,44 48,20"></polyline>
+            </svg>
+        </div>
+        <p class="message">Even geduld terwijl wij uw email verifiëren...</p>
+    </div>
+
     <script>
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get('token');
-      const body = JSON.stringify({
-        token: token,
-      });
-      fetch(`http://localhost:3000/verify`, {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        fetch(`http://localhost:3000/verify`, {
             method: 'POST',
             credentials: 'include',
             headers: {
-              'Content-Type': 'application/json',
+                'Content-Type': 'application/json',
             },
-            body
-      })
+            body: JSON.stringify({ token })
+        }).then(response => response.json())
+          .then(data => {
+              document.querySelector('.title').innerText = "Email Geverifieerd!";
+              document.querySelector('.loading').style.display = "none";
+              document.querySelector('.checkmark').style.display = "block";
+              document.querySelector('.message').innerText = "Uw email is successvol geverifieerd.";
+          }).catch(() => {
+              document.querySelector('.title').innerText = "Verificatie mislukt.";
+              document.querySelector('.loading').style.display = "none";
+              document.querySelector('.message').innerText = "Er is iets misgegaan. Probeer het later opnieuw.";
+          });
     </script>
-  </body>
+</body>
 </html>
