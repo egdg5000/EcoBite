@@ -13,7 +13,7 @@ router.get('/verification', (req, res) => {
 router.post('/verify', jsonParser, (req, res) => {
     const currentTime = new Date();
     const {token} = req.body
-    if (token === null) {res.status(400).json({success: false, message:"No token found"}); return;}
+    if (token === null) {res.status(400).json({success: false, message:"Invalid token"}); return;}
     const query = `SELECT * FROM users WHERE verification_token = ?`;
     db.promise().query(query, token).then(([result]) => {
         if (result.length > 0) {
@@ -22,7 +22,7 @@ router.post('/verify', jsonParser, (req, res) => {
                 return;
             }
             else {
-                const query_ = `UPDATE users SET verification_token = NULL, email_verified = TRUE WHERE verification_token = ?`;
+                const query_ = `UPDATE users SET verification_token = NULL, email_verified = TRUE, verification_expires = NULL WHERE verification_token = ?`;
                 db.promise().query(query_, token).then(() => {
                     res.status(200).json({success: true, message: 'E-mail verified'})
                 }).catch(err => {
@@ -30,7 +30,7 @@ router.post('/verify', jsonParser, (req, res) => {
                     res.status(500).json({success: false, message: 'Internal Server Error'});
                 });
             }
-        } else res.status(400).json({success: false, message: 'Invalid token'})
+        } else res.status(400).json({success: false, message: 'E-mail already verified'})
     }).catch(err => {
         console.error(err);
         res.status(500).json({success: false, message: 'Internal Server Error'});

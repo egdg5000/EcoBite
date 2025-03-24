@@ -13,7 +13,7 @@
     </div>
     
     <div class="container">
-        <p class="title">Verifying email...</p>
+        <p class="title">E-mail verifiëren...</p>
         <div class="icon-container">
             <svg class="loading" viewBox="25 25 50 50">
                 <circle r="20" cy="50" cx="50"></circle>
@@ -22,7 +22,7 @@
                 <polyline points="16,32 28,44 48,20"></polyline>
             </svg>
         </div>
-        <p class="message">Even geduld terwijl wij uw email verifiëren...</p>
+        <p class="message">Even geduld terwijl wij uw e-mail verifiëren...</p>
     </div>
 
     <script>
@@ -38,11 +38,30 @@
             body: JSON.stringify({ token })
         }).then(response => response.json())
           .then(data => {
+            if (data.success){
               document.querySelector('.title').innerText = "Email Geverifieerd!";
               document.querySelector('.loading').style.display = "none";
               document.querySelector('.checkmark').style.display = "block";
               document.querySelector('.message').innerText = "Uw email is successvol geverifieerd. U kunt deze pagina sluiten.";
-          }).catch(() => {
+            } else {
+              document.querySelector('.title').innerText = "Verificatie mislukt.";
+              document.querySelector('.loading').style.display = "none";
+              switch (data.message) {
+                  case 'Invalid token':
+                      document.querySelector('.message').innerText = 'Token is niet geldig';
+                      break;
+                  case 'E-mail already verified':
+                      document.querySelector('.message').innerText = 'Deze e-mail is al geverifieerd.';
+                      break;
+                  case 'Verification token expired':
+                      document.querySelector('.message').innerText = 'De verificatielink is verlopen';
+                      break;
+                  default:
+                      document.querySelector('.message').innerText = data.message;
+              }
+            }
+          }).catch(error => {
+              console.error(error);
               document.querySelector('.title').innerText = "Verificatie mislukt.";
               document.querySelector('.loading').style.display = "none";
               document.querySelector('.message').innerText = "Er is iets misgegaan. Probeer het later opnieuw.";
