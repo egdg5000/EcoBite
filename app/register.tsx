@@ -12,7 +12,7 @@ const RegistrationScreen = () => {
     const [errorMessageUsername, setErrorUsername] = useState('')
     const [errorMessagePassword, setErrorPassword] = useState('')
     const [username, setUsername] = useState('');
-    const [newemail, setEmail] = useState(email);
+    const [newemail, setEmail] = useState(email || '');
     const [password, setPassword] = useState('');
     const [registerText, setRegisterText] = useState('Register');
     const [buttonLoading, setLoadingStatus] = useState(false);
