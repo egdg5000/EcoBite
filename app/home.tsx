@@ -21,6 +21,7 @@ const HomeScreen = () => {
 
     const animatedRef = useAnimatedRef<Animated.ScrollView>();
     const scrollY = useScrollViewOffset(animatedRef);
+    const maxScroll = 300;
 
     const [treeCount, setTreeCount] = useState(0);  // Track number of trees
 
@@ -41,10 +42,15 @@ const HomeScreen = () => {
 
     // Animated style for background color based on scrollY
     const backgroundColor = useAnimatedStyle(() => {
-        let color = '#87CEEB'; // Sky blue color for "air"
-        if (scrollY.value > 100) {
-            color = '#6B3E26'; // Brownish for the "earth"
-        }
+        //color = 'rgb(135, 206, 235)'; // Sky blue color for "air"
+        //     color = 'rgb(107, 62, 38)'; // Brownish for the "earth"
+        let red1 = 135; let green1 = 206; let blue1 = 235;
+        let red2 = 107; let green2 = 62; let blue2 = 38;
+        let reddiff = red1 - red2; let greendiff = green1 - green2; let bluediff = blue1 - blue2;
+        let red = red1 - reddiff / maxScroll * scrollY.value;
+        let green = green1 - greendiff / maxScroll * scrollY.value;
+        let blue = blue1 - bluediff / maxScroll * scrollY.value;
+        let color = `rgb(${red}, ${green}, ${blue})`;
         return {
             backgroundColor: color,
         };
