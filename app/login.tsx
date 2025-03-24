@@ -37,8 +37,8 @@ const LoginScreen = () => {
       }
     
       const throwError = (response: any) => {
-        if (response.message === 'Gebruikersnaam of mailadres niet gevonden') setErrorUsername(response.message);
-        if (response.message === 'Onjuist wachtwoord') setErrorPassword(response.message);
+        if (response.message === 'Username or email not found') setErrorUsername('Gebruikersnaam of mailadres niet gevonden');
+        if (response.message === 'Incorrect password') setErrorPassword('Onjuist wachtwoord');
       }
     
       const login = async () => {
@@ -50,6 +50,7 @@ const LoginScreen = () => {
         })
         const response = await fetch('http://localhost:3000/users/login', {
           method: 'POST',
+          credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -90,7 +91,7 @@ const LoginScreen = () => {
                         renderErrorMessage={true}
                         inputContainerStyle={{
                             width: '100%',
-                            borderBottomColor:'transparent',
+                            borderBottomWidth:0,
                             alignSelf: 'center'
                         }}
                     />
@@ -106,7 +107,7 @@ const LoginScreen = () => {
                             errorMessage={errorMessagePassword}
                             inputContainerStyle={{
                                 width: '100%',
-                                borderBottomColor:'transparent',
+                                borderBottomWidth:0,
                             }}
                             placeholder="Wachtwoord"
                             onChangeText={setPassword}

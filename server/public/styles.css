@@ -1,0 +1,79 @@
+@font-face {
+    font-family: ABeeZee;
+    src: url(ABeeZee.ttf);
+  }
+
+.title-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10rem;
+    font-family: 'ABeeZee';
+    font-size: 2em;
+}
+.title {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+
+.checkmark {
+    display: flex;
+    flex-direction: row;
+    width: 2em;
+    transform-origin: center;
+    }
+
+    .line {
+        stroke: green;
+        stroke-width: 0.1em;
+        stroke-linecap: round;
+        transform: translateY(1.6em);
+        animation: draw 1.5s forwards;
+        stroke-dasharray: 1.4em;
+        stroke-dashoffset: 1.4em;
+        animation-delay: calc(var(--line-index) * 0.5s);
+    }
+    @keyframes draw {
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+
+.loading {
+    width: 2em;
+    transform-origin: center;
+    animation: rotate4 2s linear infinite;
+   }
+   
+   circle {
+    fill: none;
+    stroke: hsl(214, 97%, 59%);
+    stroke-width: 2;
+    stroke-dasharray: 1, 200;
+    stroke-dashoffset: 0;
+    stroke-linecap: round;
+    animation: dash4 1.5s ease-in-out infinite;
+   }
+   
+   @keyframes rotate4 {
+    100% {
+     transform: rotate(360deg);
+    }
+   }
+   
+   @keyframes dash4 {
+    0% {
+     stroke-dasharray: 1, 200;
+     stroke-dashoffset: 0;
+    }
+   
+    50% {
+     stroke-dasharray: 90, 200;
+     stroke-dashoffset: -35px;
+    }
+   
+    100% {
+     stroke-dashoffset: -125px;
+    }
+   }
+   

@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Image, Dimensions } from "react-native";
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
-import { Link } from 'expo-router';
-import Video from 'react-native-video';
+import { Link, useRouter } from 'expo-router';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -65,9 +64,29 @@ function Splash({ children }: { children: React.ReactNode }) {
     </View>
   );
 }
-
+async function checkLogin() {
+    const router = useRouter();
+    const response = await fetch('http://localhost:3000/users/loginStatus', {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    const data = await response.json();
+    if (!response.ok) {
+      console.log("Something went wrong");
+      console.log(response);
+    }
+    if (data.success){
+      console.log('Logged in!');
+      router.push('/home');
+    } else console.log(response);
+}
 
 function MainScreen() {
+  checkLogin();
   return (
     <ImageBackground
       source={require("../assets/images/spinach.jpg")}
