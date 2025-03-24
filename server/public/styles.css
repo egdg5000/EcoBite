@@ -1,0 +1,146 @@
+@font-face {
+    font-family: ABeeZee;
+    src: url(ABeeZee.ttf);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'ABeeZee', sans-serif;
+    background-color: #f4f4f4;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    height: 50px;
+}
+
+.app-name {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.eco {
+    color: darkgreen;
+}
+
+.bite {
+    color: lightgreen;
+}
+
+.container {
+    text-align: center;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    height: 4rem;
+}
+
+.loading {
+    width: 3rem;
+    height: 3rem;
+    transform-origin: center;
+    animation: rotate 1.5s linear infinite;
+}
+
+circle {
+    fill: none;
+    stroke: #007BFF;
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 90, 150;
+    stroke-dashoffset: 0;
+    animation: dash 1.5s ease-in-out infinite;
+}
+
+.checkmark {
+    display: none;
+    width: 3rem;
+    height: 3rem;
+    stroke: green;
+    stroke-width: 5;
+    stroke-linecap: round;
+    fill: none;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+polyline {
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: draw 1s forwards;
+}
+
+.message {
+    font-size: 1rem;
+    margin-top: 1rem;
+    color: #555;
+}
+
+/* Animations */
+@keyframes rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+    50% {
+        stroke-dasharray: 90, 150;
+        stroke-dashoffset: -35px;
+    }
+    100% {
+        stroke-dashoffset: -125px;
+    }
+}
+
+@keyframes draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
