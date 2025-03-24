@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
-import { useSharedValue, withTiming, useAnimatedProps, useAnimatedScrollHandler, useAnimatedStyle } from 'react-native-reanimated';
-import Animated from 'react-native-reanimated';
+import Animated, {
+    useSharedValue, 
+    withTiming, 
+    useAnimatedProps, 
+    useAnimatedStyle,
+    useAnimatedRef,
+    useScrollViewOffset,
+} from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -12,15 +18,13 @@ const HomeScreen = () => {
     const [fontsLoaded] = useFonts({
         'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
     });
-    const scrollY = useSharedValue(0);  // Using useSharedValue
+
+    const animatedRef = useAnimatedRef<Animated.ScrollView>();
+    const scrollY = useScrollViewOffset(animatedRef);
+
     const [treeCount, setTreeCount] = useState(0);  // Track number of trees
 
-    // Handle scroll event with useAnimatedScrollHandler
-    const scrollHandler = useAnimatedScrollHandler({
-        onScroll: (event) => {
-            scrollY.value = event.contentOffset.y;
-        },
-    });
+
 
     const progress = useSharedValue(0);
 
@@ -58,7 +62,7 @@ const HomeScreen = () => {
         <Animated.View style={[styles.container, backgroundColor]}> 
             <ScrollView
                 contentContainerStyle={styles.scrollContainer}
-                onScroll={scrollHandler}  // Use the new scroll handler
+                ref={animatedRef}
                 scrollEventThrottle={16}
             >
                 <View style={styles.header}> 
