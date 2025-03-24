@@ -7,7 +7,7 @@ const dotenv = require('dotenv').config()
 const MySQLStore = require('express-mysql-session')(session);
 
 app.use(cors({
-  origin: 'http://localhost:8081',
+  origin: 'localhost:8081',
   credentials: true
 }));
 
@@ -31,6 +31,8 @@ app.use(session({
   }
 }));
 
+app.use(express.static(__dirname + '/public'));
+
 sessionStore.onReady().then(() => {
 	console.log('MySQLSessionStore ready');
 }).catch(error => {
@@ -38,7 +40,8 @@ sessionStore.onReady().then(() => {
 });
 
 //Routes
-app.use("/users", require("./routes/users.js"));
+app.use("/users", require('./routes/users.js'));
+app.use("/", require('./routes/index.js'))
 
 
 app.listen(port, () => {

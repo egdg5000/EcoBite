@@ -96,7 +96,7 @@ function MainScreen() {
         <Image source={require("../assets/images/EcoBite2.png")} style={styles.logo} />
         <Text style={styles.title}>Welkom</Text>
 
-        <Link href='/starting' asChild>
+        <Link href='/Starting' asChild>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Aan de slag</Text>
           </TouchableOpacity>
