@@ -7,11 +7,11 @@ import { useFonts } from 'expo-font';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
-const [fontsLoaded] = useFonts({
-  'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
-});
 
 const HomeScreen = () => {
+    const [fontsLoaded] = useFonts({
+        'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+    });
     const scrollY = useSharedValue(0);  // Using useSharedValue
     const [treeCount, setTreeCount] = useState(0);  // Track number of trees
 
