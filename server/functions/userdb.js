@@ -3,7 +3,7 @@ const { db } = require('../database')
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-
+const path = require('path')
 
 const emailTransporter = nodemailer.createTransport({
     service: 'gmail',
@@ -39,7 +39,7 @@ async function registerUser(req, res){
         from: process.env.EMAIL,
         to: email,
         subject: 'Verify Your Email',
-        html: `Please click the following link to verify your email: <a href="${verificationUrl}">${verificationUrl}</a>`
+        html: require('fs').readFileSync(path.join(__dirname, '../public/verification_email.html'), 'utf8').replace('{{ verificationUrl }}', verificationUrl)
     };
     await emailTransporter.sendMail(mailOptions);
     const expiration = new Date(new Date().setHours(new Date().getHours() + 1))
