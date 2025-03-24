@@ -37,7 +37,7 @@ const LoginScreen = () => {
       }
     
       const throwError = (response: any) => {
-        if (response.message === 'Username or email not found') setErrorUsername('Gebruikersnaam of mailadres niet gevonden');
+        if (response.message === 'Username or email not found') setErrorUsername('Gebruikersnaam of email niet gevonden');
         if (response.message === 'Incorrect password') setErrorPassword('Onjuist wachtwoord');
       }
     
