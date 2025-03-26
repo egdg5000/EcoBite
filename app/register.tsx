@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
     },
     button: {
-        backgroundColor: '#2DBE60',
+        backgroundColor: 'green',
         padding: 10,
         borderRadius: 8,
         marginTop: 20,

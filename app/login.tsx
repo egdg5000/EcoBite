@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold"
     },
     loginButton: {
-        backgroundColor: '#2DBE60',
+        backgroundColor: 'green',
         padding: 10,
         borderRadius: 8,
         marginTop: 20,
