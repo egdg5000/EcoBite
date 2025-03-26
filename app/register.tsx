@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Image, KeyboardAvoidingView, Platform, ImageBackground
 } from "react-native";
@@ -7,10 +7,18 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const RegisterScreen = () => {
     const router = useRouter();
+    const params = useLocalSearchParams();
+    
     const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
+    const [email, setEmail] = useState(params.email || '');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+
+    useEffect(() => {
+        if (params.email) {
+            setEmail(params.email);
+        }
+    }, [params.email]);
 
     const validate = () => {
         if (!username || !email || !password) {
