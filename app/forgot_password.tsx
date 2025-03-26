@@ -7,6 +7,7 @@ import { Input } from '@rneui/themed';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
+  const [errorMessage, seterrorMessage] = useState('');
     const [fontsLoaded] = useFonts({
         'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
     });
@@ -16,14 +17,15 @@ export default function ForgotPasswordScreen() {
 
   const handlePasswordReset = async () => {
     if (!email) {
-      Toast.show({ type: 'error', text1: 'Voer een e-mailadres in' });
+      seterrorMessage('Voer een e-mailadres in');
       return;
     }
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      Toast.show({ type: 'error', text1: 'Voer een geldig e-mailadres in' });
+      seterrorMessage('Voer een geldig e-mailadres in');
       return;
     }
+    seterrorMessage('');
     const body = JSON.stringify({
       email: email,
     })
@@ -59,6 +61,7 @@ export default function ForgotPasswordScreen() {
           autoCapitalize="none"
           id='email'
           placeholderTextColor="#777"
+          errorMessage={errorMessage}
           renderErrorMessage={true}
           inputContainerStyle={{
               width: '100%',
@@ -108,7 +111,6 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 50,
-    marginBottom: 15,
     fontFamily: 'ABeeZee',
     backgroundColor: '#F5F5F5',
     paddingVertical: 15,
@@ -125,6 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     width: '95%',
     alignItems: 'center',
+    marginTop: 15,
   },
   buttonText: {
     color: '#fff',
