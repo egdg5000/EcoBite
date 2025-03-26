@@ -12,13 +12,32 @@ export default function ForgotPasswordScreen() {
   useEffect(() => {
   }, []);
 
-  const handlePasswordReset = () => {
+  const handlePasswordReset = async () => {
     if (!email) {
       Toast.show({ type: 'error', text1: 'Voer een e-mailadres in' });
       return;
     }
-    // Hier zou je een API-aanroep doen om de reset e-mail te versturen
-    Toast.show({ type: 'success', text1: 'Reset e-mail verzonden!' });
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      Toast.show({ type: 'error', text1: 'Voer een geldig e-mailadres in' });
+    }
+    const body = JSON.stringify({
+      email: email,
+    })
+    const response = await fetch('http://localhost:3000/sendrecoverymail', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body
+    });
+    
+    const data = await response.json();
+    if (!response.ok) {
+      console.error(response)
+      Toast.show({type: 'error', text1: 'Er is iets misgegaan'})
+    } else Toast.show({ type: 'success', text1: 'Reset e-mail verzonden!' });
   };
 
   return (

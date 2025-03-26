@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet, SafeAreaView, Keyboard
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
 import {Button, Input } from '@rneui/themed';
+import Toast from 'react-native-toast-message';
 
 
 const RegistrationScreen = () => {
