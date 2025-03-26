@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import Toast from 'react-native-toast-message';
 import { useFonts } from 'expo-font';
+import { Input } from '@rneui/themed';
+
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
@@ -48,13 +50,21 @@ export default function ForgotPasswordScreen() {
     <Image source={require('../assets/images/EcoBite2.png')} style={styles.logo} />
      <Text style={styles.appName}><Text style={styles.eco}>Eco</Text><Text style={styles.bite}>Bite</Text></Text>
       <Text style={styles.title}>Wachtwoord vergeten</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Voer uw e-mail in"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
+      <Input
+          style={styles.input}
+          placeholder="Voer uw e-mail in"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          id='email'
+          placeholderTextColor="#777"
+          renderErrorMessage={true}
+          inputContainerStyle={{
+              width: '100%',
+              borderBottomWidth:0,
+              alignSelf: 'center'
+          }}
       />
       <TouchableOpacity style={styles.button} onPress={handlePasswordReset}>
         <Text style={styles.buttonText}>Reset wachtwoord</Text>
@@ -98,18 +108,22 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 50,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    paddingHorizontal: 10,
     marginBottom: 15,
     fontFamily: 'ABeeZee',
+    backgroundColor: '#F5F5F5',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginTop: 5,
   },
   button: {
     backgroundColor: 'green',
     padding: 15,
     borderRadius: 8,
-    width: '100%',
+    width: '95%',
     alignItems: 'center',
   },
   buttonText: {
