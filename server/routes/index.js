@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const { db } = require('../database');
 const path = require('path')
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt');
 
 const jsonParser = bodyParser.json();
 
@@ -48,19 +49,42 @@ router.post('/verify', jsonParser, (req, res) => {
 })
 
 router.get('/recovery', (req, res) => {
-    res.sendFile(path.join(__dirname + '/../public/password_recovery.html'))
+    res.sendFile(path.join(__dirname + '/../public/reset_password.html'))
+});
+
+router.post('/recovery', jsonParser, async (req, res) => {
+    const { password, token } = req.body;
+    const query = `SELECT * FROM users WHERE recovery_token = ?`;
+    const [result] = await db.promise().query(query, [token]);
+    if (result.length === 0) {
+        res.status(404).json({success: false, message: 'Token not found'});
+        return;
+    }
+    const isMatch = await bcrypt.compare(password, result[0].password_hash);
+    if (isMatch){
+        res.status(400).json({success: false, message: 'Same password already exist'});
+        return;
+    }
+    const userid = result[0].id;
+    const hashedpassword = await bcrypt.hash(password, 10);
+    const query1 = `UPDATE users SET password_hash = ?, recovery_token = NULL WHERE id = ?`
+    const [result1] = await db.promise().query(query1, [hashedpassword, userid]);
+    if (result1.affectedRows > 0) {
+        res.status(200).json({success: true, message: 'Password changed'})
+    }
 });
 
 router.post('/sendrecoverymail', jsonParser, (req, res) => {
     const {email} = req.body
-    console.log(email);
     const query = `SELECT * FROM users WHERE email = ?`;
     db.promise().query(query, email).then(([result]) => {
         if (result.length === 0) {
             res.status(404).json({success: false, message: 'Email not found'});
+            return;
         }
         if (!result[0].email_verified){
             res.status(400).json({success: false, message: 'Email not verified'});
+            return;
         }
         const userid = result[0].id
         const token = randomBytes(20).toString('base64').replace(/[^a-zA-Z0-9]/g, '')

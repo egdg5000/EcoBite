@@ -35,6 +35,8 @@ export default function ForgotPasswordScreen() {
     });
     const data = await response.json();
       if (data.success) Toast.show({ type: 'success', text1: 'Reset e-mail verzonden!' });
+      else if (data.message === 'Email not found') {Toast.show({ type: 'error', text1: 'Geen account met deze e-mail gevonden' })}
+      else if (data.message === 'Email not verified') {Toast.show({ type: 'error', text1: 'Deze e-mail is niet geverifieerd' })}
       else{
         console.error(data.message);
         Toast.show({type: 'error', text1: 'Er is iets misgegaan'})
