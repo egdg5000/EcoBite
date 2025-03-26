@@ -116,9 +116,13 @@ const LoginScreen = () => {
                     </View>
 
                     {/* Wachtwoord Vergeten */}
-                    <TouchableOpacity>
-                        <Text style={styles.forgotPassword}>Wachtwoord vergeten?</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity>
+                    <Text style={styles.forgotPassword}>
+                        <Link href="/forgot_password" asChild>
+                            <Text style={styles.forgotPassword}>Wachtwoord vergeten?</Text>
+                        </Link>
+                    </Text>
+                </TouchableOpacity>
 
                     <Button
                         loading={buttonLoading}
