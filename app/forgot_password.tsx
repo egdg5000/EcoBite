@@ -20,6 +20,7 @@ export default function ForgotPasswordScreen() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       Toast.show({ type: 'error', text1: 'Voer een geldig e-mailadres in' });
+      return;
     }
     const body = JSON.stringify({
       email: email,
@@ -32,12 +33,12 @@ export default function ForgotPasswordScreen() {
       },
       body
     });
-    
     const data = await response.json();
-    if (!response.ok) {
-      console.error(response)
-      Toast.show({type: 'error', text1: 'Er is iets misgegaan'})
-    } else Toast.show({ type: 'success', text1: 'Reset e-mail verzonden!' });
+      if (data.success) Toast.show({ type: 'success', text1: 'Reset e-mail verzonden!' });
+      else{
+        console.error(data.message);
+        Toast.show({type: 'error', text1: 'Er is iets misgegaan'})
+      }
   };
 
   return (

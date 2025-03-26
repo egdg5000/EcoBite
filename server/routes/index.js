@@ -4,8 +4,17 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const { db } = require('../database');
 const path = require('path')
+const nodemailer = require('nodemailer');
 
 const jsonParser = bodyParser.json();
+
+const emailTransporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD
+    }
+});
 
 router.get('/verification', (req, res) => {
     res.sendFile(path.join(__dirname + '/../public/verify_email.html'))
@@ -62,9 +71,10 @@ router.post('/sendrecoverymail', jsonParser, (req, res) => {
             from: process.env.EMAIL,
             to: email,
             subject: 'Reset your password',
-            html: require('fs').readFileSync(path.join(__dirname, '../public/recovery_email.html'), 'utf8').replace('{{ recoveryUrl }}', recoveryUrl)
+            html: require('fs').readFileSync(path.join(__dirname, '../public/reset_password_email.html'), 'utf8').replace('{{ recoveryUrl }}', recoveryUrl)
         };
         emailTransporter.sendMail(mailOptions);
+        res.status(200).json({success: true, message: 'Verification email sent'})
     }).catch(err => {
         console.error(err);
         res.status(500).json({success: false, message: 'Internal Server Error'});
