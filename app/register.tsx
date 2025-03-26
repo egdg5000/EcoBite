@@ -88,7 +88,7 @@ const RegistrationScreen = () => {
         }
         if (data.success){
           setRegisterText('Geregistreerd!');
-          router.push('/home');
+          router.push('/setup');
         } else setRegisterText('Registreren')
         setLoadingStatus(false);
     };
@@ -153,6 +153,7 @@ const RegistrationScreen = () => {
                   buttonStyle={styles.button}
                   onPress={register}
                   title={registerText}/>
+              
               <Text style={styles.loginText}>Al een account?
                   <Link href="/login" asChild>
                   <Text style={styles.loginLink}> Inloggen</Text>
