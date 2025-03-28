@@ -1,9 +1,14 @@
 import React from "react";
 import { View, Text, Image, ImageBackground, StyleSheet, ScrollView, Dimensions, TouchableOpacity, SafeAreaView } from "react-native";
+import { useFonts } from 'expo-font';
 
 const { width, height } = Dimensions.get("window");
 
 const AboutScreen = () => {
+   const [fontsLoaded] = useFonts({
+      'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+    });
+
   return (
     <SafeAreaView style={styles.safeArea}>
       {/* Sluitknopje */}
@@ -95,18 +100,21 @@ const styles = StyleSheet.create({
     color: "white",
     textAlign: "center",
     marginBottom: 15,
+    fontFamily: 'ABeeZee', 
   },
   text: {
     fontSize: width * 0.045,
     color: "white",
     lineHeight: width * 0.06,
     textAlign: "center",
+    fontFamily: 'ABeeZee', 
   },
   footer: {
     fontSize: width * 0.04,
     color: "lightgray",
     textAlign: "center",
     marginTop: 20,
+    fontFamily: 'ABeeZee', 
   },
 });
 
