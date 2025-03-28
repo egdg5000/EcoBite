@@ -54,7 +54,7 @@ const AboutScreen = () => {
           </View>
           
           <Text style={styles.footer}>
-            Dit project is een initiatief van Björn Alderden, Bryan Keislair, Paul Becking, Vincent Nijboer en Leon Hermans.
+            Dit project is een initiatief van Björn Alderden, Bryan Keislair, Emmet de Graaf, Paul Becking, Vincent Nijboer en Leon Hermans.
           </Text>
         </ScrollView>
       </ImageBackground>
