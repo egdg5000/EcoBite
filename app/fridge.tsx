@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Modal } from "react-native";
-import { Button } from "react-native-paper";
 import { Plus, Filter } from "lucide-react-native";
 import { useFonts } from 'expo-font';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Voeg dit toe
 
 const FridgePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -10,14 +10,24 @@ const FridgePage = () => {
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
   
   const [products, setProducts] = useState([
-    { id: "1", name: "Melk", quantity: "1L", expiry: "02-04-2025", category: "zuivel" },
-    { id: "2", name: "Kipfilet", quantity: "500g", expiry: "05-04-2025", category: "vlees" },
-    { id: "3", name: "Appels", quantity: "4 stuks", expiry: "10-04-2025", category: "vruchten" },
+    { id: "1", name: "Melk", quantity: "1L", expiry: "02-04-2025", category: "zuivel", isFavorite: false },
+    { id: "2", name: "Kipfilet", quantity: "500g", expiry: "05-04-2025", category: "vlees", isFavorite: false },
+    { id: "3", name: "Appels", quantity: "4 stuks", expiry: "10-04-2025", category: "vruchten", isFavorite: false },
   ]);
 
   const [fontsLoaded] = useFonts({
     'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
   });
+
+  const toggleFavorite = (productId: string) => {
+    setProducts(prevProducts =>
+      prevProducts.map(product =>
+        product.id === productId
+          ? { ...product, isFavorite: !product.isFavorite }  // Toggle the favorite status
+          : product
+      )
+    );
+  };
 
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
@@ -47,6 +57,25 @@ const FridgePage = () => {
             <Text style={styles.productName}>{item.name}</Text>
             <Text style={styles.productDetails}>Hoeveelheid: {item.quantity}</Text>
             <Text style={styles.productExpiry}>Houdbaar tot: {item.expiry}</Text>
+            
+            {/* Container for the icons (delete and favorite) */}
+            <View style={styles.iconsContainer}>
+              {/* Cross icon for delete */}
+              <TouchableOpacity onPress={() => {
+                setProducts(prevProducts => prevProducts.filter(product => product.id !== item.id));
+              }}>
+                <Icon name="times" size={24} color="#d32f2f" />
+              </TouchableOpacity>
+              
+              {/* Heart icon to mark as favorite */}
+              <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
+                <Icon
+                  name={item.isFavorite ? "heart" : "heart-o"}  // 'heart' for filled, 'heart-o' for empty
+                  size={24}
+                  color={item.isFavorite ? "#ff4081" : "#888"} // Pink when favorite
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         )}
       />
@@ -121,6 +150,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
+    position: "relative", // Allows absolute positioning for icons
   },
   productName: {
     fontSize: 18,
@@ -138,6 +168,14 @@ const styles = StyleSheet.create({
     color: "#d32f2f",
     fontWeight: "600",
     fontFamily: 'ABeeZee', 
+  },
+  iconsContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: 50, // Adjusts the width of the container
   },
   addButton: {
     position: "absolute",
@@ -169,6 +207,37 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
     fontFamily: 'ABeeZee', 
+  },
+  input: {
+    width: "100%",
+    padding: 10,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    fontFamily: 'ABeeZee', 
+  },
+  categorySelector: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    width: "100%",
+    marginBottom: 12,
+  },
+  categoryButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 8,
+    width: "18%",
+    alignItems: "center",
+    marginRight: 8,
+  },
+  selectedCategory: {
+    backgroundColor: "#4CAF50",
+  },
+  categoryButtonText: {
+    fontSize: 14,
+    color: "#333",
   },
   filterOption: {
     padding: 10,
