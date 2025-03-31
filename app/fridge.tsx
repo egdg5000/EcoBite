@@ -1,25 +1,28 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Modal } from "react-native";
 import { Button } from "react-native-paper";
 import { Plus, Filter } from "lucide-react-native";
 import { useFonts } from 'expo-font';
 
 const FridgePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+  
   const [products, setProducts] = useState([
-    { id: "1", name: "Melk", quantity: "1L", expiry: "02-04-2025" },
-    { id: "2", name: "Kipfilet", quantity: "500g", expiry: "05-04-2025" },
-    { id: "3", name: "Appels", quantity: "4 stuks", expiry: "10-04-2025" },
+    { id: "1", name: "Melk", quantity: "1L", expiry: "02-04-2025", category: "zuivel" },
+    { id: "2", name: "Kipfilet", quantity: "500g", expiry: "05-04-2025", category: "vlees" },
+    { id: "3", name: "Appels", quantity: "4 stuks", expiry: "10-04-2025", category: "vruchten" },
   ]);
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const [fontsLoaded] = useFonts({
+    'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+  });
 
-   const [fontsLoaded] = useFonts({
-      'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
-    });
-  
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+    (selectedCategory ? product.category === selectedCategory : true)
+  );
 
   return (
     <View style={styles.container}>
@@ -31,7 +34,7 @@ const FridgePage = () => {
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
-        <TouchableOpacity style={styles.filterButton}>
+        <TouchableOpacity style={styles.filterButton} onPress={() => setIsFilterModalVisible(true)}>
           <Filter size={24} color="#4CAF50" />
         </TouchableOpacity>
       </View>
@@ -51,6 +54,34 @@ const FridgePage = () => {
       <TouchableOpacity style={styles.addButton}>
         <Plus size={28} color="white" />
       </TouchableOpacity>
+
+      {/* Filter Modal */}
+      <Modal
+        visible={isFilterModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setIsFilterModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Filter op categorie</Text>
+            {["vruchten", "groente", "vlees", "vis", "zuivel"].map(category => (
+              <TouchableOpacity key={category} style={styles.filterOption} onPress={() => {
+                setSelectedCategory(category);
+                setIsFilterModalVisible(false);
+              }}>
+                <Text style={styles.filterOptionText}>{category}</Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity style={styles.filterOption} onPress={() => {
+              setSelectedCategory(null);
+              setIsFilterModalVisible(false);
+            }}>
+              <Text style={styles.filterOptionText}>Alle categorieën</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -119,6 +150,38 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: 300,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    fontFamily: 'ABeeZee', 
+  },
+  filterOption: {
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: "#f0f0f0",
+    width: "100%",
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  filterOptionText: {
+    fontSize: 16,
+    color: "#333",
+    fontFamily: 'ABeeZee', 
   },
 });
 
