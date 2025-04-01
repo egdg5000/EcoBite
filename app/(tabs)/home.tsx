@@ -10,13 +10,14 @@ import Animated, {
     useScrollViewOffset,
 } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
+import { Link } from 'expo-router';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 
 const HomeScreen = () => {
     const [fontsLoaded] = useFonts({
-        'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+        'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
     });
 
     const animatedRef = useAnimatedRef<Animated.ScrollView>();
@@ -183,6 +184,11 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'white',
         fontFamily: "ABeeZee",
+    },
+    button: {
+        fontSize: 20,
+        textDecorationLine: 'underline',
+        color: '#fff',
     },
 });
 

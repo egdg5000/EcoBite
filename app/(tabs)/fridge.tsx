@@ -3,6 +3,7 @@ import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Modal } 
 import { Plus, Filter } from "lucide-react-native";
 import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Voeg dit toe
+import { Link } from 'expo-router';
 
 const FridgePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -23,7 +24,7 @@ const FridgePage = () => {
   ]);
 
   const [fontsLoaded] = useFonts({
-    'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+    'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
   });
 
   const toggleFavorite = (productId: string) => {
