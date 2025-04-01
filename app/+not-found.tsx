@@ -9,7 +9,7 @@ export default function NotFoundScreen() {
     });
   return (
     <>
-      <Stack.Screen options={{ title: 'Oops! Pagina niet gevonden' }} />
+      <Stack.Screen options={{ title: 'Oeps! Pagina niet gevonden' }} />
       <View style={styles.container}>
         <Image 
           source={require('../assets/images/EcoBite2.png')} 
