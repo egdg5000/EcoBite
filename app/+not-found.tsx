@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0', 
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20, // Padding rondom
+    padding: 20, 
   },
 
   logo: {
