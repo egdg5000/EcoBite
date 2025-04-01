@@ -62,7 +62,7 @@ export default function TabLayout() {
         options={{
           title: 'Koelkast',
           tabBarIcon: ({ color, focused }) => (
-            <AnimatedIcon name="cube" color={color} focused={focused} />
+            <AnimatedIcon name="fast-food" color={color} focused={focused} />
           ),
         }}
       />
