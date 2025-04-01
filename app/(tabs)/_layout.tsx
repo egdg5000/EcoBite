@@ -2,8 +2,12 @@ import { Tabs } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Animated, Easing } from 'react-native';
 import { useEffect, useRef } from 'react';
+import { useFonts } from 'expo-font';
 
 export default function TabLayout() {
+   const [fontsLoaded] = useFonts({
+    'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
+  });
   return (
     <Tabs
       screenOptions={{
@@ -20,6 +24,10 @@ export default function TabLayout() {
           overflow: 'hidden', 
         },
         headerShown: false,
+        tabBarLabelStyle: {
+          fontFamily: 'ABeeZee', 
+          fontSize: 14, 
+        },
       }}
     >
       <Tabs.Screen
