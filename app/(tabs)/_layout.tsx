@@ -15,6 +15,9 @@ export default function TabLayout() {
           elevation: 5,
           height: 60,
           paddingBottom: 5,
+          borderRadius: 30, 
+          marginHorizontal: 10, 
+          overflow: 'hidden', 
         },
         headerShown: false,
       }}
@@ -42,7 +45,7 @@ export default function TabLayout() {
         options={{
           title: 'Scan',
           tabBarIcon: ({ color, focused }) => (
-            <AnimatedIcon name="scan" color={color} focused={focused} isCenter />
+            <AnimatedIcon name="barcode" color={color} focused={focused} isCenter />
           ),
         }}
       />
@@ -51,7 +54,7 @@ export default function TabLayout() {
         options={{
           title: 'Koelkast',
           tabBarIcon: ({ color, focused }) => (
-            <AnimatedIcon name="folder" color={color} focused={focused} />
+            <AnimatedIcon name="cube" color={color} focused={focused} />
           ),
         }}
       />
@@ -67,7 +70,6 @@ export default function TabLayout() {
     </Tabs>
   );
 }
-
 
 type AnimatedIconProps = {
   name: keyof typeof Ionicons.glyphMap; 
