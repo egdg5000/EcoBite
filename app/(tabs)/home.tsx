@@ -11,6 +11,8 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
 import { Link } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons'; 
+import { TouchableOpacity, Image } from 'react-native';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -72,9 +74,21 @@ const HomeScreen = () => {
                 ref={animatedRef}
                 scrollEventThrottle={16}
             >
-                <View style={styles.header}> 
+            <View style={styles.header}> 
+                    <Link href="/about" asChild>
+                        <TouchableOpacity style={styles.iconLeft}>
+                            <Ionicons name="information-circle" size={32} color="white" style={styles.iconShadow} />
+                        </TouchableOpacity>
+                    </Link>
+
                     <Text style={styles.title}>Voedselverspilling Verminderen</Text>
-                </View>
+
+                    <Link href="/donate" asChild>
+                        <TouchableOpacity style={styles.iconRight}>
+                            <Image source={require('../../assets/images/donate-icon.png')} style={styles.donateIcon} />
+                        </TouchableOpacity>
+                    </Link>
+            </View>
                 
                 <View style={styles.statsContainer}> 
                     <Text style={styles.statsTitle}>Jouw statistieken:</Text>
@@ -189,6 +203,25 @@ const styles = StyleSheet.create({
         fontSize: 20,
         textDecorationLine: 'underline',
         color: '#fff',
+    },
+    iconLeft: {
+        position: 'absolute',
+        left: 10,
+        top: 50, // Iets verder naar beneden geplaatst
+    },
+    iconRight: {
+        position: 'absolute',
+        right: 10,
+        top: 50, // Iets verder naar beneden geplaatst
+    },
+    donateIcon: {
+        width: 32,
+        height: 32,
+    },
+    iconShadow: {
+        textShadowColor: 'black',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
     },
 });
 
