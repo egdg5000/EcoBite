@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
 import Svg, { Circle, Rect } from 'react-native-svg';
 import Animated, {
     useSharedValue, 
@@ -12,10 +12,9 @@ import Animated, {
 import { useFonts } from 'expo-font';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons'; 
-import { TouchableOpacity, Image } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-
 
 const HomeScreen = () => {
     const [fontsLoaded] = useFonts({
@@ -27,8 +26,6 @@ const HomeScreen = () => {
     const maxScroll = 300;
 
     const [treeCount, setTreeCount] = useState(0);  // Track number of trees
-
-
 
     const progress = useSharedValue(0);
 
@@ -45,8 +42,6 @@ const HomeScreen = () => {
 
     // Animated style for background color based on scrollY
     const backgroundColor = useAnimatedStyle(() => {
-        //color = 'rgb(135, 206, 235)'; // Sky blue color for "air"
-        //     color = 'rgb(107, 62, 38)'; // Brownish for the "earth"
         let red1 = 135; let green1 = 206; let blue1 = 235;
         let red2 = 107; let green2 = 62; let blue2 = 38;
         let reddiff = red1 - red2; let greendiff = green1 - green2; let bluediff = blue1 - blue2;
@@ -74,21 +69,19 @@ const HomeScreen = () => {
                 ref={animatedRef}
                 scrollEventThrottle={16}
             >
-            <View style={styles.header}> 
-                    <Link href="/about" asChild>
-                        <TouchableOpacity style={styles.iconLeft}>
-                            <Ionicons name="information-circle" size={32} color="white" style={styles.iconShadow} />
-                        </TouchableOpacity>
-                    </Link>
-
-                    <Text style={styles.title}>Voedselverspilling Verminderen</Text>
-
-                    <Link href="/donate" asChild>
-                        <TouchableOpacity style={styles.iconRight}>
-                            <Image source={require('../../assets/images/donate-icon.png')} style={styles.donateIcon} />
-                        </TouchableOpacity>
-                    </Link>
-            </View>
+                <View style={styles.header}> 
+                    <View style={styles.logoContainer}>
+                        {/* Logo */}
+                        <Image 
+                            source={require('../../assets/images/EcoBite2.png')} // Logo bestand
+                            style={styles.logo} 
+                        />
+                        <Text style={styles.title}>
+                            Eco
+                            <Text style={styles.lightGreen}>Bite</Text> {/* Lichtere groen voor "Bite" */}
+                        </Text>
+                    </View>
+                </View>
                 
                 <View style={styles.statsContainer}> 
                     <Text style={styles.statsTitle}>Jouw statistieken:</Text>
@@ -128,10 +121,21 @@ const HomeScreen = () => {
                     <Text style={styles.statsText}>Aantal bomen: {treeCount}</Text>
                 </View>
 
-                {/* Simulate scrolling deeper into the earth */}
-                <Animated.View style={[styles.depthEffect, scaleEffect]}>
-                    <Text style={styles.depthText}>Je komt steeds dichter bij de aarde!</Text>
-                </Animated.View>
+                <View style={styles.bottomTextContainer}>
+                    <View style={styles.bottomTextRow}>
+                        <Text style={styles.bottomText}>Wilt u doneren bij de voedselbank? Klik icoon voor meer informatie.</Text>
+                        <Link href="/donate">
+                            <Ionicons name="heart" size={24} color="green" style={styles.icon} />
+                        </Link>
+                    </View>
+                    <View style={styles.divider} /> {/* Divider line between the items */}
+                    <View style={styles.bottomTextRow}>
+                        <Text style={styles.bottomText}>Meer informatie over ons team? Klik icoon voor meer informatie.</Text>
+                        <Link href="/about">
+                            <Ionicons name="information-circle" size={24} color="green" style={styles.icon} />
+                        </Link>
+                    </View>
+                </View>
             </ScrollView>
         </Animated.View>
     );
@@ -149,11 +153,25 @@ const styles = StyleSheet.create({
         padding: 20,
         alignItems: 'center',
     },
+    logoContainer: {
+        flexDirection: 'row',  // Zorgt ervoor dat het logo en de naam naast elkaar staan
+        alignItems: 'center',
+        marginBottom: 20, // Space between logo and other content
+    },
+    logo: {
+        width: 40,  // Pas de grootte van het logo aan
+        height: 40, // Pas de grootte van het logo aan
+        resizeMode: 'contain', // Zorg ervoor dat het logo goed schaalt
+        marginRight: 10,  // Wat ruimte tussen logo en tekst
+    },
     title: {
-        fontSize: 22,
+        fontSize: 24,  // Aangepaste grootte voor de tekst
         fontWeight: 'bold',
-        color: 'white',
+        color: '#006400',  // Donkerder groen voor Eco
         fontFamily: "ABeeZee",
+    },
+    lightGreen: {
+        color: '#66C466',  // Lichter groen voor Bite
     },
     statsContainer: {
         marginVertical: 20,
@@ -187,41 +205,33 @@ const styles = StyleSheet.create({
         color: 'white',
         fontFamily: "ABeeZee",
     },
-    depthEffect: {
-        marginTop: 20,
+    bottomTextContainer: {
+        marginTop: 40,
         padding: 15,
-        backgroundColor: 'rgba(0, 0, 0, 0.4)',
-        borderRadius: 10,
         alignItems: 'center',
+        width: '100%',
+        backgroundColor: 'rgba(255, 255, 255, 0.2)',
+        borderRadius: 10,
     },
-    depthText: {
-        fontSize: 18,
+    bottomTextRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    bottomText: {
+        fontSize: 16,
         color: 'white',
         fontFamily: "ABeeZee",
+        marginRight: 10,
     },
-    button: {
-        fontSize: 20,
-        textDecorationLine: 'underline',
-        color: '#fff',
+    icon: {
+        marginLeft: 10,
     },
-    iconLeft: {
-        position: 'absolute',
-        left: 10,
-        top: 50, // Iets verder naar beneden geplaatst
-    },
-    iconRight: {
-        position: 'absolute',
-        right: 10,
-        top: 50, // Iets verder naar beneden geplaatst
-    },
-    donateIcon: {
-        width: 32,
-        height: 32,
-    },
-    iconShadow: {
-        textShadowColor: 'black',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 3,
+    divider: {
+        height: 1,
+        width: '100%',
+        backgroundColor: 'white',
+        marginVertical: 10,
     },
 });
 
