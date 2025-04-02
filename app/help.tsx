@@ -17,7 +17,7 @@ export default function HelpPage() {
             </TouchableOpacity>
             
             <Text style={styles.title}>Help & Ondersteuning</Text>
-            <Text style={styles.subtitle}>Hier vind je antwoorden op veelgestelde vragen over het gebruik van de app.</Text>
+            <Text style={styles.subtitle}>Hier vindt u antwoorden op veelgestelde vragen over het gebruik van de app.</Text>
             
             {/* Veelgestelde vragen */}
             <View style={styles.section}>
@@ -25,17 +25,17 @@ export default function HelpPage() {
                 
                 <TouchableOpacity style={styles.question}>
                     <Text style={styles.questionText}>🔍 Hoe scan ik een barcode?</Text>
-                    <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan' en richt je camera op de barcode. Zorg ervoor dat de barcode duidelijk in beeld is.</Text>
+                    <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan' en richt uw camera op de barcode. Zorg ervoor dat de barcode duidelijk in beeld is.</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.question}>
                     <Text style={styles.questionText}>📝 Hoe voeg ik handmatig een ingrediënt toe?</Text>
-                    <Text style={styles.answerText}>Druk op de knop Koelkast in de navigatiebar. Druk op '+ Nieuw ingrediënt' en voer de naam en vervaldatum in.</Text>
+                    <Text style={styles.answerText}>Druk op de knop Koelkast in de navigatiebalk. Druk op '+ Nieuw ingrediënt' en voer de naam en vervaldatum in.</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.question}>
                     <Text style={styles.questionText}>🍽️ Hoe krijg ik recepten op basis van mijn ingrediënten?</Text>
-                    <Text style={styles.answerText}>Open de Fridge-pagina en selecteer beschikbare ingrediënten. De app geeft recepten op basis van wat je hebt.</Text>
+                    <Text style={styles.answerText}>Open de Fridge-pagina en selecteer de beschikbare ingrediënten. De app geeft recepten op basis van wat u heeft.</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.question}>
@@ -45,14 +45,14 @@ export default function HelpPage() {
 
                 <TouchableOpacity style={styles.question}>
                     <Text style={styles.questionText}>📢 Hoe stel ik meldingen in voor producten die bijna verlopen?</Text>
-                    <Text style={styles.answerText}>Je kunt meldingen instellen onder Account → Notificaties om herinneringen te krijgen.</Text>
+                    <Text style={styles.answerText}>U kunt meldingen instellen onder Account → Notificaties om herinneringen te ontvangen.</Text>
                 </TouchableOpacity>
             </View>
 
             {/* Extra ondersteuning */}
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Extra ondersteuning</Text>
-                <Text style={styles.text}>Heb je nog vragen? Neem contact op via:</Text>
+                <Text style={styles.text}>Heeft u nog vragen? Neem contact met ons op via:</Text>
                 <Text style={styles.contactText}>📧 placeholder@voedselapp.com</Text>
             </View>
         </ScrollView>
