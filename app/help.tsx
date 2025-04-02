@@ -35,12 +35,12 @@ export default function HelpPage() {
 
                 <TouchableOpacity style={styles.question}>
                     <Text style={styles.questionText}>🍽️ Hoe krijg ik recepten op basis van mijn ingrediënten?</Text>
-                    <Text style={styles.answerText}>Open de Fridge-pagina en selecteer de beschikbare ingrediënten. De app geeft recepten op basis van wat u heeft.</Text>
+                    <Text style={styles.answerText}>Open de koelkast-pagina en selecteer de beschikbare ingrediënten. De app geeft recepten op basis van wat u heeft.</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.question}>
                     <Text style={styles.questionText}>❤️ Waar kan ik voedsel doneren?</Text>
-                    <Text style={styles.answerText}>Ga naar de Donatiepagina in de app om een lijst met lokale voedselbanken te zien. De donatiepagina is rechtsboven te vinden op de homepagina.</Text>
+                    <Text style={styles.answerText}>Ga naar de Donatiepagina in de app om meer informatie en een lijst met lokale voedselbanken (Nederlandse Voedselbanken) te zien. De donatiepagina is rechtsboven te vinden op de homepagina.</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.question}>
@@ -53,7 +53,7 @@ export default function HelpPage() {
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Extra ondersteuning</Text>
                 <Text style={styles.text}>Heeft u nog vragen? Neem contact met ons op via:</Text>
-                <Text style={styles.contactText}>📧 placeholder@voedselapp.com</Text>
+                <Text style={styles.contactText}>📧 placeholder@ecobite.com</Text>
             </View>
         </ScrollView>
     );

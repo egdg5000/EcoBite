@@ -12,7 +12,6 @@ export default function AccountPage() {
   const [userData] = useState({
     username: 'JohanD123',
     email: 'johand@example.com',
-    profilePicture: 'https://via.placeholder.com/100',
   });
 
   const router = useRouter(); 
@@ -49,7 +48,6 @@ export default function AccountPage() {
     <ScrollView style={styles.container}>
       {/* Gebruikersinformatie */}
       <View style={styles.userInfo}>
-        <Image source={{ uri: userData.profilePicture }} style={styles.profilePic} />
         <View style={styles.userText}>
           <Text style={styles.userInfoText}>Gebruikersnaam: {userData.username}</Text>
           <Text style={styles.userInfoText}>Email: {userData.email}</Text>
