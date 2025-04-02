@@ -25,12 +25,12 @@ export default function HelpPage() {
                 
                 <TouchableOpacity style={styles.question}>
                     <Text style={styles.questionText}>🔍 Hoe scan ik een barcode?</Text>
-                    <Text style={styles.answerText}>Ga naar de Homepagina en druk op de groene plus-knop. Kies 'Scan' en richt je camera op de barcode.</Text>
+                    <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan' en richt je camera op de barcode. Zorg ervoor dat de barcode duidelijk in beeld is.</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.question}>
                     <Text style={styles.questionText}>📝 Hoe voeg ik handmatig een ingrediënt toe?</Text>
-                    <Text style={styles.answerText}>Druk op de plus-knop en kies 'Fridge'. Druk op '+ Nieuw ingrediënt' en voer de naam en vervaldatum in.</Text>
+                    <Text style={styles.answerText}>Druk op de knop Koelkast in de navigatiebar. Druk op '+ Nieuw ingrediënt' en voer de naam en vervaldatum in.</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.question}>
@@ -40,7 +40,7 @@ export default function HelpPage() {
 
                 <TouchableOpacity style={styles.question}>
                     <Text style={styles.questionText}>❤️ Waar kan ik voedsel doneren?</Text>
-                    <Text style={styles.answerText}>Ga naar de Donatiepagina in de app om een lijst met lokale voedselbanken te zien.</Text>
+                    <Text style={styles.answerText}>Ga naar de Donatiepagina in de app om een lijst met lokale voedselbanken te zien. De donatiepagina is rechtsboven te vinden op de homepagina.</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.question}>
