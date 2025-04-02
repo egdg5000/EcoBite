@@ -43,9 +43,7 @@ export default function AccountPage() {
   };
 
   const handleAboutPress = () => {
-    Alert.alert('Over de app', 'Versie 1.0.0', [
-      { text: 'OK', onPress: () => {} },
-    ]);
+    router.push('../about_app'); // Navigeren naar de AboutPage
   };
 
   const handleLogout = () => {
