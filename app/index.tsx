@@ -9,6 +9,7 @@ const Login = () => {
       source={require("../assets/images/mobilebackground.jpg")}
       style={styles.backgroundImage}
     >
+<<<<<<< Updated upstream
       <View style={styles.overlay}>
         <Image source={require("../assets/images/EcoBite2.png")} style={styles.logo} />
         <Text style={styles.title}>Welkom</Text>
@@ -22,6 +23,10 @@ const Login = () => {
         </TouchableOpacity>
       </View>
     </ImageBackground>
+=======
+      <Text></Text>
+    </View>
+>>>>>>> Stashed changes
   );
 };
 
