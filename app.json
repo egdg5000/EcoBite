@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "test-app",
+    "name": "EcoBite",
     "slug": "test-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,6 +12,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.voetafdruk.ecobite",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -36,11 +37,18 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/ABeeZee.ttf"],
+          "fonts": [
+            "./assets/fonts/ABeeZee.ttf"
+          ],
           "family": "ABeeZee"
         }
       ]
     ],
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#53B175"
+    },
     "experiments": {
       "typedRoutes": true
     },

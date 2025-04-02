@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   SafeAreaView,
   View,
   Text,
   StyleSheet,
   Image,
-  TouchableOpacity
+  TouchableOpacity,
+  TextInput
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
+import { Link } from 'expo-router';
 
 const EcoBiteScreen = () => {
+  const [email, setEmail] = useState('');
+
   // Fonts inladen via Expo
   const [fontsLoaded] = useFonts({
     'ABeeZee-Regular': require('../assets/fonts/ABeeZee.ttf'),
@@ -24,7 +28,7 @@ const EcoBiteScreen = () => {
     <SafeAreaView style={styles.container}>
       {/* Achtergrondafbeelding over de hele pagina */}
       <Image
-        source={require('../assets/images/601 1.jpg')}
+        source={require('../assets/images/ingredients.jpg')}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
@@ -32,44 +36,58 @@ const EcoBiteScreen = () => {
       {/* Overlay voor de tekst en knoppen */}
       <View style={styles.overlay}>
         {/* Titel */}
-        <Text style={styles.title}>
-          Verminder uw voedselverspilling{'\n'}
-          <Text style={styles.ecoText}>Eco</Text>
-          <Text style={styles.biteText}>Bite</Text>
-        </Text>
-
-        {/* Knoppen onderaan de pagina vastzetten */}
-        <View style={styles.buttonContainer}>
-          {/* Aan de slag-knop */}
-          <TouchableOpacity style={styles.startButton}>
-            <Text style={styles.startButtonText}>Aan de slag</Text>
-          </TouchableOpacity>
-
-          {/* Registreren met Google */}
-          <TouchableOpacity style={styles.googleButton}>
-            <Image
-              source={require('../assets/images/icons8-google-50.png')}
-              style={styles.socialLogo}
-            />
-            <Text style={styles.googleButtonText}>Registreren met Google</Text>
-          </TouchableOpacity>
-
-          {/* Registreren met Facebook */}
-          <TouchableOpacity style={styles.facebookButton}>
-            <Image
-              source={require('../assets/images/icons8-facebook-50.png')}
-              style={styles.socialLogo}
-            />
-            <Text style={styles.facebookButtonText}>Registreren met Facebook</Text>
-          </TouchableOpacity>
+        <View style={styles.textContainer}>
+          <Text style={styles.subtitle}>Verminder uw voedselverspilling</Text>
+          <Text style={styles.title}>
+            <Text style={styles.ecoText}>Eco</Text>
+            <Text style={styles.biteText}>Bite</Text>
+          </Text>
         </View>
+
+        {/* E-mail invoerveld */}
+        <TextInput
+          style={styles.input}
+          placeholder="Voer uw e-mailadres in"
+          placeholderTextColor="#777"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+
+        {/* Doorgaan-knop */}
+        <Link href={{pathname: '/register', params: {email}}} asChild>
+          <TouchableOpacity style={styles.startButton}>
+            <Text style={styles.startButtonText}>Doorgaan</Text>
+          </TouchableOpacity>
+        </Link>
+
+        {/* Registreren met Google */}
+        <TouchableOpacity style={styles.googleButton}>
+          <Image
+            source={require('../assets/images/icons8-google-50.png')}
+            style={styles.socialLogo}
+          />
+          <Text style={styles.googleButtonText}>Registreren met Google</Text>
+        </TouchableOpacity>
+
+        {/* Registreren met Facebook */}
+        <TouchableOpacity style={styles.facebookButton}>
+          <Image
+            source={require('../assets/images/icons8-facebook-50.png')}
+            style={styles.socialLogo}
+          />
+          <Text style={styles.facebookButtonText}>Registreren met Facebook</Text>
+        </TouchableOpacity>
 
         {/* Footer: inloggen */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>Heeft u al een account? </Text>
-          <TouchableOpacity>
-            <Text style={styles.footerLink}>Inloggen</Text>
-          </TouchableOpacity>
+          <Link href="/login" asChild>
+            <TouchableOpacity>
+              <Text style={styles.footerLink}>Inloggen</Text>
+            </TouchableOpacity>
+          </Link>
         </View>
       </View>
     </SafeAreaView>
@@ -86,41 +104,63 @@ const styles = StyleSheet.create({
   backgroundImage: {
     position: 'absolute',
     width: '100%',
-    height: '80%', // Verklein de afbeelding zodat er meer witruimte onder is
-    top: '-25%', // Verplaats de afbeelding iets omhoog
+    height: '80%',
+    top: '-9%',
+  },
+  textContainer: {
+    backgroundColor: '#FFF',
+    borderRadius: 8,
+    marginBottom: 10,
+    width: '95%',
+    alignSelf: 'center',
+    padding: 20
   },
   overlay: {
     flex: 1,
-    justifyContent: 'flex-end', // Zorgt ervoor dat de inhoud onderaan blijft
+    justifyContent: 'flex-end',
     paddingHorizontal: 20,
-    paddingBottom: 40, // Ruimte voor knoppen
+    paddingBottom: 40,
   },
-  title: {
-    fontSize: 20,
+  subtitle: {
+    fontSize: 18,
     fontWeight: '600',
     textAlign: 'center',
     fontFamily: 'ABeeZee-Regular',
-    marginBottom: 40, // Extra ruimte boven de knoppen
+    marginBottom: 5,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: '600',
+    textAlign: 'center',
+    fontFamily: 'ABeeZee-Regular',
+    marginBottom: 20,
   },
   ecoText: {
-    color: '#137D3B', // Donkergroen voor "Eco"
+    color: '#137D3B',
     fontWeight: 'bold',
     fontFamily: 'ABeeZee-Regular',
   },
   biteText: {
-    color: '#2DBE60', // Lichter groen voor "Bite"
+    color: '#2DBE60',
     fontWeight: 'bold',
     fontFamily: 'ABeeZee-Regular',
   },
-  buttonContainer: {
-    width: '100%',
+  input: {
+    backgroundColor: '#F5F5F5',
+    paddingVertical: 15,
+    paddingHorizontal: 15,
+    borderRadius: 8,
+    fontSize: 16,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   startButton: {
     backgroundColor: '#2DBE60',
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: 50,
   },
   startButtonText: {
     color: '#FFF',
