@@ -66,7 +66,7 @@ const FridgePage = () => {
           <Filter size={24} color="#4CAF50" />
         </TouchableOpacity>
       </View>
-      
+
       <FlatList
         data={filteredProducts}
         keyExtractor={item => item.id}
@@ -75,7 +75,7 @@ const FridgePage = () => {
             <Text style={styles.productName}>{item.name}</Text>
             <Text style={styles.productDetails}>Hoeveelheid: {item.quantity}</Text>
             <Text style={styles.productExpiry}>Houdbaar tot: {item.expiry}</Text>
-            
+
             <View style={styles.iconsContainer}>
               <TouchableOpacity onPress={() => {
                 setProducts(prevProducts => prevProducts.filter(product => product.id !== item.id));
@@ -135,7 +135,16 @@ const FridgePage = () => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
+            {/* Sluitknop */}
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={() => setIsAddModalVisible(false)}
+            >
+              <Text style={styles.closeButtonText}>✖</Text>
+            </TouchableOpacity>
+
             <Text style={styles.modalTitle}>Voeg een nieuw product toe</Text>
+
             <TextInput
               style={styles.input}
               placeholder="Naam van het product"
@@ -160,142 +169,161 @@ const FridgePage = () => {
               value={newProduct.category}
               onChangeText={(text) => setNewProduct({ ...newProduct, category: text })}
             />
+
             <TouchableOpacity style={styles.addProductButton} onPress={handleAddProduct}>
               <Text style={styles.addProductButtonText}>Voeg product toe</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
+
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 16,
-      backgroundColor: "#ffffff",
-    },
-    searchContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      marginBottom: 16,
-    },
-    searchInput: {
-      flex: 1,
-      borderWidth: 1,
-      borderColor: "#ccc",
-      borderRadius: 8,
-      padding: 10,
-      backgroundColor: "#f5f5f5",
-      fontFamily: 'ABeeZee', 
-    },
-    filterButton: {
-      padding: 10,
-      backgroundColor: "#e0e0e0",
-      borderRadius: 8,
-      marginLeft: 8,
-    },
-    productCard: {
-      padding: 12,
-      marginTop: 8,
-      backgroundColor: "#f9f9f9",
-      borderRadius: 8,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
-      position: "relative", 
-    },
-    productName: {
-      fontSize: 18,
-      fontWeight: "bold",
-      color: "#333",
-      fontFamily: 'ABeeZee', 
-    },
-    productDetails: {
-      fontSize: 14,
-      color: "#666",
-      fontFamily: 'ABeeZee', 
-    },
-    productExpiry: {
-      fontSize: 14,
-      color: "#d32f2f",
-      fontWeight: "600",
-      fontFamily: 'ABeeZee', 
-    },
-    iconsContainer: {
-      position: "absolute",
-      top: 10,
-      right: 10,
-      flexDirection: "row",
-      justifyContent: "space-between",
-      width: 50,
-    },
-    addButton: {
-      position: "absolute",
-      bottom: 20,
-      right: 20,
-      backgroundColor: "#4CAF50",
-      padding: 16,
-      borderRadius: 50,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 4 },
-      shadowOpacity: 0.3,
-      shadowRadius: 4,
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "rgba(0,0,0,0.5)",
-    },
-    modalContent: {
-      backgroundColor: "white",
-      padding: 20,
-      borderRadius: 10,
-      width: 300,
-      alignItems: "center",
-    },
-    modalTitle: {
-      fontSize: 18,
-      fontWeight: "bold",
-      marginBottom: 10,
-      fontFamily: 'ABeeZee', 
-    },
-    input: {
-      width: "100%",
-      padding: 10,
-      marginBottom: 12,
-      borderWidth: 1,
-      borderColor: "#ccc",
-      borderRadius: 8,
-      fontFamily: 'ABeeZee', 
-    },
-    addProductButton: {
-      backgroundColor: "#4CAF50",
-      padding: 12,
-      borderRadius: 8,
-    },
-    addProductButtonText: {
-      color: "white",
-      fontWeight: "bold",
-    },
-    // New styles for filterOption and filterOptionText
-    filterOption: {
-      padding: 10,
-      marginVertical: 5,
-      backgroundColor: "#f0f0f0",
-      width: "100%",
-      alignItems: "center",
-      borderRadius: 5,
-    },
-    filterOptionText: {
-      fontSize: 16,
-      color: "#333",
-      fontFamily: 'ABeeZee', 
-    },
-  });
-  
-  export default FridgePage;
-  
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#ffffff",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
+  searchInput: {
+    flex: 1,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 10,
+    backgroundColor: "#f5f5f5",
+    fontFamily: 'ABeeZee',
+  },
+  filterButton: {
+    padding: 10,
+    backgroundColor: "#e0e0e0",
+    borderRadius: 8,
+    marginLeft: 8,
+  },
+  productCard: {
+    padding: 12,
+    marginTop: 8,
+    backgroundColor: "#f9f9f9",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    position: "relative",
+  },
+  productName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+    fontFamily: 'ABeeZee',
+  },
+  productDetails: {
+    fontSize: 14,
+    color: "#666",
+    fontFamily: 'ABeeZee',
+  },
+  productExpiry: {
+    fontSize: 14,
+    color: "#d32f2f",
+    fontWeight: "600",
+    fontFamily: 'ABeeZee',
+  },
+  iconsContainer: {
+    position: "absolute",
+    top: 10,
+    right: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: 50,
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "#4CAF50",
+    padding: 16,
+    borderRadius: 50,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: 300,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+    fontFamily: 'ABeeZee',
+  },
+  input: {
+    width: "100%",
+    padding: 10,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    fontFamily: 'ABeeZee',
+  },
+  addProductButton: {
+    backgroundColor: "#4CAF50",
+    padding: 12,
+    borderRadius: 8,
+  },
+  addProductButtonText: {
+    color: "white",
+    fontWeight: "bold",
+  },
+  // New styles for filterOption and filterOptionText
+  filterOption: {
+    padding: 10,
+    marginVertical: 5,
+    backgroundColor: "#f0f0f0",
+    width: "100%",
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  filterOptionText: {
+    fontSize: 16,
+    color: "#333",
+    fontFamily: 'ABeeZee',
+  },
+
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    backgroundColor: 'red',
+    width: 22,
+    height: 22,
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+
+});
+
+export default FridgePage;
