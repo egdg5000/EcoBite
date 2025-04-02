@@ -19,11 +19,11 @@ export default function AccountPage() {
 
   
   const handleFiltersPress = () => {
-    Alert.alert('Filters', 'Stel je filters in', [{ text: 'OK', onPress: () => {} }]);
+    router.push('/filters'); 
   };
 
   const handleDetailsPress = () => {
-    Alert.alert('Accountdetails', 'Bewerk je accountgegevens', [{ text: 'OK', onPress: () => {} }]);
+    router.push('/details'); 
   };
 
   const handleNotificationsPress = () => {
