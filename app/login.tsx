@@ -5,6 +5,7 @@ import {
 import { Button, Input } from '@rneui/themed';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { useFonts } from 'expo-font';
+import Toast from 'react-native-toast-message';
 
 const LoginScreen = () => {
     const router = useRouter();
@@ -98,9 +99,20 @@ const LoginScreen = () => {
                         errorMessage={errorMessagePassword}
                     />
 
+<<<<<<< HEAD
                     <TouchableOpacity>
                         <Text style={styles.forgotPassword}>Wachtwoord vergeten?</Text>
                     </TouchableOpacity>
+=======
+                    {/* Wachtwoord Vergeten */}
+                <TouchableOpacity>
+                    <Text style={styles.forgotPassword}>
+                        <Link href="/forgot_password" asChild>
+                            <Text style={styles.forgotPassword}>Wachtwoord vergeten?</Text>
+                        </Link>
+                    </Text>
+                </TouchableOpacity>
+>>>>>>> main
 
                     <Button loading={buttonLoading} buttonStyle={styles.loginButton} onPress={login} title="Inloggen" />
 
@@ -116,6 +128,7 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
     container: { flex: 1, backgroundColor: '#FFF', justifyContent: 'center', alignItems: 'center' },
     innerContainer: { width: '80%', alignItems: 'center' },
     logo: { width: 120, height: 120, marginBottom: 10 }, // Groter logo
@@ -126,6 +139,89 @@ const styles = StyleSheet.create({
     loginButton: { backgroundColor: '#2DBE60', borderRadius: 10, width: '100%', height: 50 },
     registerText: { marginTop: 20, color: "#666", fontSize: 16 },
     registerLink: { color: "#2DBE60", fontWeight: "bold", fontSize: 16 }, // Groen gemaakt
+=======
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        padding: 20,
+        justifyContent: 'flex-end'
+    },
+    logo: {
+        width: 100,
+        height: 100,
+        marginBottom: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: "bold",
+        color: "#333",
+        fontFamily: 'ABeeZee', 
+    },
+    subtitle: {
+        fontSize: 14,
+        color: "#666",
+        marginBottom: 20,
+        fontFamily: 'ABeeZee', 
+    },
+    input: {
+        backgroundColor: '#F5F5F5',
+        paddingVertical: 15,
+        paddingHorizontal: 15,
+        borderRadius: 8,
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        width: '100%',
+        marginTop: 5,
+    },
+    passwordContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        width: "100%",
+    },
+    toggleText: {
+        fontSize: 16,
+        color: "#666",
+        fontFamily: 'ABeeZee', 
+    },
+    forgotPassword: {
+        alignSelf: "flex-end",
+        color: "#007BFF",
+        marginBottom: 20,
+        fontWeight: "bold"
+    },
+    loginButton: {
+        backgroundColor: 'green',
+        padding: 10,
+        borderRadius: 8,
+        marginTop: 20,
+        width: '95%',
+        alignSelf: 'center',
+        alignItems: 'center',
+    },
+    loginButtonText: {
+        color: "white",
+        fontSize: 18,
+        fontFamily: 'ABeeZee', 
+    },
+    registerText: {
+        marginTop: 20,
+        color: "#666",
+        fontFamily: 'ABeeZee', 
+    },
+    registerLink: {
+        color: "#007BFF",
+        fontFamily: 'ABeeZee', 
+        fontWeight: "bold"
+    },
+    errorMessage: {
+        flex: 1,
+        backgroundColor: 'blue',
+        width: '100%',
+        fontFamily: 'ABeeZee', 
+    },
+>>>>>>> main
 });
 
 export default LoginScreen;
