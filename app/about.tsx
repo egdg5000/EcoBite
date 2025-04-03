@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, Image, ImageBackground, StyleSheet, ScrollView, Dimensions, TouchableOpacity, SafeAreaView } from "react-native";
 import { useFonts } from 'expo-font';
+import { useRouter } from "expo-router";
 
 const { width, height } = Dimensions.get("window");
 
@@ -9,12 +10,14 @@ const AboutScreen = () => {
       'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
     });
 
+    const router = useRouter();
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Sluitknopje */}
-      <TouchableOpacity style={styles.closeButton} onPress={() => alert("Sluitknop geklikt!")}> 
-        <Text style={styles.closeText}>×</Text>
-      </TouchableOpacity>
+
+    <TouchableOpacity style={styles.closeButton} onPress={() => router.push("/home")}>
+      <Text style={styles.closeText}>×</Text>
+    </TouchableOpacity>
 
       <ImageBackground 
         source={require("../assets/images/foodmaken.png")} 

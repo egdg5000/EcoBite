@@ -108,11 +108,25 @@ const styles = StyleSheet.create({
         padding: 20,
         alignItems: 'center',
     },
+    logoContainer: {
+        flexDirection: 'row',  // Zorgt ervoor dat het logo en de naam naast elkaar staan
+        alignItems: 'center',
+        marginBottom: 20, // Space between logo and other content
+    },
+    logo: {
+        width: 40,  // Pas de grootte van het logo aan
+        height: 40, // Pas de grootte van het logo aan
+        resizeMode: 'contain', // Zorg ervoor dat het logo goed schaalt
+        marginRight: 10,  // Wat ruimte tussen logo en tekst
+    },
     title: {
-        fontSize: 22,
+        fontSize: 24,  // Aangepaste grootte voor de tekst
         fontWeight: 'bold',
-        color: 'white',
+        color: '#006400',  // Donkerder groen voor Eco
         fontFamily: "ABeeZee",
+    },
+    lightGreen: {
+        color: '#66C466',  // Lichter groen voor Bite
     },
     statsContainer: {
         marginVertical: 20,
