@@ -12,7 +12,6 @@ import Animated, {
 import { useFonts } from 'expo-font';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -58,8 +57,17 @@ const HomeScreen = () => {
     return (
         <Animated.View style={[styles.container, backgroundColor]}>
             <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
+                
+                {/* Header met logo en naam */}
                 <View style={styles.header}>
-                    <Text style={styles.title}>Voedselverspilling Verminderen</Text>
+                    <View style={styles.logoContainer}>
+                        <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
+                        <Text style={styles.title}>
+                            <Text style={styles.darkGreen}>Eco</Text>
+                            <Text style={styles.lightGreen}>Bite</Text>
+                        </Text>
+                    </View>
+                    <Text style={styles.pageTitle}>Voedselverspilling Verminderen</Text>
                 </View>
 
                 <View style={styles.statsContainer}>
@@ -83,7 +91,7 @@ const HomeScreen = () => {
                             <Ionicons name="heart" size={24} color="green" style={styles.icon} />
                         </Link>
                     </View>
-                    <View style={styles.divider} /> {/* Divider line between the items */}
+                    <View style={styles.divider} />
                     <View style={styles.bottomTextRow}>
                         <Text style={styles.bottomText}>Meer informatie over ons team? Klik icoon voor meer informatie.</Text>
                         <Link href="/about">
@@ -109,24 +117,34 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     logoContainer: {
-        flexDirection: 'row',  // Zorgt ervoor dat het logo en de naam naast elkaar staan
+        flexDirection: 'row',
         alignItems: 'center',
-        marginBottom: 20, // Space between logo and other content
+        marginBottom: 10,
     },
     logo: {
-        width: 40,  // Pas de grootte van het logo aan
-        height: 40, // Pas de grootte van het logo aan
-        resizeMode: 'contain', // Zorg ervoor dat het logo goed schaalt
-        marginRight: 10,  // Wat ruimte tussen logo en tekst
+        width: 50,
+        height: 50,
+        resizeMode: 'contain',
+        marginRight: 10,
     },
     title: {
-        fontSize: 24,  // Aangepaste grootte voor de tekst
+        fontSize: 24,
         fontWeight: 'bold',
-        color: '#006400',  // Donkerder groen voor Eco
         fontFamily: "ABeeZee",
     },
+    darkGreen: {
+        color: '#006400',
+    },
     lightGreen: {
-        color: '#66C466',  // Lichter groen voor Bite
+        color: '#66C466',
+    },
+    pageTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
+        fontFamily: "ABeeZee",
+        textAlign: 'center',
+        marginTop: 5,
     },
     statsContainer: {
         marginVertical: 20,
