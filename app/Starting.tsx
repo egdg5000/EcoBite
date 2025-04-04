@@ -6,16 +6,17 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  TextInput
+  TextInput,
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 
 const EcoBiteScreen = () => {
-  const [email, setEmail] = useState('');
+  const router = useRouter();
+  const [email, setEmail] = useState<string>('');
+  const [emailError, setEmailError] = useState<string>('');
 
-  // Fonts inladen via Expo
   const [fontsLoaded] = useFonts({
     'ABeeZee-Regular': require('../assets/fonts/ABeeZee.ttf'),
   });
@@ -24,18 +25,29 @@ const EcoBiteScreen = () => {
     return <AppLoading />;
   }
 
+  const validateEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleContinue = () => {
+    if (!validateEmail(email)) {
+      setEmailError('Voer een geldig e-mailadres in.');
+    } else {
+      setEmailError('');
+      router.push({ pathname: '/register', params: { email } });
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Achtergrondafbeelding over de hele pagina */}
       <Image
         source={require('../assets/images/ingredients.jpg')}
         style={styles.backgroundImage}
         resizeMode="cover"
       />
 
-      {/* Overlay voor de tekst en knoppen */}
       <View style={styles.overlay}>
-        {/* Titel */}
         <View style={styles.textContainer}>
           <Text style={styles.subtitle}>Verminder uw voedselverspilling</Text>
           <Text style={styles.title}>
@@ -44,9 +56,8 @@ const EcoBiteScreen = () => {
           </Text>
         </View>
 
-        {/* E-mail invoerveld */}
         <TextInput
-          style={styles.input}
+          style={[styles.input, emailError ? styles.inputError : null]}
           placeholder="Voer uw e-mailadres in"
           placeholderTextColor="#777"
           value={email}
@@ -54,15 +65,12 @@ const EcoBiteScreen = () => {
           keyboardType="email-address"
           autoCapitalize="none"
         />
+        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-        {/* Doorgaan-knop */}
-        <Link href={{pathname: '/register', params: {email}}} asChild>
-          <TouchableOpacity style={styles.startButton}>
-            <Text style={styles.startButtonText}>Doorgaan</Text>
-          </TouchableOpacity>
-        </Link>
+        <TouchableOpacity style={styles.startButton} onPress={handleContinue}>
+          <Text style={styles.startButtonText}>Doorgaan</Text>
+        </TouchableOpacity>
 
-        {/* Registreren met Google */}
         <TouchableOpacity style={styles.googleButton}>
           <Image
             source={require('../assets/images/icons8-google-50.png')}
@@ -71,7 +79,6 @@ const EcoBiteScreen = () => {
           <Text style={styles.googleButtonText}>Registreren met Google</Text>
         </TouchableOpacity>
 
-        {/* Registreren met Facebook */}
         <TouchableOpacity style={styles.facebookButton}>
           <Image
             source={require('../assets/images/icons8-facebook-50.png')}
@@ -80,7 +87,6 @@ const EcoBiteScreen = () => {
           <Text style={styles.facebookButtonText}>Registreren met Facebook</Text>
         </TouchableOpacity>
 
-        {/* Footer: inloggen */}
         <View style={styles.footer}>
           <Text style={styles.footerText}>Heeft u al een account? </Text>
           <Link href="/login" asChild>
@@ -113,7 +119,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     width: '95%',
     alignSelf: 'center',
-    padding: 20
+    padding: 20,
   },
   overlay: {
     flex: 1,
@@ -151,9 +157,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 8,
     fontSize: 16,
-    marginBottom: 15,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: '#ccc',
+  },
+  inputError: {
+    borderColor: 'red',
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 10,
+    fontFamily: 'ABeeZee-Regular',
   },
   startButton: {
     backgroundColor: '#2DBE60',
