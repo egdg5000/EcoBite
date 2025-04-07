@@ -38,7 +38,7 @@ export default function AccountPage() {
   };
 
   const handleLogout = () => {
-    Alert.alert('Uitloggen', 'Weet je zeker dat je wilt uitloggen?', [
+    Alert.alert('Uitloggen', 'Weet u zeker dat u wilt uitloggen?', [
       { text: 'Nee', style: 'cancel' },
       { text: 'Ja', onPress: () => router.push('/') },
     ]);
