@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -37,10 +37,7 @@ export default function AccountPage() {
   };
 
   const handleLogout = () => {
-    Alert.alert('Uitloggen', 'Weet u zeker dat u wilt uitloggen?', [
-      { text: 'Nee', style: 'cancel' },
-      { text: 'Ja', onPress: () => router.push('/') },
-    ]);
+    router.push('/'); 
   };
 
   return (
@@ -84,7 +81,6 @@ export default function AccountPage() {
           </TouchableOpacity>
         </View>
 
-        
         <View style={styles.categoryContainer}>
           <Text style={styles.categoryTitle}>Juridische Informatie</Text>
         </View>
@@ -101,7 +97,6 @@ export default function AccountPage() {
             <Text style={styles.arrow}>→</Text>
           </TouchableOpacity>
         </View>
-
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Ionicons name="log-out" size={24} color="#D32F2F" />
@@ -125,7 +120,6 @@ const styles = StyleSheet.create({
   logoutButton: { flexDirection: 'row', alignItems: 'center', padding: 15, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#D32F2F', marginTop: 30 },
   logoutText: { fontSize: 16, color: '#D32F2F', marginLeft: 10, fontFamily: 'ABeeZee' },
 
-  
   categoryContainer: { marginTop: 30 },  
   categoryTitle: { 
     fontSize: 20, 
