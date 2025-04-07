@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'; // Voeg SafeAreaView toe
 import { useRouter } from 'expo-router'; // Navigatie hook
 import { checkForUpdateAsync } from 'expo-updates'; // Directe import van checkForUpdateAsync
 import * as Application from 'expo-application'; // Om de versie op te halen
@@ -29,20 +29,22 @@ export default function AboutPage() {
   }, []); // Lege afhankelijkheden, zodat dit alleen één keer gebeurt bij het laden van de pagina
 
   const handleGoBack = () => {
-    router.push('/account'); // Terug naar accountpagina
+    router.push('/account'); 
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Over de App</Text>
-      <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>Versie: {appVersion}</Text>
-        <Text style={styles.infoText}>{updateStatus}</Text>
+    <SafeAreaView style={styles.container}> 
+      <View style={styles.container}>
+        <Text style={styles.header}>Over de App</Text>
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoText}>Versie: {appVersion}</Text>
+          <Text style={styles.infoText}>{updateStatus}</Text>
+        </View>
+        <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
+          <Text style={styles.backButtonText}>Terug naar Account</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-        <Text style={styles.backButtonText}>Terug naar Account</Text>
-      </TouchableOpacity>
-    </View>
+    </SafeAreaView>  
   );
 }
 

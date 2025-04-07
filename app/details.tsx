@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 
@@ -20,32 +20,34 @@ export default function AccountDetailsPage({ }) {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Accountgegevens</Text>
-            
-            <Text style={styles.label}>Gebruikersnaam</Text>
-            <TextInput 
-                style={styles.input} 
-                value={userData.username} 
-                onChangeText={(text) => setUserData({ ...userData, username: text })} 
-            />
-            
-            <Text style={styles.label}>Email</Text>
-            <TextInput 
-                style={styles.input} 
-                value={userData.email} 
-                onChangeText={(text) => setUserData({ ...userData, email: text })} 
-                keyboardType="email-address"
-            />
-            
-            <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
-                <Text style={styles.saveButtonText}>Opslaan</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.backButton} onPress={() => router.push('/account')}>
-                <Text style={styles.backButtonText}>Terug naar account</Text>
-            </TouchableOpacity>
-        </View>
+        <SafeAreaView style={styles.container}> {/* SafeAreaView gewikkeld om de View */}
+            <View style={styles.innerContainer}> {/* Binnen de SafeAreaView */}
+                <Text style={styles.title}>Accountgegevens</Text>
+                
+                <Text style={styles.label}>Gebruikersnaam</Text>
+                <TextInput 
+                    style={styles.input} 
+                    value={userData.username} 
+                    onChangeText={(text) => setUserData({ ...userData, username: text })} 
+                />
+                
+                <Text style={styles.label}>Email</Text>
+                <TextInput 
+                    style={styles.input} 
+                    value={userData.email} 
+                    onChangeText={(text) => setUserData({ ...userData, email: text })} 
+                    keyboardType="email-address"
+                />
+                
+                <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
+                    <Text style={styles.saveButtonText}>Opslaan</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity style={styles.backButton} onPress={() => router.push('/account')}>
+                    <Text style={styles.backButtonText}>Terug naar account</Text>
+                </TouchableOpacity>
+            </View>
+        </SafeAreaView> 
     );
 }
 
@@ -53,6 +55,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+    },
+    innerContainer: {
+        flex: 1,
         padding: 20,
     },
     title: {

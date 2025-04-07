@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Image, SafeAreaView } from 'react-native';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -16,7 +16,6 @@ export default function AccountPage() {
 
   const router = useRouter(); 
 
-  
   const handleFiltersPress = () => {
     router.push('/filters'); 
   };
@@ -45,52 +44,53 @@ export default function AccountPage() {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Gebruikersinformatie */}
-      <View style={styles.userInfo}>
-        <View style={styles.userText}>
-          <Text style={styles.userInfoText}>Gebruikersnaam: {userData.username}</Text>
-          <Text style={styles.userInfoText}>Email: {userData.email}</Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView style={styles.container}>
+        {/* Gebruikersinformatie */}
+        <View style={styles.userInfo}>
+          <View style={styles.userText}>
+            <Text style={styles.userInfoText}>Gebruikersnaam: {userData.username}</Text>
+            <Text style={styles.userInfoText}>Email: {userData.email}</Text>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={handleFiltersPress}>
-          <Text style={styles.buttonText}>Filters</Text>
-          <Text style={styles.arrow}>→</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={handleFiltersPress}>
+            <Text style={styles.buttonText}>Filters</Text>
+            <Text style={styles.arrow}>→</Text>
+          </TouchableOpacity>
+          <View style={styles.separator}></View>
+
+          <TouchableOpacity style={styles.button} onPress={handleDetailsPress}>
+            <Text style={styles.buttonText}>Details</Text>
+            <Text style={styles.arrow}>→</Text>
+          </TouchableOpacity>
+          <View style={styles.separator}></View>
+
+          <TouchableOpacity style={styles.button} onPress={handleNotificationsPress}>
+            <Text style={styles.buttonText}>Notificaties</Text>
+            <Text style={styles.arrow}>→</Text>
+          </TouchableOpacity>
+          <View style={styles.separator}></View>
+
+          <TouchableOpacity style={styles.button} onPress={handleHelpPress}>
+            <Text style={styles.buttonText}>Help</Text>
+            <Text style={styles.arrow}>→</Text>
+          </TouchableOpacity>
+          <View style={styles.separator}></View>
+
+          <TouchableOpacity style={styles.button} onPress={handleAboutPress}>
+            <Text style={styles.buttonText}>Over de app</Text>
+            <Text style={styles.arrow}>→</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+          <Ionicons name="log-out" size={24} color="#D32F2F" />
+          <Text style={styles.logoutText}>Uitloggen</Text>
         </TouchableOpacity>
-        <View style={styles.separator}></View>
-
-        <TouchableOpacity style={styles.button} onPress={handleDetailsPress}>
-          <Text style={styles.buttonText}>Details</Text>
-          <Text style={styles.arrow}>→</Text>
-        </TouchableOpacity>
-        <View style={styles.separator}></View>
-
-        <TouchableOpacity style={styles.button} onPress={handleNotificationsPress}>
-          <Text style={styles.buttonText}>Notificaties</Text>
-          <Text style={styles.arrow}>→</Text>
-        </TouchableOpacity>
-        <View style={styles.separator}></View>
-
-        <TouchableOpacity style={styles.button} onPress={handleHelpPress}>
-          <Text style={styles.buttonText}>Help</Text>
-          <Text style={styles.arrow}>→</Text>
-        </TouchableOpacity>
-        <View style={styles.separator}></View>
-
-        <TouchableOpacity style={styles.button} onPress={handleAboutPress}>
-          <Text style={styles.buttonText}>Over de app</Text>
-          <Text style={styles.arrow}>→</Text>
-        </TouchableOpacity>
-      </View>
-
-
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Ionicons name="log-out" size={24} color="#D32F2F" />
-        <Text style={styles.logoutText}>Uitloggen</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 

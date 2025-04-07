@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 
@@ -10,56 +10,61 @@ export default function HelpPage() {
     });
 
     return (
-        <ScrollView style={styles.container}>
-            {/* Terugknop naar Accountpagina */}
-            <TouchableOpacity style={styles.backButton} onPress={() => router.push('/account')}>
-                <Text style={styles.backButtonText}>← Terug naar Account</Text>
-            </TouchableOpacity>
-            
-            <Text style={styles.title}>Help & Ondersteuning</Text>
-            <Text style={styles.subtitle}>Hier vindt u antwoorden op veelgestelde vragen over het gebruik van de app.</Text>
-            
-            {/* Veelgestelde vragen */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Veelgestelde Vragen (FAQ)</Text>
+        <SafeAreaView style={styles.safeArea}> {/* SafeAreaView toegevoegd */}
+            <ScrollView style={styles.container}>
+                {/* Terugknop naar Accountpagina */}
+                <TouchableOpacity style={styles.backButton} onPress={() => router.push('/account')}>
+                    <Text style={styles.backButtonText}>← Terug naar Account</Text>
+                </TouchableOpacity>
                 
-                <TouchableOpacity style={styles.question}>
-                    <Text style={styles.questionText}>🔍 Hoe scan ik een barcode?</Text>
-                    <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan' en richt uw camera op de barcode. Zorg ervoor dat de barcode duidelijk in beeld is.</Text>
-                </TouchableOpacity>
+                <Text style={styles.title}>Help & Ondersteuning</Text>
+                <Text style={styles.subtitle}>Hier vindt u antwoorden op veelgestelde vragen over het gebruik van de app.</Text>
+                
+                {/* Veelgestelde vragen */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Veelgestelde Vragen (FAQ)</Text>
+                    
+                    <TouchableOpacity style={styles.question}>
+                        <Text style={styles.questionText}>🔍 Hoe scan ik een barcode?</Text>
+                        <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan' en richt uw camera op de barcode. Zorg ervoor dat de barcode duidelijk in beeld is.</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.question}>
-                    <Text style={styles.questionText}>📝 Hoe voeg ik handmatig een ingrediënt toe?</Text>
-                    <Text style={styles.answerText}>Druk op de knop Koelkast in de navigatiebalk. Druk op '+ Nieuw ingrediënt' en voer de naam en vervaldatum in.</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.question}>
+                        <Text style={styles.questionText}>📝 Hoe voeg ik handmatig een ingrediënt toe?</Text>
+                        <Text style={styles.answerText}>Druk op de knop Koelkast in de navigatiebalk. Druk op '+ Nieuw ingrediënt' en voer de naam en vervaldatum in.</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.question}>
-                    <Text style={styles.questionText}>🍽️ Hoe krijg ik recepten op basis van mijn ingrediënten?</Text>
-                    <Text style={styles.answerText}>Open de koelkast-pagina en selecteer de beschikbare ingrediënten. De app geeft recepten op basis van wat u heeft.</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.question}>
+                        <Text style={styles.questionText}>🍽️ Hoe krijg ik recepten op basis van mijn ingrediënten?</Text>
+                        <Text style={styles.answerText}>Open de koelkast-pagina en selecteer de beschikbare ingrediënten. De app geeft recepten op basis van wat u heeft.</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.question}>
-                    <Text style={styles.questionText}>❤️ Waar kan ik voedsel doneren?</Text>
-                    <Text style={styles.answerText}>Ga naar de Donatiepagina in de app om meer informatie en een lijst met lokale voedselbanken (Nederlandse Voedselbanken) te zien. De donatiepagina is rechtsboven te vinden op de homepagina.</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity style={styles.question}>
+                        <Text style={styles.questionText}>❤️ Waar kan ik voedsel doneren?</Text>
+                        <Text style={styles.answerText}>Ga naar de Donatiepagina in de app om meer informatie en een lijst met lokale voedselbanken (Nederlandse Voedselbanken) te zien. De donatiepagina is rechtsboven te vinden op de homepagina.</Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.question}>
-                    <Text style={styles.questionText}>📢 Hoe stel ik meldingen in voor producten die bijna verlopen?</Text>
-                    <Text style={styles.answerText}>U kunt meldingen instellen onder Account → Notificaties om herinneringen te ontvangen.</Text>
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity style={styles.question}>
+                        <Text style={styles.questionText}>📢 Hoe stel ik meldingen in voor producten die bijna verlopen?</Text>
+                        <Text style={styles.answerText}>U kunt meldingen instellen onder Account → Notificaties om herinneringen te ontvangen.</Text>
+                    </TouchableOpacity>
+                </View>
 
-            {/* Extra ondersteuning */}
-            <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Extra ondersteuning</Text>
-                <Text style={styles.text}>Heeft u nog vragen? Neem contact met ons op via:</Text>
-                <Text style={styles.contactText}>📧 placeholder@ecobite.com</Text>
-            </View>
-        </ScrollView>
+                {/* Extra ondersteuning */}
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Extra ondersteuning</Text>
+                    <Text style={styles.text}>Heeft u nog vragen? Neem contact met ons op via:</Text>
+                    <Text style={styles.contactText}>📧 placeholder@ecobite.com</Text>
+                </View>
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+    },
     container: {
         flex: 1,
         backgroundColor: '#fff',

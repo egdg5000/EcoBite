@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Modal } from "react-native";
+import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Modal, SafeAreaView } from "react-native";  // Voeg SafeAreaView toe
 import { Plus, Filter } from "lucide-react-native";
 import { useFonts } from 'expo-font';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Voeg dit toe
@@ -53,7 +53,7 @@ const FridgePage = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>  {/* SafeAreaView hier toegevoegd */}
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -177,7 +177,7 @@ const FridgePage = () => {
         </View>
       </Modal>
 
-    </View>
+    </SafeAreaView>
   );
 };
 

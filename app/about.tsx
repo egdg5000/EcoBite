@@ -13,11 +13,10 @@ const AboutScreen = () => {
     const router = useRouter();
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-
-    <TouchableOpacity style={styles.closeButton} onPress={() => router.push("/home")}>
-      <Text style={styles.closeText}>×</Text>
-    </TouchableOpacity>
+    <SafeAreaView style={styles.safeArea}> 
+      <TouchableOpacity style={styles.closeButton} onPress={() => router.push("/home")}>
+        <Text style={styles.closeText}>×</Text>
+      </TouchableOpacity>
 
       <ImageBackground 
         source={require("../assets/images/foodmaken.png")} 
