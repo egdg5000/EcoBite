@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, Image, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -14,26 +14,26 @@ export default function AccountPage() {
     email: 'johand@example.com',
   });
 
-  const router = useRouter(); 
+  const router = useRouter();
 
   const handleFiltersPress = () => {
-    router.push('/filters'); 
+    router.push('/filters');
   };
 
   const handleDetailsPress = () => {
-    router.push('/details'); 
+    router.push('/details');
   };
 
   const handleNotificationsPress = () => {
-    router.push('/notifications'); 
+    router.push('/notifications');
   };
 
   const handleHelpPress = () => {
-    router.push('/help'); 
+    router.push('/help');
   };
 
   const handleAboutPress = () => {
-    router.push('/about_app'); 
+    router.push('/about_app');
   };
 
   const handleLogout = () => {
@@ -41,6 +41,14 @@ export default function AccountPage() {
       { text: 'Nee', style: 'cancel' },
       { text: 'Ja', onPress: () => router.push('/') },
     ]);
+  };
+
+  const handleTermsPress = () => {
+    router.push('/terms');
+  };
+
+  const handlePrivacyPress = () => {
+    router.push('/privacy_policy');
   };
 
   return (
@@ -55,6 +63,7 @@ export default function AccountPage() {
         </View>
 
         <View style={styles.buttonContainer}>
+          {/* Andere knoppen */}
           <TouchableOpacity style={styles.button} onPress={handleFiltersPress}>
             <Text style={styles.buttonText}>Filters</Text>
             <Text style={styles.arrow}>→</Text>
@@ -83,6 +92,21 @@ export default function AccountPage() {
             <Text style={styles.buttonText}>Over de app</Text>
             <Text style={styles.arrow}>→</Text>
           </TouchableOpacity>
+
+          {/* Toevoegen van separator tussen Over de app en servicevoorwaarden */}
+          <View style={styles.separator}></View>
+
+          {/* Nieuwe knoppen voor de voorwaarden en privacybeleid */}
+          <TouchableOpacity style={styles.button} onPress={handleTermsPress}>
+            <Text style={styles.buttonText}>Servicevoorwaarden</Text>
+            <Text style={styles.arrow}>→</Text>
+          </TouchableOpacity>
+          <View style={styles.separator}></View>
+
+          <TouchableOpacity style={styles.button} onPress={handlePrivacyPress}>
+            <Text style={styles.buttonText}>Privacybeleid</Text>
+            <Text style={styles.arrow}>→</Text>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
@@ -97,7 +121,6 @@ export default function AccountPage() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff', padding: 20 },
   userInfo: { flexDirection: 'row', alignItems: 'center', marginBottom: 30, padding: 20, backgroundColor: '#f8f8f8', borderRadius: 10 },
-  profilePic: { width: 100, height: 100, borderRadius: 50, marginRight: 20 },
   userText: { justifyContent: 'center' },
   userInfoText: { fontSize: 18, color: '#333', fontFamily: 'ABeeZee' },
   buttonContainer: { marginTop: 20 },
