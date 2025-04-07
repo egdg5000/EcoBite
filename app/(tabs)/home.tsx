@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, Image, SafeAreaView } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
     useSharedValue,
@@ -55,52 +55,54 @@ const HomeScreen = () => {
     };
 
     return (
-        <Animated.View style={[styles.container, backgroundColor]}>
-            <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
-                
-                {/* Header met logo en naam */}
-                <View style={styles.header}>
-                    <View style={styles.logoContainer}>
-                        <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
-                        <Text style={styles.title}>
-                            <Text style={styles.darkGreen}>Eco</Text>
-                            <Text style={styles.lightGreen}>Bite</Text>
-                        </Text>
+        <SafeAreaView style={{ flex: 1 }}>
+            <Animated.View style={[styles.container, backgroundColor]}>
+                <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
+                    
+                    {/* Header met logo en naam */}
+                    <View style={styles.header}>
+                        <View style={styles.logoContainer}>
+                            <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
+                            <Text style={styles.title}>
+                                <Text style={styles.darkGreen}>Eco</Text>
+                                <Text style={styles.lightGreen}>Bite</Text>
+                            </Text>
+                        </View>
+                        <Text style={styles.pageTitle}>Voedselverspilling Verminderen</Text>
                     </View>
-                    <Text style={styles.pageTitle}>Voedselverspilling Verminderen</Text>
-                </View>
 
-                <View style={styles.statsContainer}>
-                    <Text style={styles.statsTitle}>Jouw statistieken:</Text>
-                    <Svg height="100" width="100" viewBox="0 0 100 100">
-                        <Circle cx="50" cy="50" r="40" stroke="white" strokeWidth="5" fill="none" />
-                        <AnimatedCircle cx="50" cy="50" r="40" stroke="green" strokeWidth="5" strokeDasharray="251.2" animatedProps={animatedProps} fill="none" />
-                    </Svg>
-                    <Text style={styles.statsText}>CO2-reductie: {co2Reduction}%</Text>
-                </View>
-
-                <View style={styles.groundContainer}>
-                    <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
-                    <Image source={getTreeImage()} style={styles.treeImage} />
-                </View>
-
-                <View style={styles.bottomTextContainer}>
-                    <View style={styles.bottomTextRow}>
-                        <Text style={styles.bottomText}>Wilt u doneren bij de voedselbank? Klik icoon voor meer informatie.</Text>
-                        <Link href="/donate">
-                            <Ionicons name="heart" size={24} color="green" style={styles.icon} />
-                        </Link>
+                    <View style={styles.statsContainer}>
+                        <Text style={styles.statsTitle}>Jouw statistieken:</Text>
+                        <Svg height="100" width="100" viewBox="0 0 100 100">
+                            <Circle cx="50" cy="50" r="40" stroke="white" strokeWidth="5" fill="none" />
+                            <AnimatedCircle cx="50" cy="50" r="40" stroke="green" strokeWidth="5" strokeDasharray="251.2" animatedProps={animatedProps} fill="none" />
+                        </Svg>
+                        <Text style={styles.statsText}>CO2-reductie: {co2Reduction}%</Text>
                     </View>
-                    <View style={styles.divider} />
-                    <View style={styles.bottomTextRow}>
-                        <Text style={styles.bottomText}>Meer informatie over ons team? Klik icoon voor meer informatie.</Text>
-                        <Link href="/about">
-                            <Ionicons name="information-circle" size={24} color="green" style={styles.icon} />
-                        </Link>
+
+                    <View style={styles.groundContainer}>
+                        <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
+                        <Image source={getTreeImage()} style={styles.treeImage} />
                     </View>
-                </View>
-            </ScrollView>
-        </Animated.View>
+
+                    <View style={styles.bottomTextContainer}>
+                        <View style={styles.bottomTextRow}>
+                            <Text style={styles.bottomText}>Wilt u doneren bij de voedselbank? Klik icoon voor meer informatie.</Text>
+                            <Link href="/donate">
+                                <Ionicons name="heart" size={24} color="green" style={styles.icon} />
+                            </Link>
+                        </View>
+                        <View style={styles.divider} />
+                        <View style={styles.bottomTextRow}>
+                            <Text style={styles.bottomText}>Meer informatie over ons team? Klik icoon voor meer informatie.</Text>
+                            <Link href="/about">
+                                <Ionicons name="information-circle" size={24} color="green" style={styles.icon} />
+                            </Link>
+                        </View>
+                    </View>
+                </ScrollView>
+            </Animated.View>
+        </SafeAreaView>
     );
 };
 
