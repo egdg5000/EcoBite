@@ -92,7 +92,6 @@ function MainScreen() {
       source={require("../assets/images/spinach.jpg")}
       style={styles.backgroundImage}
     >
-<<<<<<< Updated upstream
       <View style={styles.overlay}>
         <Image source={require("../assets/images/EcoBite2.png")} style={styles.logo} />
         <Text style={styles.title}>Welkom</Text>
@@ -110,10 +109,6 @@ function MainScreen() {
         </Link>
       </View>
     </ImageBackground>
-=======
-      <Text></Text>
-    </View>
->>>>>>> Stashed changes
   );
 };
 
