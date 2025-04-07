@@ -10,8 +10,8 @@ export default function AccountPage() {
   });
 
   const [userData] = useState({
-    username: 'JohanD123',
-    email: 'johand@example.com',
+    username: 'Placeholder',
+    email: 'placeholder@example.com',
   });
 
   const router = useRouter();
