@@ -43,18 +43,9 @@ export default function AccountPage() {
     ]);
   };
 
-  const handleTermsPress = () => {
-    router.push('/terms');
-  };
-
-  const handlePrivacyPress = () => {
-    router.push('/privacy_policy');
-  };
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
-        {/* Gebruikersinformatie */}
         <View style={styles.userInfo}>
           <View style={styles.userText}>
             <Text style={styles.userInfoText}>Gebruikersnaam: {userData.username}</Text>
@@ -63,7 +54,6 @@ export default function AccountPage() {
         </View>
 
         <View style={styles.buttonContainer}>
-          {/* Andere knoppen */}
           <TouchableOpacity style={styles.button} onPress={handleFiltersPress}>
             <Text style={styles.buttonText}>Filters</Text>
             <Text style={styles.arrow}>→</Text>
@@ -92,22 +82,26 @@ export default function AccountPage() {
             <Text style={styles.buttonText}>Over de app</Text>
             <Text style={styles.arrow}>→</Text>
           </TouchableOpacity>
+        </View>
 
-          {/* Toevoegen van separator tussen Over de app en servicevoorwaarden */}
-          <View style={styles.separator}></View>
+        
+        <View style={styles.categoryContainer}>
+          <Text style={styles.categoryTitle}>Juridische Informatie</Text>
+        </View>
 
-          {/* Nieuwe knoppen voor de voorwaarden en privacybeleid */}
-          <TouchableOpacity style={styles.button} onPress={handleTermsPress}>
-            <Text style={styles.buttonText}>Servicevoorwaarden</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-          <View style={styles.separator}></View>
-
-          <TouchableOpacity style={styles.button} onPress={handlePrivacyPress}>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/privacy_policy')}>
             <Text style={styles.buttonText}>Privacybeleid</Text>
             <Text style={styles.arrow}>→</Text>
           </TouchableOpacity>
+          <View style={styles.separator}></View>
+
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/terms')}>
+            <Text style={styles.buttonText}>Servicevoorwaarden</Text>
+            <Text style={styles.arrow}>→</Text>
+          </TouchableOpacity>
         </View>
+
 
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Ionicons name="log-out" size={24} color="#D32F2F" />
@@ -130,4 +124,13 @@ const styles = StyleSheet.create({
   separator: { height: 1, backgroundColor: '#ddd', marginVertical: 10 },
   logoutButton: { flexDirection: 'row', alignItems: 'center', padding: 15, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#D32F2F', marginTop: 30 },
   logoutText: { fontSize: 16, color: '#D32F2F', marginLeft: 10, fontFamily: 'ABeeZee' },
+
+  
+  categoryContainer: { marginTop: 30 },  
+  categoryTitle: { 
+    fontSize: 20, 
+    fontWeight: 'bold', 
+    color: '#28a745', 
+    fontFamily: 'ABeeZee' 
+  },
 });
