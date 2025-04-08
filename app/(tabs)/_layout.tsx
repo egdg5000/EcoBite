@@ -11,20 +11,10 @@ import {
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFonts } from 'expo-font';
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import CustomTabBar from '../components/CustomTabBar'; 
-=======
-=======
->>>>>>> Stashed changes
 import { useState, useRef, useEffect } from 'react';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { StackNavigation } from 'expo-router/build/types';
 import { BlurView } from 'expo-blur';
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
 export default function TabLayout() {
   const [fontsLoaded] = useFonts({
@@ -35,20 +25,8 @@ export default function TabLayout() {
 
   return (
     <Tabs
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    tabBar={(props) => <CustomTabBar {...props} />}
-    screenOptions={{
-      headerShown: false,
-    }}
-=======
       tabBar={(props: BottomTabBarProps) => <CustomTabBar {...props} />}
       screenOptions={{ headerShown: false }}
->>>>>>> Stashed changes
-=======
-      tabBar={(props: BottomTabBarProps) => <CustomTabBar {...props} />}
-      screenOptions={{ headerShown: false }}
->>>>>>> Stashed changes
     >
       <Tabs.Screen name="home" options={{ title: 'Home' }} />
       <Tabs.Screen name="discover" options={{ title: 'Ontdek' }} />
