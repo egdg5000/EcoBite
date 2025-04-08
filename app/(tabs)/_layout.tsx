@@ -3,6 +3,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Animated, Easing } from 'react-native';
 import { useEffect, useRef } from 'react';
 import { useFonts } from 'expo-font';
+import CustomTabBar from '../components/CustomTabBar'; 
 
 export default function TabLayout() {
    const [fontsLoaded] = useFonts({
@@ -10,25 +11,10 @@ export default function TabLayout() {
   });
   return (
     <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: '#4CAF50', 
-        tabBarInactiveTintColor: '#888', 
-        tabBarStyle: {
-          backgroundColor: '#fff', 
-          borderTopWidth: 0,
-          elevation: 5,
-          height: 60,
-          paddingBottom: 5,
-          borderRadius: 30, 
-          marginHorizontal: 10, 
-          overflow: 'hidden', 
-        },
-        headerShown: false,
-        tabBarLabelStyle: {
-          fontFamily: 'ABeeZee', 
-          fontSize: 14, 
-        },
-      }}
+    tabBar={(props) => <CustomTabBar {...props} />}
+    screenOptions={{
+      headerShown: false,
+    }}
     >
       <Tabs.Screen
         name="home"
