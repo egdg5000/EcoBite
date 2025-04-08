@@ -30,6 +30,7 @@ export default function TabLayout() {
     >
       <Tabs.Screen name="home" options={{ title: 'Home' }} />
       <Tabs.Screen name="discover" options={{ title: 'Ontdek' }} />
+      <Tabs.Screen name="donate" options={{ title: 'Doneer' }} />
       <Tabs.Screen name="account" options={{ title: 'Account' }} />
 
       {/* Verberg 'scan' en 'fridge' uit de tabbar maar maak ze nog steeds deel van de navigatie */}
@@ -60,7 +61,7 @@ const CustomTabBar = ({
   const leftTabs = state.routes.filter(
     (r) => r.name === 'home' || r.name === 'discover'
   );
-  const rightTabs = state.routes.filter((r) => r.name === 'account');
+  const rightTabs = state.routes.filter((r) => r.name === 'account' || r.name === 'donate');
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(10)).current;
@@ -106,6 +107,7 @@ const CustomTabBar = ({
     let iconName: keyof typeof Ionicons.glyphMap = 'home';
     if (route.name === 'discover') iconName = 'search';
     if (route.name === 'account') iconName = 'person';
+    if (route.name === 'donate') iconName = 'heart'; // Voeg hart-icoon toe voor doneerpagina
 
     const onPress = () => {
       const event = navigation.emit({
@@ -262,7 +264,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 80,
     left: '-37%',
-    transform: [{ translateX: -80 }], // halverwege het menu
+    transform: [{ translateX: -80 }],
     backgroundColor: '#4CAF50',
     borderRadius: 12,
     padding: 12,
