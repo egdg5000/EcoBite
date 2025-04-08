@@ -22,6 +22,7 @@
     "@react-navigation/native": "^7.0.19",
     "@rneui/base": "^4.0.0-rc.7",
     "@rneui/themed": "^4.0.0-rc.8",
+    "@types/react-router": "^5.1.20",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "components": "^0.1.0",
