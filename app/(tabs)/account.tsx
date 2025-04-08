@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Modal } from 'react-native';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
@@ -13,6 +13,8 @@ export default function AccountPage() {
     username: 'Placeholder',
     email: 'placeholder@example.com',
   });
+
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const router = useRouter();
 
@@ -37,7 +39,12 @@ export default function AccountPage() {
   };
 
   const handleLogout = () => {
-    router.push('/'); 
+    setLogoutModalVisible(true);
+  };
+
+  const confirmLogout = () => {
+    setLogoutModalVisible(false);
+    router.push('/');
   };
 
   return (
@@ -103,6 +110,27 @@ export default function AccountPage() {
           <Text style={styles.logoutText}>Uitloggen</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={logoutModalVisible}
+        onRequestClose={() => setLogoutModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Weet u zeker dat u wilt uitloggen?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity onPress={() => setLogoutModalVisible(false)} style={styles.cancelButton}>
+                <Text style={styles.cancelButtonText}>Annuleer</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={confirmLogout} style={styles.confirmButton}>
+                <Text style={styles.confirmButtonText}>Uitloggen</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -120,11 +148,61 @@ const styles = StyleSheet.create({
   logoutButton: { flexDirection: 'row', alignItems: 'center', padding: 15, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#D32F2F', marginTop: 30 },
   logoutText: { fontSize: 16, color: '#D32F2F', marginLeft: 10, fontFamily: 'ABeeZee' },
 
-  categoryContainer: { marginTop: 30 },  
-  categoryTitle: { 
-    fontSize: 20, 
-    fontWeight: 'bold', 
-    color: '#28a745', 
-    fontFamily: 'ABeeZee' 
+  categoryContainer: { marginTop: 30 },
+  categoryTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#28a745',
+    fontFamily: 'ABeeZee'
+  },
+
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContainer: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 18,
+    marginBottom: 20,
+    fontFamily: 'ABeeZee',
+    textAlign: 'center',
+    color: '#333',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  cancelButton: {
+    flex: 1,
+    marginRight: 10,
+    padding: 10,
+    backgroundColor: '#ccc',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    color: '#333',
+    fontFamily: 'ABeeZee',
+  },
+  confirmButton: {
+    flex: 1,
+    marginLeft: 10,
+    padding: 10,
+    backgroundColor: '#D32F2F',
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  confirmButtonText: {
+    color: '#fff',
+    fontFamily: 'ABeeZee',
   },
 });
