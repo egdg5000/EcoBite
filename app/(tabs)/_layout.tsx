@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   sideContainer: {
     flexDirection: 'row',
     flex: 1,
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
   },
   centerSpacer: {
     width: 80, // ruimte voor FAB
