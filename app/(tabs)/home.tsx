@@ -87,13 +87,6 @@ const HomeScreen = () => {
 
                     <View style={styles.bottomTextContainer}>
                         <View style={styles.bottomTextRow}>
-                            <Text style={styles.bottomText}>Wilt u doneren bij de voedselbank? Klik icoon voor meer informatie.</Text>
-                            <Link href="/donate">
-                                <Ionicons name="heart" size={24} color="green" style={styles.icon} />
-                            </Link>
-                        </View>
-                        <View style={styles.divider} />
-                        <View style={styles.bottomTextRow}>
                             <Text style={styles.bottomText}>Meer informatie over ons team? Klik icoon voor meer informatie.</Text>
                             <Link href="/about">
                                 <Ionicons name="information-circle" size={24} color="green" style={styles.icon} />
