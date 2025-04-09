@@ -43,7 +43,6 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, descriptors, navigat
           size: 24,
         });
 
-        // Render a custom button in the middle (green + button for 'scan')
         if (route.name === 'scan') {
           return (
             <TouchableOpacity
