@@ -173,6 +173,9 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
               <Ionicons name="barcode" size={20} color="#fff" />
               <Text style={styles.fabText}>Scan</Text>
             </TouchableOpacity>
+            
+            <View style={styles.divider} /> 
+
             <TouchableOpacity
               style={styles.fabItem}
               onPress={() => {
@@ -264,6 +267,12 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.2)',
     zIndex: 5,
+  },
+  divider: {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#fff',
+    marginVertical: 6, // Ruimte tussen de knoppen
   },
 });
 
