@@ -19,6 +19,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(10)).current;
+  const scaleAnim = useRef(new Animated.Value(1)).current;  // Animatie voor schaling
 
   const leftTabs = state.routes.filter(
     (r: any) => r.name === 'home' || r.name === 'discover'
@@ -61,6 +62,20 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
     }
   }, [menuOpen]);
 
+  const handlePressIn = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 0.9,  // Schaal naar 0.9 voor het indrukken
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.spring(scaleAnim, {
+      toValue: 1,  // Schaal terug naar 1 wanneer losgelaten
+      useNativeDriver: true,
+    }).start();
+  };
+
   const renderTabButton = (route: any) => {
     const { options } = descriptors[route.key];
     const isFocused = state.index === state.routes.findIndex((r: any) => r.key === route.key);
@@ -87,12 +102,16 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
         key={route.key}
         onPress={onPress}
         style={styles.tabButton}
+        onPressIn={handlePressIn}  // Aanraking ingedrukt
+        onPressOut={handlePressOut}  // Aanraking losgelaten
       >
-        <Ionicons
-          name={iconName}
-          size={24}
-          color={isFocused ? '#4CAF50' : '#888'}
-        />
+        <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
+          <Ionicons
+            name={iconName}
+            size={24}
+            color={isFocused ? '#4CAF50' : '#888'}
+          />
+        </Animated.View>
         <Text
           style={{
             fontFamily: 'ABeeZee',
@@ -154,9 +173,6 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
               <Ionicons name="barcode" size={20} color="#fff" />
               <Text style={styles.fabText}>Scan</Text>
             </TouchableOpacity>
-
-            <View style={styles.divider} /> {/* Divider tussen de knoppen */}
-
             <TouchableOpacity
               style={styles.fabItem}
               onPress={() => {
@@ -179,9 +195,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 70,
     backgroundColor: '#fff',
-    borderTopLeftRadius: 25, // Afgeronde hoeken
-    borderTopRightRadius: 25, // Afgeronde hoeken
-    elevation: 5,
+    borderTopWidth: 0,
+    borderRadius: 15, // Afgeronde hoeken
+    elevation: 10, // Schaduw toegevoegd voor diepte
+    shadowColor: '#000', // Schaduw kleur
+    shadowOffset: { width: 0, height: 5 }, // Positie van de schaduw
+    shadowOpacity: 0.15, // Schaduw doorzichtigheid verhoogd voor meer nadruk
+    shadowRadius: 10, // Schaduw radius verhoogd voor een meer dramatisch effect
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 24,
@@ -193,7 +213,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   centerSpacer: {
-    width: 90,
+    width: 90, // iets breder voor meer ademruimte rond de +
   },
   tabButton: {
     alignItems: 'center',
@@ -201,9 +221,9 @@ const styles = StyleSheet.create({
   },
   centerWrapper: {
     position: 'absolute',
-    bottom: 7,
+    bottom: 7, // Verplaatst de knop iets omhoog
     left: '50%',
-    transform: [{ translateX: -30 }],
+    transform: [{ translateX: -30 }], // Verplaatst de knop iets naar rechts
     zIndex: 10,
   },
   plusButton: {
@@ -239,12 +259,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontFamily: 'ABeeZee',
     fontSize: 14,
-  },
-  divider: {
-    width: '100%',
-    height: 1,
-    backgroundColor: '#fff',
-    marginVertical: 6, // Ruimte tussen de knoppen
   },
   menuOverlay: {
     ...StyleSheet.absoluteFillObject,
