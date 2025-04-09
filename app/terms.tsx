@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 
 export default function TermsScreen() {
@@ -7,20 +7,26 @@ export default function TermsScreen() {
     'ABeeZee': require('../assets/fonts/ABeeZee.ttf'), // Laad het lettertype
   });
 
+  const router = useRouter();
+
   if (!fontsLoaded) {
     return null; // Wacht tot de lettertypen geladen zijn
   }
 
+  const handleBackPress = () => {
+    router.back();
+  };
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
       <View style={styles.container}>
         <Text style={styles.title}>Servicevoorwaarden</Text>
-        
+
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.content}>
             Welkom bij onze servicevoorwaarden. Door gebruik te maken van deze app, gaat u akkoord met de volgende voorwaarden:
           </Text>
-          
+
           <View style={styles.section}>
             <Text style={styles.subtitle}>1. Gebruik van de App</Text>
             <Text style={styles.content}>
@@ -52,7 +58,7 @@ export default function TermsScreen() {
             <Text style={styles.subtitle}>4. Privacy en Gegevensverwerking</Text>
             <Text style={styles.content}>
               Uw gegevens worden verwerkt in overeenstemming met ons{' '}
-              <Link href="/privacy_policy" style={styles.link}>privacybeleid</Link>. We zullen uw persoonlijke gegevens niet zonder uw toestemming verkopen aan derden. Wij nemen redelijke maatregelen om uw gegevens te beschermen, maar kunnen niet garanderen dat ze volledig veilig zijn.
+              <Text style={styles.link} onPress={() => router.push('/privacy_policy')}>privacybeleid</Text>. We zullen uw persoonlijke gegevens niet zonder uw toestemming verkopen aan derden. Wij nemen redelijke maatregelen om uw gegevens te beschermen, maar kunnen niet garanderen dat ze volledig veilig zijn.
             </Text>
           </View>
 
@@ -89,10 +95,10 @@ export default function TermsScreen() {
             Door verder te gaan, accepteert u deze voorwaarden en stemt u in met ons beleid.
           </Text>
         </ScrollView>
-        
-        <Link href="/register" asChild>
-          <Text style={styles.link}>Terug naar registratie</Text>
-        </Link>
+
+        <Text onPress={handleBackPress} style={styles.link}>
+          Terug
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -100,11 +106,11 @@ export default function TermsScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10, fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10, fontFamily: 'ABeeZee' },
   scrollContainer: { paddingBottom: 20 },
-  content: { fontSize: 16, color: '#333', marginBottom: 10, fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
-  subtitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5, color: '#333', fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
+  content: { fontSize: 16, color: '#333', marginBottom: 10, fontFamily: 'ABeeZee' },
+  subtitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5, color: '#333', fontFamily: 'ABeeZee' },
   section: { marginBottom: 20 },
   divider: { height: 1, backgroundColor: '#28a745', marginVertical: 10 },
-  link: { fontSize: 16, color: '#007BFF', fontWeight: 'bold', textAlign: 'center', marginTop: 20, fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
+  link: { fontSize: 16, color: '#007BFF', fontWeight: 'bold', textAlign: 'center', marginTop: 20, fontFamily: 'ABeeZee' },
 });

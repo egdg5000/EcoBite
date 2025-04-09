@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 
 export default function PrivacyPolicyScreen() {
@@ -7,20 +7,26 @@ export default function PrivacyPolicyScreen() {
     'ABeeZee': require('../assets/fonts/ABeeZee.ttf'), // Laad het lettertype
   });
 
+  const router = useRouter();
+
   if (!fontsLoaded) {
     return null; // Wacht tot de lettertypen geladen zijn
   }
 
+  const handleBackPress = () => {
+    router.back();
+  };
+
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
       <View style={styles.container}>
         <Text style={styles.title}>Privacybeleid</Text>
-        
+
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.content}>
             Dit privacybeleid legt uit hoe we uw persoonlijke gegevens verzamelen, gebruiken en beschermen wanneer u gebruik maakt van onze app.
           </Text>
-          
+
           <View style={styles.section}>
             <Text style={styles.subtitle}>1. Gegevensverzameling</Text>
             <Text style={styles.content}>
@@ -79,10 +85,10 @@ export default function PrivacyPolicyScreen() {
             Door gebruik te maken van onze app, gaat u akkoord met dit privacybeleid en geeft u toestemming voor de verwerking van uw gegevens zoals beschreven.
           </Text>
         </ScrollView>
-        
-        <Link href="/register" asChild>
-          <Text style={styles.link}>Terug naar registratie</Text>
-        </Link>
+
+        <Text onPress={handleBackPress} style={styles.link}>
+          Terug
+        </Text>
       </View>
     </SafeAreaView>
   );
@@ -90,11 +96,11 @@ export default function PrivacyPolicyScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10, fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
+  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 10, fontFamily: 'ABeeZee' },
   scrollContainer: { paddingBottom: 20 },
-  content: { fontSize: 16, color: '#333', marginBottom: 10, fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
-  subtitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5, color: '#333', fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
+  content: { fontSize: 16, color: '#333', marginBottom: 10, fontFamily: 'ABeeZee' },
+  subtitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5, color: '#333', fontFamily: 'ABeeZee' },
   section: { marginBottom: 20 },
   divider: { height: 1, backgroundColor: '#28a745', marginVertical: 10 },
-  link: { fontSize: 16, color: '#007BFF', fontWeight: 'bold', textAlign: 'center', fontFamily: 'ABeeZee' }, // Gebruik ABeeZee
+  link: { fontSize: 16, color: '#007BFF', fontWeight: 'bold', textAlign: 'center', fontFamily: 'ABeeZee' },
 });

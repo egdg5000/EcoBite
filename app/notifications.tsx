@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 
@@ -14,52 +14,57 @@ export default function NotificationsSettings() {
   const [donationReminders, setDonationReminders] = useState(true);
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.title}>Notificatie-instellingen</Text>
-      <Text style={styles.subtitle}>Beheer je meldingen voor de app.</Text>
+    <SafeAreaView style={styles.safeArea}> {/* SafeAreaView toegevoegd */}
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>Notificatie-instellingen</Text>
+        <Text style={styles.subtitle}>Beheer je meldingen voor de app.</Text>
 
-      {/* Notificatie-opties */}
-      <View style={styles.section}>
-        <View style={styles.settingRow}>
-          <Text style={styles.settingText}>🔔 Producten die bijna verlopen</Text>
-          <Switch
-            value={expiryAlerts}
-            onValueChange={setExpiryAlerts}
-            trackColor={{ false: '#767577', true: '#4CAF50' }}
-            thumbColor={expiryAlerts ? '#fff' : '#f4f3f4'}
-          />
+        {/* Notificatie-opties */}
+        <View style={styles.section}>
+          <View style={styles.settingRow}>
+            <Text style={styles.settingText}>🔔 Producten die bijna verlopen</Text>
+            <Switch
+              value={expiryAlerts}
+              onValueChange={setExpiryAlerts}
+              trackColor={{ false: '#767577', true: '#4CAF50' }}
+              thumbColor={expiryAlerts ? '#fff' : '#f4f3f4'}
+            />
+          </View>
+
+          <View style={styles.settingRow}>
+            <Text style={styles.settingText}>📢 Algemene updates</Text>
+            <Switch
+              value={generalUpdates}
+              onValueChange={setGeneralUpdates}
+              trackColor={{ false: '#767577', true: '#4CAF50' }}
+              thumbColor={generalUpdates ? '#fff' : '#f4f3f4'}
+            />
+          </View>
+
+          <View style={styles.settingRow}>
+            <Text style={styles.settingText}>❤️ Donatieherinneringen</Text>
+            <Switch
+              value={donationReminders}
+              onValueChange={setDonationReminders}
+              trackColor={{ false: '#767577', true: '#4CAF50' }}
+              thumbColor={donationReminders ? '#fff' : '#f4f3f4'}
+            />
+          </View>
         </View>
 
-        <View style={styles.settingRow}>
-          <Text style={styles.settingText}>📢 Algemene updates</Text>
-          <Switch
-            value={generalUpdates}
-            onValueChange={setGeneralUpdates}
-            trackColor={{ false: '#767577', true: '#4CAF50' }}
-            thumbColor={generalUpdates ? '#fff' : '#f4f3f4'}
-          />
-        </View>
-
-        <View style={styles.settingRow}>
-          <Text style={styles.settingText}>❤️ Donatieherinneringen</Text>
-          <Switch
-            value={donationReminders}
-            onValueChange={setDonationReminders}
-            trackColor={{ false: '#767577', true: '#4CAF50' }}
-            thumbColor={donationReminders ? '#fff' : '#f4f3f4'}
-          />
-        </View>
-      </View>
-
-      {/* Terug knop */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.push('/account')}>
-        <Text style={styles.backButtonText}>← Terug naar Account</Text>
-      </TouchableOpacity>
-    </ScrollView>
+        {/* Terug knop */}
+        <TouchableOpacity style={styles.backButton} onPress={() => router.push('/account')}>
+          <Text style={styles.backButtonText}>← Terug naar Account</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
