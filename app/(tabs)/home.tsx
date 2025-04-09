@@ -100,6 +100,8 @@ const HomeScreen = () => {
                             {greeting}
                         </Animated.Text>
 
+                        <View style={styles.divider} />
+
                     </View>
 
                     <View style={styles.statsContainer}>
@@ -242,6 +244,14 @@ const styles = StyleSheet.create({
     icon: {
         marginLeft: 10,
     },
+    divider: {
+        height: 1,
+        backgroundColor: 'white',
+        width: '80%',
+        marginTop: 15,
+        marginBottom: 10,
+        opacity: 0.4,
+    },    
 });
 
 export default HomeScreen;
