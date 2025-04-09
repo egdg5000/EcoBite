@@ -26,10 +26,21 @@ const HomeScreen = () => {
 
     const [co2Reduction, setCo2Reduction] = useState(0);
     const progress = useSharedValue(0);
+    const [greeting, setGreeting] = useState('');
 
     useEffect(() => {
         progress.value = withTiming(75, { duration: 2000 });
         setCo2Reduction(75);
+
+        
+        const hour = new Date().getHours();
+        if (hour < 12) {
+            setGreeting('Goedemorgen');
+        } else if (hour < 18) {
+            setGreeting('Goedemiddag');
+        } else {
+            setGreeting('Goedenavond');
+        }
     }, []);
 
     const animatedProps = useAnimatedProps(() => ({
@@ -58,7 +69,7 @@ const HomeScreen = () => {
         <SafeAreaView style={{ flex: 1 }}>
             <Animated.View style={[styles.container, backgroundColor]}>
                 <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
-                    
+
                     {/* Header met logo en naam */}
                     <View style={styles.header}>
                         <View style={styles.logoContainer}>
@@ -68,7 +79,12 @@ const HomeScreen = () => {
                                 <Text style={styles.lightGreen}>Bite</Text>
                             </Text>
                         </View>
-                        <Text style={styles.pageTitle}>Voedselverspilling Verminderen</Text>
+
+                        
+                        {greeting && (
+                            <Text style={styles.greetingText}>{greeting}!</Text>
+                        )}
+
                     </View>
 
                     <View style={styles.statsContainer}>
@@ -140,6 +156,17 @@ const styles = StyleSheet.create({
         fontFamily: "ABeeZee",
         textAlign: 'center',
         marginTop: 5,
+    },
+    greetingText: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#FFFFFF',
+        fontFamily: 'ABeeZee',
+        marginBottom: 10,
+        textAlign: 'center',
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
     },
     statsContainer: {
         marginVertical: 20,
