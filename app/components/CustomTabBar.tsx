@@ -184,7 +184,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
               }}
             >
               <Ionicons name="fast-food" size={20} color="#fff" />
-              <Text style={styles.fabText}>Koelkast</Text>
+              <Text style={styles.fabText}>Voorraad</Text>
             </TouchableOpacity>
           </Animated.View>
         </View>
