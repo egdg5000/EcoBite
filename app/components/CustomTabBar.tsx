@@ -137,18 +137,12 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
             onPress={() => setMenuOpen((prev) => !prev)}
             activeOpacity={0.8}
           >
-            <Ionicons name={menuOpen ? 'close' : 'add'} size={32} color="#fff" />
+            <Ionicons name={menuOpen ? 'close' : 'add'} size={28} color="#fff" />
           </TouchableOpacity>
 
           <Animated.View
             pointerEvents={menuOpen ? 'auto' : 'none'}
-            style={[
-              styles.fabMenu,
-              {
-                opacity: fadeAnim,
-                transform: [{ translateY: slideAnim }],
-              },
-            ]}
+            style={[styles.fabMenu, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}
           >
             <TouchableOpacity
               style={styles.fabItem}
@@ -160,6 +154,9 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
               <Ionicons name="barcode" size={20} color="#fff" />
               <Text style={styles.fabText}>Scan</Text>
             </TouchableOpacity>
+
+            <View style={styles.divider} /> {/* Divider tussen de knoppen */}
+
             <TouchableOpacity
               style={styles.fabItem}
               onPress={() => {
@@ -182,20 +179,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 70,
     backgroundColor: '#fff',
-    borderTopWidth: 0,
+    borderTopLeftRadius: 25, // Afgeronde hoeken
+    borderTopRightRadius: 25, // Afgeronde hoeken
     elevation: 5,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 30,
+    paddingHorizontal: 24,
     position: 'relative',
   },
   sideContainer: {
     flexDirection: 'row',
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
   centerSpacer: {
-    width: 80,
+    width: 90,
   },
   tabButton: {
     alignItems: 'center',
@@ -203,16 +201,16 @@ const styles = StyleSheet.create({
   },
   centerWrapper: {
     position: 'absolute',
-    bottom: 5,
+    bottom: 7,
     left: '50%',
-    transform: [{ translateX: -35 }],
+    transform: [{ translateX: -30 }],
     zIndex: 10,
   },
   plusButton: {
     backgroundColor: '#4CAF50',
-    borderRadius: 35,
-    width: 70,
-    height: 60,
+    borderRadius: 28,
+    width: 56,
+    height: 56,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
@@ -220,7 +218,7 @@ const styles = StyleSheet.create({
   fabMenu: {
     position: 'absolute',
     bottom: 80,
-    left: '-37%',
+    left: '-56%',
     transform: [{ translateX: -80 }],
     backgroundColor: '#4CAF50',
     borderRadius: 12,
@@ -241,6 +239,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontFamily: 'ABeeZee',
     fontSize: 14,
+  },
+  divider: {
+    width: '100%',
+    height: 1,
+    backgroundColor: '#fff',
+    marginVertical: 6, // Ruimte tussen de knoppen
   },
   menuOverlay: {
     ...StyleSheet.absoluteFillObject,
