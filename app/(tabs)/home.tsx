@@ -28,20 +28,35 @@ const HomeScreen = () => {
     const progress = useSharedValue(0);
     const [greeting, setGreeting] = useState('');
 
+    // Animatie voor begroetingstekst
+    const greetingOpacity = useSharedValue(0);
+    const greetingTranslateY = useSharedValue(10);
+
     useEffect(() => {
         progress.value = withTiming(75, { duration: 2000 });
         setCo2Reduction(75);
 
-        
-        const hour = new Date().getHours();
-        if (hour < 12) {
-            setGreeting('Goedemorgen');
-        } else if (hour < 18) {
-            setGreeting('Goedemiddag');
+        // Bepaal begroeting + emoji
+        const currentHour = new Date().getHours();
+        let timeGreeting = '';
+        if (currentHour < 12) {
+            timeGreeting = 'Goedemorgen 🌅';
+        } else if (currentHour < 18) {
+            timeGreeting = 'Goedemiddag 🌤️';
         } else {
-            setGreeting('Goedenavond');
+            timeGreeting = 'Goedenavond 🌙';
         }
+        setGreeting(timeGreeting);
+
+        // Start fade-in animatie
+        greetingOpacity.value = withTiming(1, { duration: 800 });
+        greetingTranslateY.value = withTiming(0, { duration: 800 });
     }, []);
+
+    const greetingStyle = useAnimatedStyle(() => ({
+        opacity: greetingOpacity.value,
+        transform: [{ translateY: greetingTranslateY.value }],
+    }));
 
     const animatedProps = useAnimatedProps(() => ({
         strokeDashoffset: 251.2 - (progress.value / 100) * 251.2,
@@ -69,7 +84,7 @@ const HomeScreen = () => {
         <SafeAreaView style={{ flex: 1 }}>
             <Animated.View style={[styles.container, backgroundColor]}>
                 <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
-
+                    
                     {/* Header met logo en naam */}
                     <View style={styles.header}>
                         <View style={styles.logoContainer}>
@@ -80,10 +95,10 @@ const HomeScreen = () => {
                             </Text>
                         </View>
 
-                        
-                        {greeting && (
-                            <Text style={styles.greetingText}>{greeting}!</Text>
-                        )}
+                        {/* Begroeting met animatie */}
+                        <Animated.Text style={[styles.greetingText, greetingStyle]}>
+                            {greeting}
+                        </Animated.Text>
 
                     </View>
 
@@ -149,6 +164,16 @@ const styles = StyleSheet.create({
     lightGreen: {
         color: '#66C466',
     },
+    greetingText: {
+        fontSize: 22,
+        fontWeight: '600',
+        color: 'white',
+        marginTop: 10,
+        fontFamily: "ABeeZee",
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+    },
     pageTitle: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -156,17 +181,6 @@ const styles = StyleSheet.create({
         fontFamily: "ABeeZee",
         textAlign: 'center',
         marginTop: 5,
-    },
-    greetingText: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: '#FFFFFF',
-        fontFamily: 'ABeeZee',
-        marginBottom: 10,
-        textAlign: 'center',
-        textShadowColor: 'rgba(0, 0, 0, 0.3)',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 2,
     },
     statsContainer: {
         marginVertical: 20,
@@ -227,12 +241,6 @@ const styles = StyleSheet.create({
     },
     icon: {
         marginLeft: 10,
-    },
-    divider: {
-        height: 1,
-        width: '100%',
-        backgroundColor: 'white',
-        marginVertical: 10,
     },
 });
 
