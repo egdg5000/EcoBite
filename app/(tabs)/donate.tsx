@@ -7,7 +7,7 @@ const DonateScreen = () => {
     const router = useRouter();
 
     const [fontsLoaded] = useFonts({
-        'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+        'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
     });
 
     if (!fontsLoaded) {
@@ -20,7 +20,7 @@ const DonateScreen = () => {
 
     return (
         <SafeAreaView style={styles.safeArea}> {/* SafeAreaView toegevoegd */}
-            <ImageBackground source={require("../assets/images/donate.jpg")} style={styles.background}>
+            <ImageBackground source={require("../../assets/images/donate.jpg")} style={styles.background}>
                 <View style={styles.overlay}>
                     
                     {/* Sluitknop */}
@@ -38,7 +38,7 @@ const DonateScreen = () => {
 
                     {/* Voedselbank Logo */}
                     <View style={styles.logoContainer}>
-                        <Image source={require("../assets/images/image 21.png")} style={styles.foodbankLogo} />
+                        <Image source={require("../../assets/images/image 21.png")} style={styles.foodbankLogo} />
                     </View>
 
                     {/* Beschrijving */}
@@ -50,7 +50,7 @@ const DonateScreen = () => {
 
                     {/* EcoBite Logo en Naam */}
                     <View style={styles.footer}>
-                        <Image source={require("../assets/images/EcoBite2.png")} style={styles.logo} />
+                        <Image source={require("../../assets/images/EcoBite2.png")} style={styles.logo} />
                         <Text style={styles.appName}>EcoBite</Text>
                     </View>
                 </View>

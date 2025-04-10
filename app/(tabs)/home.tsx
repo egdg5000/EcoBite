@@ -26,11 +26,34 @@ const HomeScreen = () => {
 
     const [co2Reduction, setCo2Reduction] = useState(0);
     const progress = useSharedValue(0);
+    const [greeting, setGreeting] = useState('');
+
+    const greetingOpacity = useSharedValue(0);
+    const greetingTranslateY = useSharedValue(10);
 
     useEffect(() => {
         progress.value = withTiming(75, { duration: 2000 });
         setCo2Reduction(75);
+
+        const currentHour = new Date().getHours();
+        let timeGreeting = '';
+        if (currentHour < 12) {
+            timeGreeting = 'Goedemorgen 🌅';
+        } else if (currentHour < 18) {
+            timeGreeting = 'Goedemiddag 🌤️';
+        } else {
+            timeGreeting = 'Goedenavond 🌙';
+        }
+        setGreeting(timeGreeting);
+
+        greetingOpacity.value = withTiming(1, { duration: 800 });
+        greetingTranslateY.value = withTiming(0, { duration: 800 });
     }, []);
+
+    const greetingStyle = useAnimatedStyle(() => ({
+        opacity: greetingOpacity.value,
+        transform: [{ translateY: greetingTranslateY.value }],
+    }));
 
     const animatedProps = useAnimatedProps(() => ({
         strokeDashoffset: 251.2 - (progress.value / 100) * 251.2,
@@ -59,7 +82,6 @@ const HomeScreen = () => {
             <Animated.View style={[styles.container, backgroundColor]}>
                 <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
                     
-                    {/* Header met logo en naam */}
                     <View style={styles.header}>
                         <View style={styles.logoContainer}>
                             <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
@@ -68,16 +90,33 @@ const HomeScreen = () => {
                                 <Text style={styles.lightGreen}>Bite</Text>
                             </Text>
                         </View>
-                        <Text style={styles.pageTitle}>Voedselverspilling Verminderen</Text>
+
+                        <Animated.Text style={[styles.greetingText, greetingStyle]}>
+                            {greeting}
+                        </Animated.Text>
+
+                        <View style={styles.divider} />
+
                     </View>
 
                     <View style={styles.statsContainer}>
                         <Text style={styles.statsTitle}>Jouw statistieken:</Text>
-                        <Svg height="100" width="100" viewBox="0 0 100 100">
-                            <Circle cx="50" cy="50" r="40" stroke="white" strokeWidth="5" fill="none" />
-                            <AnimatedCircle cx="50" cy="50" r="40" stroke="green" strokeWidth="5" strokeDasharray="251.2" animatedProps={animatedProps} fill="none" />
+                        <Svg height="150" width="150" viewBox="0 0 100 100">
+                            <Circle cx="50" cy="50" r="40" stroke="#ffffff66" strokeWidth="8" fill="none" />
+                            <AnimatedCircle
+                                cx="50"
+                                cy="50"
+                                r="40"
+                                stroke="#66C466"
+                                strokeWidth="8"
+                                strokeDasharray="251.2"
+                                animatedProps={animatedProps}
+                                fill="none"
+                                strokeLinecap="round"
+                            />
                         </Svg>
-                        <Text style={styles.statsText}>CO2-reductie: {co2Reduction}%</Text>
+                        <Text style={styles.statsPercentage}>{co2Reduction}%</Text>
+                        <Text style={styles.statsText}>CO2-reductie</Text>
                     </View>
 
                     <View style={styles.groundContainer}>
@@ -86,13 +125,6 @@ const HomeScreen = () => {
                     </View>
 
                     <View style={styles.bottomTextContainer}>
-                        <View style={styles.bottomTextRow}>
-                            <Text style={styles.bottomText}>Wilt u doneren bij de voedselbank? Klik icoon voor meer informatie.</Text>
-                            <Link href="/donate">
-                                <Ionicons name="heart" size={24} color="green" style={styles.icon} />
-                            </Link>
-                        </View>
-                        <View style={styles.divider} />
                         <View style={styles.bottomTextRow}>
                             <Text style={styles.bottomText}>Meer informatie over ons team? Klik icoon voor meer informatie.</Text>
                             <Link href="/about">
@@ -140,6 +172,16 @@ const styles = StyleSheet.create({
     lightGreen: {
         color: '#66C466',
     },
+    greetingText: {
+        fontSize: 22,
+        fontWeight: '600',
+        color: 'white',
+        marginTop: 10,
+        fontFamily: "ABeeZee",
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+    },
     pageTitle: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -151,10 +193,16 @@ const styles = StyleSheet.create({
     statsContainer: {
         marginVertical: 20,
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        padding: 15,
-        borderRadius: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        padding: 20,
+        borderRadius: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 5,
     },
+    
     statsTitle: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -210,10 +258,23 @@ const styles = StyleSheet.create({
     },
     divider: {
         height: 1,
-        width: '100%',
         backgroundColor: 'white',
-        marginVertical: 10,
+        width: '80%',
+        marginTop: 15,
+        marginBottom: 10,
+        opacity: 0.4,
     },
+    statsPercentage: {
+        position: 'absolute',
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#66FF66',
+        fontFamily: "ABeeZee",
+        textShadowColor: 'rgba(0, 0, 0, 0.4)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+        marginTop: 80,
+    },      
 });
 
 export default HomeScreen;
