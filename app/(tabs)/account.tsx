@@ -101,6 +101,12 @@ export default function AccountPage() {
           </TouchableOpacity>
         </View>
 
+        <View style={styles.legalHeader}>
+          <Ionicons name="document-text-outline" size={22} color="#4CAF50" style={{ marginRight: 8 }} />
+          <Text style={styles.categoryTitle}>Juridische Informatie</Text>
+        </View>
+
+
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => router.push('/privacy_policy')}>
             <Text style={styles.buttonText}>Privacybeleid</Text>
@@ -167,6 +173,7 @@ const styles = StyleSheet.create({
 
   donateContainer: {
     marginTop: 30,
+    marginBottom: 30,
     padding: 20,
     backgroundColor: '#e6f4ea',
     borderRadius: 10,
@@ -251,5 +258,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontFamily: 'ABeeZee',
   },
-  
+  legalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },  
 });
