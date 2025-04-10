@@ -95,10 +95,10 @@ const FridgePage = () => {
       />
 
       <TouchableOpacity style={styles.addButton} onPress={() => setIsAddModalVisible(true)}>
-        <Plus size={28} color="white" />
+        <Plus size={20} color="#4CAF50" style={{ marginRight: 6 }} />
+        <Text style={{ color: '#4CAF50', fontWeight: 'bold', fontFamily: 'ABeeZee' }}>Product</Text>
       </TouchableOpacity>
 
-      {/* Filter Modal */}
       <Modal
         visible={isFilterModalVisible}
         transparent={true}
@@ -126,7 +126,6 @@ const FridgePage = () => {
         </View>
       </Modal>
 
-      {/* Add Product Modal */}
       <Modal
         visible={isAddModalVisible}
         transparent={true}
@@ -247,14 +246,19 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 20,
     right: 20,
-    backgroundColor: "#4CAF50",
-    padding: 16,
-    borderRadius: 50,
+    backgroundColor: "#ffffff",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#4CAF50",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
-  },
+    flexDirection: 'row',
+    alignItems: 'center',
+  },  
   modalContainer: {
     flex: 1,
     justifyContent: "center",

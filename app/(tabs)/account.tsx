@@ -97,7 +97,7 @@ export default function AccountPage() {
             Heb je voedsel dat je niet gaat gebruiken? Doneer het eenvoudig aan een voedselbank in de buurt en help verspilling verminderen.
           </Text>
           <TouchableOpacity style={styles.donateButton} onPress={() => router.push('/donate')}>
-            <Text style={styles.donateButtonText}>Doneer nu</Text>
+            <Text style={styles.donateButtonText}>Meer Informatie</Text>
           </TouchableOpacity>
         </View>
 
