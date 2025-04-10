@@ -101,11 +101,22 @@ const HomeScreen = () => {
 
                     <View style={styles.statsContainer}>
                         <Text style={styles.statsTitle}>Jouw statistieken:</Text>
-                        <Svg height="100" width="100" viewBox="0 0 100 100">
-                            <Circle cx="50" cy="50" r="40" stroke="white" strokeWidth="5" fill="none" />
-                            <AnimatedCircle cx="50" cy="50" r="40" stroke="green" strokeWidth="5" strokeDasharray="251.2" animatedProps={animatedProps} fill="none" />
+                        <Svg height="150" width="150" viewBox="0 0 100 100">
+                            <Circle cx="50" cy="50" r="40" stroke="#ffffff66" strokeWidth="8" fill="none" />
+                            <AnimatedCircle
+                                cx="50"
+                                cy="50"
+                                r="40"
+                                stroke="#66C466"
+                                strokeWidth="8"
+                                strokeDasharray="251.2"
+                                animatedProps={animatedProps}
+                                fill="none"
+                                strokeLinecap="round"
+                            />
                         </Svg>
-                        <Text style={styles.statsText}>CO2-reductie: {co2Reduction}%</Text>
+                        <Text style={styles.statsPercentage}>{co2Reduction}%</Text>
+                        <Text style={styles.statsText}>CO2-reductie</Text>
                     </View>
 
                     <View style={styles.groundContainer}>
@@ -182,10 +193,16 @@ const styles = StyleSheet.create({
     statsContainer: {
         marginVertical: 20,
         alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        padding: 15,
-        borderRadius: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        padding: 20,
+        borderRadius: 15,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 5,
     },
+    
     statsTitle: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -246,7 +263,18 @@ const styles = StyleSheet.create({
         marginTop: 15,
         marginBottom: 10,
         opacity: 0.4,
-    },    
+    },
+    statsPercentage: {
+        position: 'absolute',
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#66FF66',
+        fontFamily: "ABeeZee",
+        textShadowColor: 'rgba(0, 0, 0, 0.4)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+        marginTop: 80,
+    },      
 });
 
 export default HomeScreen;
