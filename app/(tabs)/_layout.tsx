@@ -16,10 +16,10 @@ export default function TabLayout() {
     >
       <Tabs.Screen name="home" options={{ title: 'Home' }} />
       <Tabs.Screen name="discover" options={{ title: 'Ontdek' }} />
-      <Tabs.Screen name="donate" options={{ title: 'Doneer' }} />
+      <Tabs.Screen name="fridge" options={{ title: 'Voorraad' }} /> 
       <Tabs.Screen name="account" options={{ title: 'Account' }} />
       <Tabs.Screen name="scan" options={{ tabBarButton: () => null }} />
-      <Tabs.Screen name="fridge" options={{ tabBarButton: () => null }} />
+      <Tabs.Screen name="add_food" options={{ tabBarButton: () => null }} /> 
     </Tabs>
   );
 }
