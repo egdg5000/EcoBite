@@ -172,7 +172,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
               }}
             >
               <Ionicons name="barcode" size={20} color="#fff" />
-              <Text style={styles.fabText}>Scan</Text>
+              <Text style={styles.fabText}>Scan barcode</Text>
             </TouchableOpacity>
             
             <View style={styles.divider} /> 
@@ -185,7 +185,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
               }}
             >
               <Ionicons name="restaurant" size={20} color="#fff" />
-              <Text style={styles.fabText}>Voedsel</Text>
+              <Text style={styles.fabText}>Voedsel toevoegen</Text>
             </TouchableOpacity>
           </Animated.View>
         </View>

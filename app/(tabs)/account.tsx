@@ -97,9 +97,15 @@ export default function AccountPage() {
             Heb je voedsel dat je niet gaat gebruiken? Doneer het eenvoudig aan een voedselbank in de buurt en help verspilling verminderen.
           </Text>
           <TouchableOpacity style={styles.donateButton} onPress={() => router.push('/donate')}>
-            <Text style={styles.donateButtonText}>Doneer nu</Text>
+            <Text style={styles.donateButtonText}>Meer Informatie</Text>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.legalHeader}>
+          <Ionicons name="document-text-outline" size={22} color="#4CAF50" style={{ marginRight: 8 }} />
+          <Text style={styles.categoryTitle}>Juridische Informatie</Text>
+        </View>
+
 
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={() => router.push('/privacy_policy')}>
@@ -167,6 +173,7 @@ const styles = StyleSheet.create({
 
   donateContainer: {
     marginTop: 30,
+    marginBottom: 30,
     padding: 20,
     backgroundColor: '#e6f4ea',
     borderRadius: 10,
@@ -251,5 +258,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     fontFamily: 'ABeeZee',
   },
-  
+  legalHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },  
 });
