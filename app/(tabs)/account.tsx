@@ -88,8 +88,17 @@ export default function AccountPage() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.categoryContainer}>
-          <Text style={styles.categoryTitle}>Juridische Informatie</Text>
+        <View style={styles.donateContainer}>
+          <View style={styles.donateHeader}>
+            <Ionicons name="heart" size={22} color="#D32F2F" style={{ marginRight: 8 }} />
+            <Text style={styles.donateTitle}>Voedsel doneren</Text>
+          </View>
+          <Text style={styles.donateDescription}>
+            Heb je voedsel dat je niet gaat gebruiken? Doneer het eenvoudig aan een voedselbank in de buurt en help verspilling verminderen.
+          </Text>
+          <TouchableOpacity style={styles.donateButton} onPress={() => router.push('/donate')}>
+            <Text style={styles.donateButtonText}>Doneer nu</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.buttonContainer}>
@@ -156,6 +165,31 @@ const styles = StyleSheet.create({
     fontFamily: 'ABeeZee'
   },
 
+  donateContainer: {
+    marginTop: 30,
+    padding: 20,
+    backgroundColor: '#e6f4ea',
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  donateTitle: {
+    fontSize: 20,
+    fontFamily: 'ABeeZee',
+    color: '#2e7d32',
+    marginBottom: 10,
+  },
+  donateButton: {
+    backgroundColor: '#4CAF50',
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+  },
+  donateButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+  },
+
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -205,4 +239,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontFamily: 'ABeeZee',
   },
+  donateHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  donateDescription: {
+    fontSize: 14,
+    color: '#555',
+    textAlign: 'center',
+    marginBottom: 12,
+    fontFamily: 'ABeeZee',
+  },
+  
 });

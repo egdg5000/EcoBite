@@ -25,8 +25,9 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
     (r: any) => r.name === 'home' || r.name === 'discover'
   );
   const rightTabs = state.routes.filter(
-    (r: any) => r.name === 'account' || r.name === 'donate'
+    (r: any) => r.name === 'fridge' || r.name === 'account'
   );
+  
 
   useEffect(() => {
     if (menuOpen) {
@@ -83,7 +84,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
     let iconName: keyof typeof Ionicons.glyphMap = 'home';
     if (route.name === 'discover') iconName = 'search';
     if (route.name === 'account') iconName = 'person';
-    if (route.name === 'donate') iconName = 'heart';
+    if (route.name === 'fridge') iconName = 'fast-food';
 
     const onPress = () => {
       const event = navigation.emit({
@@ -179,12 +180,12 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
             <TouchableOpacity
               style={styles.fabItem}
               onPress={() => {
-                nav.navigate('fridge' as never);
+                nav.navigate('add_food' as never);
                 setMenuOpen(false);
               }}
             >
-              <Ionicons name="fast-food" size={20} color="#fff" />
-              <Text style={styles.fabText}>Voorraad</Text>
+              <Ionicons name="restaurant" size={20} color="#fff" />
+              <Text style={styles.fabText}>Voedsel</Text>
             </TouchableOpacity>
           </Animated.View>
         </View>
