@@ -1,17 +1,15 @@
-import { View, Text, StyleSheet, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, SafeAreaView, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
 
 export default function PrivacyPolicyScreen() {
   const [fontsLoaded] = useFonts({
-    'ABeeZee': require('../assets/fonts/ABeeZee.ttf'), // Laad het lettertype
+    'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
   });
 
   const router = useRouter();
 
-  if (!fontsLoaded) {
-    return null; // Wacht tot de lettertypen geladen zijn
-  }
+  if (!fontsLoaded) return null;
 
   const handleBackPress = () => {
     router.back();
@@ -35,7 +33,7 @@ export default function PrivacyPolicyScreen() {
           </View>
 
           <View style={styles.divider} />
-          
+
           <View style={styles.section}>
             <Text style={styles.subtitle}>2. Gebruik van Gegevens</Text>
             <Text style={styles.content}>
@@ -44,7 +42,7 @@ export default function PrivacyPolicyScreen() {
           </View>
 
           <View style={styles.divider} />
-          
+
           <View style={styles.section}>
             <Text style={styles.subtitle}>3. Gegevensbeveiliging</Text>
             <Text style={styles.content}>
@@ -53,7 +51,7 @@ export default function PrivacyPolicyScreen() {
           </View>
 
           <View style={styles.divider} />
-          
+
           <View style={styles.section}>
             <Text style={styles.subtitle}>4. Delen van Gegevens</Text>
             <Text style={styles.content}>
@@ -62,7 +60,7 @@ export default function PrivacyPolicyScreen() {
           </View>
 
           <View style={styles.divider} />
-          
+
           <View style={styles.section}>
             <Text style={styles.subtitle}>5. Uw Rechten</Text>
             <Text style={styles.content}>
@@ -71,7 +69,7 @@ export default function PrivacyPolicyScreen() {
           </View>
 
           <View style={styles.divider} />
-          
+
           <View style={styles.section}>
             <Text style={styles.subtitle}>6. Wijzigingen in dit Privacybeleid</Text>
             <Text style={styles.content}>
@@ -80,15 +78,15 @@ export default function PrivacyPolicyScreen() {
           </View>
 
           <View style={styles.divider} />
-          
+
           <Text style={styles.content}>
             Door gebruik te maken van onze app, gaat u akkoord met dit privacybeleid en geeft u toestemming voor de verwerking van uw gegevens zoals beschreven.
           </Text>
         </ScrollView>
 
-        <Text onPress={handleBackPress} style={styles.link}>
-          Terug
-        </Text>
+        <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
+          <Text style={styles.backButtonText}>← Terug</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -102,5 +100,18 @@ const styles = StyleSheet.create({
   subtitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 5, color: '#333', fontFamily: 'ABeeZee' },
   section: { marginBottom: 20 },
   divider: { height: 1, backgroundColor: '#28a745', marginVertical: 10 },
-  link: { fontSize: 16, color: '#007BFF', fontWeight: 'bold', textAlign: 'center', fontFamily: 'ABeeZee' },
+  backButton: {
+    backgroundColor: '#28a745',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
+    fontFamily: 'ABeeZee',
+  },
 });
