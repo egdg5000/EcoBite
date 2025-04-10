@@ -28,7 +28,6 @@ const HomeScreen = () => {
     const progress = useSharedValue(0);
     const [greeting, setGreeting] = useState('');
 
-    // Animatie voor begroetingstekst
     const greetingOpacity = useSharedValue(0);
     const greetingTranslateY = useSharedValue(10);
 
@@ -36,7 +35,6 @@ const HomeScreen = () => {
         progress.value = withTiming(75, { duration: 2000 });
         setCo2Reduction(75);
 
-        // Bepaal begroeting + emoji
         const currentHour = new Date().getHours();
         let timeGreeting = '';
         if (currentHour < 12) {
@@ -48,7 +46,6 @@ const HomeScreen = () => {
         }
         setGreeting(timeGreeting);
 
-        // Start fade-in animatie
         greetingOpacity.value = withTiming(1, { duration: 800 });
         greetingTranslateY.value = withTiming(0, { duration: 800 });
     }, []);
@@ -85,7 +82,6 @@ const HomeScreen = () => {
             <Animated.View style={[styles.container, backgroundColor]}>
                 <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
                     
-                    {/* Header met logo en naam */}
                     <View style={styles.header}>
                         <View style={styles.logoContainer}>
                             <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
@@ -95,7 +91,6 @@ const HomeScreen = () => {
                             </Text>
                         </View>
 
-                        {/* Begroeting met animatie */}
                         <Animated.Text style={[styles.greetingText, greetingStyle]}>
                             {greeting}
                         </Animated.Text>
