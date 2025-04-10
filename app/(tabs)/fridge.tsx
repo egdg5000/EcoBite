@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Modal, SafeAreaView } from "react-native";  // Voeg SafeAreaView toe
 import { Plus, Filter } from "lucide-react-native";
 import { useFonts } from 'expo-font';
@@ -17,6 +17,10 @@ const FridgePage = () => {
     category: "",
   });
 
+  const [scrollEnabled, setScrollEnabled] = useState(true);
+
+  const [productList, setProductList] = useState([]);
+
   const [products, setProducts] = useState([
     { id: "1", name: "Melk", quantity: "1L", expiry: "02-04-2025", category: "zuivel", isFavorite: false },
     { id: "2", name: "Kipfilet", quantity: "500g", expiry: "05-04-2025", category: "vlees", isFavorite: false },
@@ -26,6 +30,8 @@ const FridgePage = () => {
   const [fontsLoaded] = useFonts({
     'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
   });
+
+  const searchTimer = useRef<number | null>(null);
 
   const toggleFavorite = (productId: string) => {
     setProducts(prevProducts =>
@@ -51,6 +57,28 @@ const FridgePage = () => {
     product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
     (selectedCategory ? product.category === selectedCategory : true)
   );
+
+  const searchProduct = async (product: any) => {
+    setProductList([]);
+    const response = await fetch(`http://localhost:3000/products/search?query=${product.name}`, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    const data = await response.json();
+    if (data.success) {
+      const templist: any[] = [];
+      data.data.forEach((item: any) => { //Remove duplicates 
+        const existingItem = templist.find((i) => i['name.singular'] === item['name.singular']);
+        if (!existingItem) templist.push(item);
+      });
+      setProductList(templist);
+    } else {
+      console.error(data.message);
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>  {/* SafeAreaView hier toegevoegd */}
@@ -149,7 +177,35 @@ const FridgePage = () => {
               style={styles.input}
               placeholder="Naam van het product"
               value={newProduct.name}
-              onChangeText={(text) => setNewProduct({ ...newProduct, name: text })}
+              onChangeText={(text) => {
+                if (searchTimer.current) clearTimeout(searchTimer.current);
+                searchTimer.current = window.setTimeout(() => {
+                  searchProduct({ ...newProduct, name: text });
+                }, 500);
+                setNewProduct((prevNewProduct) => ({ ...prevNewProduct, name: text }));
+              }} 
+            />
+            <FlatList
+              style={{ maxHeight: 200 }}
+              data={productList}
+              keyExtractor={item => item.Index}
+              renderItem={({ item, index }) => {
+                if (index > 11) return null;
+                return (
+                  <View style={styles.productCard}>
+                    <Text style={styles.productName}>{item['name.singular']}</Text>
+                    <TouchableOpacity
+                      style={styles.iconsContainer}
+                      onPress={() => {
+                        setNewProduct({ ...newProduct, name: item['name.singular'] });
+                        setIsAddModalVisible(false);
+                      }}
+                    >
+                    </TouchableOpacity>
+                  </View>
+                );
+              }}
+              scrollEnabled={true}
             />
             <TextInput
               style={styles.input}
