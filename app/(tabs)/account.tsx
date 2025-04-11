@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Modal, Switch } from 'react-native';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { useColorScheme } from 'react-native-appearance';
 
-export default function AccountPage() {
+const AccountPage = () => {
   const [fontsLoaded] = useFonts({
     'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
   });
@@ -15,8 +16,24 @@ export default function AccountPage() {
   });
 
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
-
+  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
+  
   const router = useRouter();
+  const systemTheme = useColorScheme();
+
+  useEffect(() => {
+    if (theme === 'system' || systemTheme === 'no-preference') {
+      setTheme(systemTheme === 'no-preference' ? 'system' : systemTheme);
+    }
+  }, [systemTheme, theme]);  
+
+  const handleThemeChange = (value: boolean) => {
+    if (value) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  };
 
   const handleFiltersPress = () => {
     router.push('/filters');
@@ -47,14 +64,29 @@ export default function AccountPage() {
     router.push('/');
   };
 
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  const dynamicStyles = theme === 'light' ? styles.lightTheme : theme === 'dark' ? styles.darkTheme : {};
+
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, ...dynamicStyles }}>
       <ScrollView style={styles.container}>
         <View style={styles.userInfo}>
           <View style={styles.userText}>
             <Text style={styles.userInfoText}>Gebruikersnaam: {userData.username}</Text>
             <Text style={styles.userInfoText}>Email: {userData.email}</Text>
           </View>
+        </View>
+
+        {/* Thema Schakelaar */}
+        <View style={styles.themeSwitcherContainer}>
+          <Text style={styles.themeSwitcherText}>Donker Thema</Text>
+          <Switch
+            value={theme === 'dark'}
+            onValueChange={handleThemeChange}
+          />
         </View>
 
         <View style={styles.buttonContainer}>
@@ -101,25 +133,6 @@ export default function AccountPage() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.legalHeader}>
-          <Ionicons name="document-text-outline" size={22} color="#4CAF50" style={{ marginRight: 8 }} />
-          <Text style={styles.categoryTitle}>Juridische Informatie</Text>
-        </View>
-
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/privacy_policy')}>
-            <Text style={styles.buttonText}>Privacybeleid</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-          <View style={styles.separator}></View>
-
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/terms')}>
-            <Text style={styles.buttonText}>Servicevoorwaarden</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-        </View>
-
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
           <Ionicons name="log-out" size={24} color="#D32F2F" />
           <Text style={styles.logoutText}>Uitloggen</Text>
@@ -148,29 +161,36 @@ export default function AccountPage() {
       </Modal>
     </SafeAreaView>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff', padding: 20 },
+  container: { flex: 1, padding: 20 },
+  lightTheme: {
+    backgroundColor: '#fff',
+    color: '#333',
+  },
+  darkTheme: {
+    backgroundColor: '#333',
+    color: '#fff',
+  },
   userInfo: { flexDirection: 'row', alignItems: 'center', marginBottom: 30, padding: 20, backgroundColor: '#f8f8f8', borderRadius: 10 },
   userText: { justifyContent: 'center' },
-  userInfoText: { fontSize: 18, color: '#333', fontFamily: 'ABeeZee' },
+  userInfoText: { fontSize: 18, fontFamily: 'ABeeZee' },
   buttonContainer: { marginTop: 20 },
   button: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 15, backgroundColor: '#f1f1f1', borderRadius: 10 },
-  buttonText: { fontSize: 16, color: '#333', fontFamily: 'ABeeZee' },
+  buttonText: { fontSize: 16, fontFamily: 'ABeeZee' },
   arrow: { fontSize: 18, color: '#4CAF50', fontFamily: 'ABeeZee' },
   separator: { height: 1, backgroundColor: '#ddd', marginVertical: 10 },
-  logoutButton: { flexDirection: 'row', alignItems: 'center', padding: 15, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#D32F2F', marginTop: 30 },
-  logoutText: { fontSize: 16, color: '#D32F2F', marginLeft: 10, fontFamily: 'ABeeZee' },
-
-  categoryContainer: { marginTop: 30 },
-  categoryTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#28a745',
-    fontFamily: 'ABeeZee'
+  themeSwitcherContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
   },
-
+  themeSwitcherText: {
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+  },
   donateContainer: {
     marginTop: 30,
     marginBottom: 30,
@@ -179,11 +199,22 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
   },
+  donateHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
   donateTitle: {
     fontSize: 20,
     fontFamily: 'ABeeZee',
     color: '#2e7d32',
-    marginBottom: 10,
+  },
+  donateDescription: {
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+    color: '#333',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   donateButton: {
     backgroundColor: '#4CAF50',
@@ -196,71 +227,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'ABeeZee',
   },
-
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContainer: {
-    width: '80%',
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18,
-    marginBottom: 20,
-    fontFamily: 'ABeeZee',
-    textAlign: 'center',
-    color: '#333',
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  cancelButton: {
-    flex: 1,
-    marginRight: 10,
-    padding: 10,
-    backgroundColor: '#ccc',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  cancelButtonText: {
-    color: '#333',
-    fontFamily: 'ABeeZee',
-  },
-  confirmButton: {
-    flex: 1,
-    marginLeft: 10,
-    padding: 10,
-    backgroundColor: '#D32F2F',
-    borderRadius: 5,
-    alignItems: 'center',
-  },
-  confirmButtonText: {
-    color: '#fff',
-    fontFamily: 'ABeeZee',
-  },
-  donateHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  donateDescription: {
-    fontSize: 14,
-    color: '#555',
-    textAlign: 'center',
-    marginBottom: 12,
-    fontFamily: 'ABeeZee',
-  },
-  legalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },  
+  logoutButton: { flexDirection: 'row', alignItems: 'center', padding: 15, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#D32F2F', marginTop: 30 },
+  logoutText: { fontSize: 16, color: '#D32F2F', marginLeft: 10, fontFamily: 'ABeeZee' },
+  modalOverlay: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
+  modalContainer: { width: '80%', backgroundColor: '#fff', borderRadius: 10, padding: 20, alignItems: 'center' },
+  modalTitle: { fontSize: 18, marginBottom: 20, fontFamily: 'ABeeZee', textAlign: 'center' },
+  modalButtons: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
+  cancelButton: { flex: 1, marginRight: 10, padding: 10, backgroundColor: '#ccc', borderRadius: 5, alignItems: 'center' },
+  cancelButtonText: { color: '#333', fontFamily: 'ABeeZee' },
+  confirmButton: { flex: 1, marginLeft: 10, padding: 10, backgroundColor: '#D32F2F', borderRadius: 5, alignItems: 'center' },
+  confirmButtonText: { color: '#fff', fontFamily: 'ABeeZee' },
 });
+
+export default AccountPage;
