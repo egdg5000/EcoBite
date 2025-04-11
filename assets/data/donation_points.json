@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "name": "Voedselbank Utrecht",
+      "latitude": 52.092876,
+      "longitude": 5.104480,
+      "description": "Hoofdkantoor van de Voedselbank in Utrecht. Neem contact op voor inlevermomenten.",
+      "address": "Kanaalweg 16, 3526 KL Utrecht"
+    },
+    {
+      "id": 2,
+      "name": "Donatiepunt Amsterdam-West",
+      "latitude": 52.3702,
+      "longitude": 4.8897,
+      "description": "Lokaal inzamelpunt voor houdbaar voedsel. Dagelijks geopend tot 18:00.",
+      "address": "Kinkerstraat 89, 1053 DH Amsterdam"
+    },
+    {
+      "id": 3,
+      "name": "Voedselhulp Rotterdam Noord",
+      "latitude": 51.9225,
+      "longitude": 4.47917,
+      "description": "Ondersteuning voor huishoudens met beperkte middelen.",
+      "address": "Bergweg 200, 3037 EG Rotterdam"
+    }
+  ]
+  
