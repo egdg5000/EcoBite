@@ -8,13 +8,13 @@ import {
   Alert,
   SafeAreaView,
   ScrollView,
-  Modal,
   Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useFonts } from "expo-font";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Picker } from "@react-native-picker/picker";
 
 const AddFoodPage = () => {
   const router = useRouter();
@@ -23,7 +23,14 @@ const AddFoodPage = () => {
   const [expiry, setExpiry] = useState("");
   const [category, setCategory] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
+
+  // Foutmeldingen state
+  const [errors, setErrors] = useState({
+    name: "",
+    quantity: "",
+    expiry: "",
+    category: "",
+  });
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
@@ -37,9 +44,39 @@ const AddFoodPage = () => {
     }
   };
 
+  const handleCategorySelect = (selectedCategory: string) => {
+    setCategory(selectedCategory);
+  };
+
+  const validateForm = () => {
+    const newErrors: any = {
+      name: "",
+      quantity: "",
+      expiry: "",
+      category: "",
+    };
+
+    if (!name) {
+      newErrors.name = "Vul de productnaam in";
+    }
+    if (!quantity) {
+      newErrors.quantity = "Vul de hoeveelheid in";
+    }
+    if (!expiry) {
+      newErrors.expiry = "Selecteer een houdbaarheidsdatum";
+    }
+    if (!category) {
+      newErrors.category = "Selecteer een categorie";
+    }
+
+    setErrors(newErrors);
+
+    // Als er geen fouten zijn, return true om het formulier te verzenden
+    return Object.values(newErrors).every((error) => error === "");
+  };
+
   const handleSubmit = () => {
-    if (!name || !quantity || !expiry || !category) {
-      Alert.alert("Vul alle velden in");
+    if (!validateForm()) {
       return;
     }
 
@@ -52,11 +89,6 @@ const AddFoodPage = () => {
 
     const encodedProduct = encodeURIComponent(JSON.stringify(newProduct));
     router.push(`/fridge?newProduct=${encodedProduct}`);
-  };
-
-  const handleCategorySelect = (selectedCategory: string) => {
-    setCategory(selectedCategory);
-    setShowCategoryModal(false); // Close modal after selection
   };
 
   if (!fontsLoaded) return null;
@@ -73,6 +105,7 @@ const AddFoodPage = () => {
           value={name}
           onChangeText={setName}
         />
+        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
         <Text style={styles.label}>Hoeveelheid</Text>
         <TextInput
@@ -81,6 +114,7 @@ const AddFoodPage = () => {
           value={quantity}
           onChangeText={setQuantity}
         />
+        {errors.quantity && <Text style={styles.errorText}>{errors.quantity}</Text>}
 
         <Text style={styles.label}>Houdbaar tot</Text>
         <TouchableOpacity
@@ -101,59 +135,25 @@ const AddFoodPage = () => {
             minimumDate={new Date()}
           />
         )}
+        {errors.expiry && <Text style={styles.errorText}>{errors.expiry}</Text>}
 
         <Text style={styles.label}>Categorie</Text>
-        <TouchableOpacity
-          style={styles.dateInput}
-          onPress={() => setShowCategoryModal(true)}
-        >
-          <Text style={styles.dateText}>
-            {category ? category : "Selecteer een categorie"}
-          </Text>
-          <Icon name="arrow-drop-down" size={20} color="#4CAF50" />
-        </TouchableOpacity>
-
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={showCategoryModal}
-          onRequestClose={() => setShowCategoryModal(false)}
-        >
-          <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <TouchableOpacity
-                style={styles.modalItem}
-                onPress={() => handleCategorySelect("Fruit")}
-              >
-                <Text style={styles.modalItemText}>Fruit</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalItem}
-                onPress={() => handleCategorySelect("Groente")}
-              >
-                <Text style={styles.modalItemText}>Groente</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalItem}
-                onPress={() => handleCategorySelect("Vlees")}
-              >
-                <Text style={styles.modalItemText}>Vlees</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalItem}
-                onPress={() => handleCategorySelect("Vis")}
-              >
-                <Text style={styles.modalItemText}>Vis</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.modalItem}
-                onPress={() => handleCategorySelect("Zuivel")}
-              >
-                <Text style={styles.modalItemText}>Zuivel</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
+        <View style={styles.dropdownContainer}>
+          <Picker
+            selectedValue={category}
+            onValueChange={handleCategorySelect}
+            style={styles.dropdown}
+            dropdownIconColor="#4CAF50"
+          >
+            <Picker.Item label="Selecteer een categorie" value="" />
+            <Picker.Item label="Fruit" value="fruit" />
+            <Picker.Item label="Groente" value="groente" />
+            <Picker.Item label="Vlees" value="vlees" />
+            <Picker.Item label="Vis" value="vis" />
+            <Picker.Item label="Zuivel" value="zuivel" />
+          </Picker>
+        </View>
+        {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Toevoegen</Text>
@@ -209,26 +209,25 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
   },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContent: {
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    padding: 20,
-    width: 300,
-  },
-  modalItem: {
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-  },
-  modalItemText: {
-    fontSize: 16,
+  errorText: {
+    fontSize: 12,
+    color: "red",
+    marginBottom: 8,
     fontFamily: "ABeeZee",
+  },
+  dropdownContainer: {
+    backgroundColor: "#f5f5f5",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    overflow: "hidden",
+    marginBottom: 16,
+  },
+  dropdown: {
+    height: 50,
     color: "#333",
+    paddingHorizontal: 10,
+    fontFamily: "ABeeZee",
   },
   button: {
     backgroundColor: "#4CAF50",
