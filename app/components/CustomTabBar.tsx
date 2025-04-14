@@ -10,11 +10,11 @@ import {
   StyleSheet,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useNavigation } from 'expo-router';
 import { BlurView } from 'expo-blur';
+import { useRouter } from 'expo-router';
 
 const CustomTabBar = ({ state, descriptors, navigation }: any) => {
-  const nav = useNavigation<any>();
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -167,7 +167,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
             <TouchableOpacity
               style={styles.fabItem}
               onPress={() => {
-                nav.navigate('scan' as never);
+                router.push('/scan');
                 setMenuOpen(false);
               }}
             >
@@ -180,7 +180,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
             <TouchableOpacity
               style={styles.fabItem}
               onPress={() => {
-                nav.navigate('add_food' as never);
+                router.push('/add_food');
                 setMenuOpen(false);
               }}
             >
