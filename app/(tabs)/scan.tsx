@@ -1,25 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, Button, TouchableOpacity, SafeAreaView } from "react-native";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useFonts } from "expo-font";
 
 const ScanScreen = () => {
-  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState<string | null>(null);
   const router = useRouter();
+  const [facing, setFacing] = useState<CameraType>('back');
+  const [permission, requestPermission] = useCameraPermissions();
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
   });
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
-    })();
-  }, []);
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View style={styles.container}>
+        <Text style={styles.text}>We need your permission to show the camera</Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
 
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     setScanned(true);
@@ -27,21 +36,21 @@ const ScanScreen = () => {
     console.log("Gescannde data:", data);
   };
 
-  if (hasPermission === null) {
-    return (
-      <View style={styles.centered}>
-        <Text style={styles.text}>Toestemming wordt gevraagd...</Text>
-      </View>
-    );
-  }
+  // if (hasPermission === null) {
+  //   return (
+  //     <View style={styles.centered}>
+  //       <Text style={styles.text}>Toestemming wordt gevraagd...</Text>
+  //     </View>
+  //   );
+  // }
 
-  if (hasPermission === false) {
-    return (
-      <View style={styles.centered}>
-        <Text style={styles.text}>Geen toegang tot camera</Text>
-      </View>
-    );
-  }
+  // if (hasPermission === false) {
+  //   return (
+  //     <View style={styles.centered}>
+  //       <Text style={styles.text}>Geen toegang tot camera</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,8 +59,9 @@ const ScanScreen = () => {
       </TouchableOpacity>
 
       <View style={styles.scannerContainer}>
-        <BarCodeScanner
-          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        <CameraView
+          facing={facing}
+          onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
         />
       </View>
