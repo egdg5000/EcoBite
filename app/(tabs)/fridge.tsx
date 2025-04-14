@@ -153,7 +153,7 @@ const FridgePage = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Filter op categorie</Text>
-            {["vruchten", "groente", "vlees", "vis", "zuivel"].map((category) => (
+            {Array.from(new Set(products.map((p) => p.category))).map((category) => (
               <TouchableOpacity
                 key={category}
                 style={styles.filterOption}
