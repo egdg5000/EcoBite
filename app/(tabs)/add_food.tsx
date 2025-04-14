@@ -8,13 +8,13 @@ import {
   Alert,
   SafeAreaView,
   ScrollView,
+  Modal,
   Platform,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { Picker } from "@react-native-picker/picker";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useFonts } from "expo-font";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const AddFoodPage = () => {
   const router = useRouter();
@@ -23,6 +23,7 @@ const AddFoodPage = () => {
   const [expiry, setExpiry] = useState("");
   const [category, setCategory] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
@@ -51,6 +52,11 @@ const AddFoodPage = () => {
 
     const encodedProduct = encodeURIComponent(JSON.stringify(newProduct));
     router.push(`/fridge?newProduct=${encodedProduct}`);
+  };
+
+  const handleCategorySelect = (selectedCategory: string) => {
+    setCategory(selectedCategory);
+    setShowCategoryModal(false); // Close modal after selection
   };
 
   if (!fontsLoaded) return null;
@@ -97,22 +103,57 @@ const AddFoodPage = () => {
         )}
 
         <Text style={styles.label}>Categorie</Text>
-        <View style={styles.dateInput}>
-          <Picker
-            selectedValue={category}
-            onValueChange={(itemValue) => setCategory(itemValue)}
-            style={styles.picker}
-            dropdownIconColor="#4CAF50"
-            itemStyle={styles.pickerItem}
-          >
-            <Picker.Item label="Selecteer een categorie" value="" />
-            <Picker.Item label="Fruit" value="fruit" />
-            <Picker.Item label="Groente" value="groente" />
-            <Picker.Item label="Vlees" value="vlees" />
-            <Picker.Item label="Vis" value="vis" />
-            <Picker.Item label="Zuivel" value="zuivel" />
-          </Picker>
-        </View>
+        <TouchableOpacity
+          style={styles.dateInput}
+          onPress={() => setShowCategoryModal(true)}
+        >
+          <Text style={styles.dateText}>
+            {category ? category : "Selecteer een categorie"}
+          </Text>
+          <Icon name="arrow-drop-down" size={20} color="#4CAF50" />
+        </TouchableOpacity>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={showCategoryModal}
+          onRequestClose={() => setShowCategoryModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalContent}>
+              <TouchableOpacity
+                style={styles.modalItem}
+                onPress={() => handleCategorySelect("Fruit")}
+              >
+                <Text style={styles.modalItemText}>Fruit</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalItem}
+                onPress={() => handleCategorySelect("Groente")}
+              >
+                <Text style={styles.modalItemText}>Groente</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalItem}
+                onPress={() => handleCategorySelect("Vlees")}
+              >
+                <Text style={styles.modalItemText}>Vlees</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalItem}
+                onPress={() => handleCategorySelect("Vis")}
+              >
+                <Text style={styles.modalItemText}>Vis</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalItem}
+                onPress={() => handleCategorySelect("Zuivel")}
+              >
+                <Text style={styles.modalItemText}>Zuivel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Toevoegen</Text>
@@ -168,19 +209,26 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
   },
-  dropdownContainer: {
-    backgroundColor: "#f5f5f5",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    overflow: "hidden",
-    marginBottom: 16,
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
-  dropdown: {
-    height: 50,
-    color: "#333",
+  modalContent: {
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    padding: 20,
+    width: 300,
+  },
+  modalItem: {
+    paddingVertical: 12,
     paddingHorizontal: 10,
+  },
+  modalItemText: {
+    fontSize: 16,
     fontFamily: "ABeeZee",
+    color: "#333",
   },
   button: {
     backgroundColor: "#4CAF50",
@@ -199,15 +247,6 @@ const styles = StyleSheet.create({
     fontFamily: "ABeeZee",
     fontWeight: "bold",
   },
-  picker: {
-    flex: 1,
-    fontFamily: "ABeeZee",
-    color: "#333",
-  },
-  pickerItem: {
-    fontFamily: "ABeeZee",
-    fontSize: 14,
-  },  
 });
 
 export default AddFoodPage;
