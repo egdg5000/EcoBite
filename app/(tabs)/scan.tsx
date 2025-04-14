@@ -163,19 +163,21 @@ const styles = StyleSheet.create({
     color: "#fff",
     textAlign: "center",
     marginBottom: 10,
+    fontFamily: "ABeeZee",
   },
   permissionText: {
     fontSize: 16,
     color: "#BDC3C7",
     textAlign: "center",
     marginBottom: 20,
+    fontFamily: "ABeeZee",
   },
   permissionButton: {
     backgroundColor: "#A0E07C",
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
-    elevation: 5, // Schaduw voor extra diepte
+    elevation: 5, 
   },
   permissionButtonText: {
     fontSize: 18,
