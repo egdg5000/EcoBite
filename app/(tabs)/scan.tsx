@@ -61,6 +61,9 @@ const ScanScreen = () => {
       <View style={styles.scannerContainer}>
         <CameraView
           facing={facing}
+          barcodeScannerSettings={{
+            barcodeTypes: ["ean13"],
+          }}
           onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
         />
