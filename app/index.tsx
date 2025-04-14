@@ -107,6 +107,7 @@ function MainScreen() {
             <Text style={styles.link}>Ik heb al een account</Text>
           </TouchableOpacity>
         </Link>
+        <Link href='/scan'>testlink</Link>
       </View>
     </ImageBackground>
   );

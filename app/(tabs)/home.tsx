@@ -22,7 +22,7 @@ const HomeScreen = () => {
 
     const animatedRef = useAnimatedRef<Animated.ScrollView>();
     const scrollY = useScrollViewOffset(animatedRef);
-    const maxScroll = 200;
+    const maxScroll = 400;
 
     const [co2Reduction, setCo2Reduction] = useState(0);
     const progress = useSharedValue(0);
