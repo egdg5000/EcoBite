@@ -123,15 +123,6 @@ const HomeScreen = () => {
                         <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
                         <Image source={getTreeImage()} style={styles.treeImage} />
                     </View>
-
-                    <View style={styles.bottomTextContainer}>
-                        <View style={styles.bottomTextRow}>
-                            <Text style={styles.bottomText}>Meer informatie over ons team? Klik icoon voor meer informatie.</Text>
-                            <Link href="/about">
-                                <Ionicons name="information-circle" size={24} color="green" style={styles.icon} />
-                            </Link>
-                        </View>
-                    </View>
                 </ScrollView>
             </Animated.View>
         </SafeAreaView>
