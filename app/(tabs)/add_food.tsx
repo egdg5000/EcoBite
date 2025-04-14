@@ -97,12 +97,13 @@ const AddFoodPage = () => {
         )}
 
         <Text style={styles.label}>Categorie</Text>
-        <View style={styles.dropdownContainer}>
+        <View style={styles.dateInput}>
           <Picker
             selectedValue={category}
             onValueChange={(itemValue) => setCategory(itemValue)}
-            style={styles.dropdown}
+            style={styles.picker}
             dropdownIconColor="#4CAF50"
+            itemStyle={styles.pickerItem}
           >
             <Picker.Item label="Selecteer een categorie" value="" />
             <Picker.Item label="Fruit" value="fruit" />
@@ -198,6 +199,15 @@ const styles = StyleSheet.create({
     fontFamily: "ABeeZee",
     fontWeight: "bold",
   },
+  picker: {
+    flex: 1,
+    fontFamily: "ABeeZee",
+    color: "#333",
+  },
+  pickerItem: {
+    fontFamily: "ABeeZee",
+    fontSize: 14,
+  },  
 });
 
 export default AddFoodPage;
