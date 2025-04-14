@@ -16,16 +16,19 @@ const ScanScreen = () => {
   });
 
   if (!permission) {
-    // Camera permissions are still loading.
     return <View />;
   }
 
   if (!permission.granted) {
-    // Camera permissions are not granted yet.
     return (
-      <View style={styles.container}>
-        <Text style={styles.text}>We need your permission to show the camera</Text>
-        <Button onPress={requestPermission} title="grant permission" />
+      <View style={styles.permissionContainer}>
+        <Text style={styles.permissionTitle}>Toegang tot de camera nodig</Text>
+        <Text style={styles.permissionText}>
+          We hebben toestemming nodig om uw camera te gebruiken om barcodes te scannen. Klik hieronder om toegang te geven.
+        </Text>
+        <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
+          <Text style={styles.permissionButtonText}>Geef Toegang</Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -78,7 +81,7 @@ const ScanScreen = () => {
             </TouchableOpacity>
           </>
         ) : (
-          <Text style={styles.text}>Richt je camera op een barcode</Text>
+          <Text style={styles.text}>Richt uw camera op een barcode</Text>
         )}
       </View>
     </SafeAreaView>
@@ -145,6 +148,39 @@ const styles = StyleSheet.create({
   backText: {
     fontSize: 22,
     color: "white",
+    fontWeight: "bold",
+  },
+  permissionContainer: {
+    flex: 1,
+    backgroundColor: "#2C3E50",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  permissionTitle: {
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#fff",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  permissionText: {
+    fontSize: 16,
+    color: "#BDC3C7",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  permissionButton: {
+    backgroundColor: "#A0E07C",
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    elevation: 5, // Schaduw voor extra diepte
+  },
+  permissionButtonText: {
+    fontSize: 18,
+    fontFamily: "ABeeZee",
+    color: "#000",
     fontWeight: "bold",
   },
 });
