@@ -14,37 +14,24 @@ import { useFonts } from "expo-font";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useLocalSearchParams, Link } from "expo-router";
 
+// Definieer een interface voor het product
+interface Product {
+  id: string;
+  name: string;
+  quantity: string;
+  expiry: string;
+  category: string;
+  isFavorite: boolean;
+}
+
 const FridgePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
 
-  const [products, setProducts] = useState([
-    {
-      id: "1",
-      name: "Melk",
-      quantity: "1L",
-      expiry: "02-04-2025",
-      category: "zuivel",
-      isFavorite: false,
-    },
-    {
-      id: "2",
-      name: "Kipfilet",
-      quantity: "500g",
-      expiry: "05-04-2025",
-      category: "vlees",
-      isFavorite: false,
-    },
-    {
-      id: "3",
-      name: "Appels",
-      quantity: "4 stuks",
-      expiry: "10-04-2025",
-      category: "vruchten",
-      isFavorite: false,
-    },
-  ]);
+  // Definieer de state voor de producten en favorieten met het juiste type
+  const [products, setProducts] = useState<Product[]>([]);
+  const [favorites, setFavorites] = useState<Product[]>([]);
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
@@ -81,6 +68,12 @@ const FridgePage = () => {
           : product
       )
     );
+
+    // Verplaats het product naar de favorieten als het een favoriet wordt
+    setFavorites((prevFavorites) => {
+      const updatedFavorites = products.filter((product) => product.isFavorite);
+      return updatedFavorites;
+    });
   };
 
   const filteredProducts = products.filter(
@@ -91,6 +84,8 @@ const FridgePage = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Mijn Voorraad</Text>
+      
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -191,6 +186,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#ffffff",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+    fontFamily: "ABeeZee",
   },
   searchContainer: {
     flexDirection: "row",
