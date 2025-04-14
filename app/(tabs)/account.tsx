@@ -115,7 +115,13 @@ const AccountPage = () => {
           <View style={styles.separator}></View>
 
           <TouchableOpacity style={styles.button} onPress={handleAboutPress}>
-            <Text style={styles.buttonText}>Over de app</Text>
+            <Text style={styles.buttonText}>Versie app</Text>
+            <Text style={styles.arrow}>→</Text>
+          </TouchableOpacity>
+          <View style={styles.separator}></View>
+
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/about')}>
+            <Text style={styles.buttonText}>Ons team</Text>
             <Text style={styles.arrow}>→</Text>
           </TouchableOpacity>
         </View>

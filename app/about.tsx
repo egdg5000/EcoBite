@@ -1,157 +1,113 @@
 import React from "react";
-import { View, Text, Image, ImageBackground, StyleSheet, ScrollView, Dimensions, TouchableOpacity, SafeAreaView } from "react-native";
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView } from "react-native";
 import { useFonts } from 'expo-font';
 import { useRouter } from "expo-router";
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-const { width, height } = Dimensions.get("window");
+export default function AboutScreen() {
+  const [fontsLoaded] = useFonts({
+    'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+  });
 
-const AboutScreen = () => {
-   const [fontsLoaded] = useFonts({
-      'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
-    });
+  const router = useRouter();
 
-    const router = useRouter();
+  if (!fontsLoaded) return null;
 
   return (
-    <SafeAreaView style={styles.safeArea}> 
-      <TouchableOpacity style={styles.closeButton} onPress={() => router.push("/home")}>
-        <Text style={styles.closeText}>×</Text>
-      </TouchableOpacity>
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="arrow-back" size={24} color="#4CAF50" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Over ons</Text>
+        <View style={{ width: 24 }} /> {/* Spacer for alignment */}
+      </View>
 
-      <ImageBackground 
-        source={require("../assets/images/foodmaken.png")} 
-        style={styles.background}
-        imageStyle={styles.imageStyle}
-      >
-        {/* Semi-transparante overlay */}
-        <View style={styles.overlay} />
+      <ScrollView contentContainerStyle={styles.container}>
+        <Image source={require("../assets/images/EcoBite2.png")} style={styles.logo} />
 
-        {/* Logo */}
-        <View style={styles.logoContainer}>
-          <Image source={require("../assets/images/EcoBite2.png")} style={styles.logo} />
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Waarom deze app?</Text>
+          <Text style={styles.cardText}>
+            Voedselverspilling is een groot probleem, en wij willen daar iets aan doen! Onze app helpt je slimmer omgaan met je boodschappen en minder eten weg te gooien.
+          </Text>
         </View>
 
-        <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.title}>Over ons</Text>
-          
-          <View style={styles.section}>
-            <Text style={styles.subtitle}>Waarom deze app?</Text>
-            <Text style={styles.text}>
-              Voedselverspilling is een groot probleem, en wij willen daar iets aan doen! Onze app helpt je slimmer omgaan met je boodschappen en minder eten weg te gooien.
-            </Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.subtitle}>Hoe werkt het?</Text>
-            <Text style={styles.text}>
-              Scan simpelweg je producten en ontdek direct recepten met wat je al in huis hebt. Gamification maakt besparen leuk en inzichtelijk!
-            </Text>
-          </View>
-          
-          <View style={styles.section}>
-            <Text style={styles.subtitle}>Onze missie</Text>
-            <Text style={styles.text}>
-              Wij geloven dat technologie kan bijdragen aan een duurzamere wereld. Met onze app maken we het makkelijker om creatief te koken en voedselverspilling te verminderen.
-            </Text>
-          </View>
-          
-          <Text style={styles.footer}>
-            Dit project is een initiatief van Björn Alderden, Bryan Keislair, Emmet de Graaf, Paul Becking, Vincent Nijboer en Leon Hermans.
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Hoe werkt het?</Text>
+          <Text style={styles.cardText}>
+            Scan simpelweg je producten en ontdek direct recepten met wat je al in huis hebt. Gamification maakt besparen leuk en inzichtelijk!
           </Text>
-        </ScrollView>
-      </ImageBackground>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>Onze missie</Text>
+          <Text style={styles.cardText}>
+            Wij geloven dat technologie kan bijdragen aan een duurzamere wereld. Met onze app maken we het makkelijker om creatief te koken en voedselverspilling te verminderen.
+          </Text>
+        </View>
+
+        <Text style={styles.footer}>
+          Dit project is een initiatief van Björn Alderden, Bryan Keislair, Emmet de Graaf, Paul Becking, Vincent Nijboer en Leon Hermans.
+        </Text>
+      </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "black",
+    backgroundColor: "#fff",
   },
-  background: {
-    flex: 1,
-    width: "100%",
-    height: "100%",
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderColor: "#eee",
   },
-  imageStyle: {
-    resizeMode: "cover",
+  headerTitle: {
+    fontSize: 20,
+    fontFamily: "ABeeZee",
+    color: "#333",
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-  },
-  logoContainer: {
-    position: "absolute",
-    top: 50,
-    left: 20,
-    zIndex: 10,
+  container: {
+    padding: 20,
+    alignItems: "center",
   },
   logo: {
-    width: 60,
-    height: 60,
+    width: 70,
+    height: 70,
     resizeMode: "contain",
-  },
-  closeButton: {
-    position: "absolute",
-    top: 50,
-    right: 20,
-    zIndex: 100,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    borderRadius: 20,
-    width: 40,
-    height: 40,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  closeText: {
-    fontSize: 22,
-    color: "white",
-    fontWeight: "bold",
-  },
-  content: {
-    flexGrow: 1,
-    padding: 25,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: width * 0.08,
-    fontWeight: "bold",
-    color: "white",
-    textAlign: "center",
-    fontFamily: "ABeeZee",
     marginBottom: 20,
   },
-  subtitle: {
-    fontSize: width * 0.06,
-    fontWeight: "bold",
-    color: "#A0E07C",
-    textAlign: "center",
-    fontFamily: "ABeeZee",
-    marginBottom: 10,
-  },
-  section: {
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    padding: 15,
-    borderRadius: 10,
+  card: {
+    backgroundColor: "#f1f1f1",
+    padding: 20,
+    borderRadius: 12,
     marginBottom: 15,
-    width: "90%",
+    width: "100%",
   },
-  text: {
-    fontSize: width * 0.045,
-    color: "white",
-    lineHeight: width * 0.06,
-    textAlign: "center",
+  cardTitle: {
+    fontSize: 18,
+    color: "#2e7d32",
     fontFamily: "ABeeZee",
+    marginBottom: 8,
+  },
+  cardText: {
+    fontSize: 15,
+    color: "#333",
+    fontFamily: "ABeeZee",
+    lineHeight: 22,
   },
   footer: {
-    fontSize: width * 0.04,
-    color: "lightgray",
+    fontSize: 14,
     textAlign: "center",
+    color: "#888",
     marginTop: 20,
     fontFamily: "ABeeZee",
   },
 });
-
-export default AboutScreen;
