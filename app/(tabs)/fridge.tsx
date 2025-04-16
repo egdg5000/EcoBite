@@ -1,87 +1,91 @@
-import React, { useState, useRef } from "react";
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, Modal, SafeAreaView } from "react-native";  // Voeg SafeAreaView toe
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  Modal,
+  SafeAreaView,
+} from "react-native";
 import { Plus, Filter } from "lucide-react-native";
-import { useFonts } from 'expo-font';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Voeg dit toe
-import { Link } from 'expo-router';
+import { useFonts } from "expo-font";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { useLocalSearchParams, Link } from "expo-router";
+
+// Definieer een interface voor het product
+interface Product {
+  id: string;
+  name: string;
+  quantity: string;
+  expiry: string;
+  category: string;
+  isFavorite: boolean;
+}
 
 const FridgePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    quantity: "",
-    expiry: "",
-    category: "",
-  });
 
-  const [scrollEnabled, setScrollEnabled] = useState(true);
-
-  const [productList, setProductList] = useState([]);
-
-  const [products, setProducts] = useState([
-    { id: "1", name: "Melk", quantity: "1L", expiry: "02-04-2025", category: "zuivel", isFavorite: false },
-    { id: "2", name: "Kipfilet", quantity: "500g", expiry: "05-04-2025", category: "vlees", isFavorite: false },
-    { id: "3", name: "Appels", quantity: "4 stuks", expiry: "10-04-2025", category: "vruchten", isFavorite: false },
-  ]);
+  // Definieer de state voor de producten en favorieten met het juiste type
+  const [products, setProducts] = useState<Product[]>([]);
+  const [favorites, setFavorites] = useState<Product[]>([]);
 
   const [fontsLoaded] = useFonts({
-    'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
+    ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
   });
 
-  const searchTimer = useRef<number | null>(null);
+  const params = useLocalSearchParams();
+
+  // ✅ Controleer op nieuwe producten via URL
+  useEffect(() => {
+    const newProductParam = Array.isArray(params.newProduct)
+      ? params.newProduct[0]
+      : params.newProduct;
+
+    if (newProductParam) {
+      try {
+        const parsedProduct = JSON.parse(newProductParam);
+        const newProductWithId = {
+          ...parsedProduct,
+          id: Date.now().toString(), // unieke ID
+          isFavorite: false,
+        };
+        setProducts((prev) => [...prev, newProductWithId]);
+      } catch (error) {
+        console.error("Fout bij het verwerken van het nieuwe product:", error);
+      }
+    }
+  }, [params.newProduct]);
 
   const toggleFavorite = (productId: string) => {
-    setProducts(prevProducts =>
-      prevProducts.map(product =>
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
         product.id === productId
           ? { ...product, isFavorite: !product.isFavorite }
           : product
       )
     );
+
+    // Verplaats het product naar de favorieten als het een favoriet wordt
+    setFavorites((prevFavorites) => {
+      const updatedFavorites = products.filter((product) => product.isFavorite);
+      return updatedFavorites;
+    });
   };
 
-  const handleAddProduct = () => {
-    const newProductId = (products.length + 1).toString();
-    setProducts(prevProducts => [
-      ...prevProducts,
-      { ...newProduct, id: newProductId, isFavorite: false }
-    ]);
-    setNewProduct({ name: "", quantity: "", expiry: "", category: "" });
-    setIsAddModalVisible(false);
-  };
-
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-    (selectedCategory ? product.category === selectedCategory : true)
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      (selectedCategory ? product.category === selectedCategory : true)
   );
 
-  const searchProduct = async (product: any) => {
-    setProductList([]);
-    const response = await fetch(`http://localhost:3000/products/search?query=${product.name}`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-    const data = await response.json();
-    if (data.success) {
-      const templist: any[] = [];
-      data.data.forEach((item: any) => { //Remove duplicates 
-        const existingItem = templist.find((i) => i['name.singular'] === item['name.singular']);
-        if (!existingItem) templist.push(item);
-      });
-      setProductList(templist);
-    } else {
-      console.error(data.message);
-    }
-  };
-
   return (
-    <SafeAreaView style={styles.container}>  {/* SafeAreaView hier toegevoegd */}
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Mijn Voorraad</Text>
+      
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -90,14 +94,17 @@ const FridgePage = () => {
           value={searchQuery}
           onChangeText={setSearchQuery}
         />
-        <TouchableOpacity style={styles.filterButton} onPress={() => setIsFilterModalVisible(true)}>
+        <TouchableOpacity
+          style={styles.filterButton}
+          onPress={() => setIsFilterModalVisible(true)}
+        >
           <Filter size={24} color="#4CAF50" />
         </TouchableOpacity>
       </View>
 
       <FlatList
         data={filteredProducts}
-        keyExtractor={item => item.id}
+        keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <View style={styles.productCard}>
             <Text style={styles.productName}>{item.name}</Text>
@@ -105,9 +112,13 @@ const FridgePage = () => {
             <Text style={styles.productExpiry}>Houdbaar tot: {item.expiry}</Text>
 
             <View style={styles.iconsContainer}>
-              <TouchableOpacity onPress={() => {
-                setProducts(prevProducts => prevProducts.filter(product => product.id !== item.id));
-              }}>
+              <TouchableOpacity
+                onPress={() =>
+                  setProducts((prev) =>
+                    prev.filter((product) => product.id !== item.id)
+                  )
+                }
+              >
                 <Icon name="times" size={24} color="#d32f2f" />
               </TouchableOpacity>
               <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
@@ -122,11 +133,17 @@ const FridgePage = () => {
         )}
       />
 
-      <TouchableOpacity style={styles.addButton} onPress={() => setIsAddModalVisible(true)}>
-        <Plus size={20} color="#4CAF50" style={{ marginRight: 6 }} />
-        <Text style={{ color: '#4CAF50', fontWeight: 'bold', fontFamily: 'ABeeZee' }}>Product</Text>
-      </TouchableOpacity>
+      {/* Voeg-knop met link naar handmatig toevoegen */}
+      <Link href="/add_food" asChild>
+        <TouchableOpacity style={styles.addButton}>
+          <Plus size={20} color="#4CAF50" style={{ marginRight: 6 }} />
+          <Text style={{ color: "#4CAF50", fontWeight: "bold", fontFamily: "ABeeZee" }}>
+            Product
+          </Text>
+        </TouchableOpacity>
+      </Link>
 
+      {/* Filter modal */}
       <Modal
         visible={isFilterModalVisible}
         transparent={true}
@@ -136,102 +153,30 @@ const FridgePage = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Filter op categorie</Text>
-            {["vruchten", "groente", "vlees", "vis", "zuivel"].map(category => (
-              <TouchableOpacity key={category} style={styles.filterOption} onPress={() => {
-                setSelectedCategory(category);
-                setIsFilterModalVisible(false);
-              }}>
+            {Array.from(new Set(products.map((p) => p.category))).map((category) => (
+              <TouchableOpacity
+                key={category}
+                style={styles.filterOption}
+                onPress={() => {
+                  setSelectedCategory(category);
+                  setIsFilterModalVisible(false);
+                }}
+              >
                 <Text style={styles.filterOptionText}>{category}</Text>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity style={styles.filterOption} onPress={() => {
-              setSelectedCategory(null);
-              setIsFilterModalVisible(false);
-            }}>
+            <TouchableOpacity
+              style={styles.filterOption}
+              onPress={() => {
+                setSelectedCategory(null);
+                setIsFilterModalVisible(false);
+              }}
+            >
               <Text style={styles.filterOptionText}>Alle categorieën</Text>
             </TouchableOpacity>
           </View>
         </View>
       </Modal>
-
-      <Modal
-        visible={isAddModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setIsAddModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            {/* Sluitknop */}
-            <TouchableOpacity
-              style={styles.closeButton}
-              onPress={() => setIsAddModalVisible(false)}
-            >
-              <Text style={styles.closeButtonText}>✖</Text>
-            </TouchableOpacity>
-
-            <Text style={styles.modalTitle}>Voeg een nieuw product toe</Text>
-
-            <TextInput
-              style={styles.input}
-              placeholder="Naam van het product"
-              value={newProduct.name}
-              onChangeText={(text) => {
-                if (searchTimer.current) clearTimeout(searchTimer.current);
-                searchTimer.current = window.setTimeout(() => {
-                  searchProduct({ ...newProduct, name: text });
-                }, 500);
-                setNewProduct((prevNewProduct) => ({ ...prevNewProduct, name: text }));
-              }} 
-            />
-            <FlatList
-              style={{ maxHeight: 200 }}
-              data={productList}
-              keyExtractor={item => item.Index}
-              renderItem={({ item, index }) => {
-                if (index > 11) return null;
-                return (
-                  <View style={styles.productCard}>
-                    <Text style={styles.productName}>{item['name.singular']}</Text>
-                    <TouchableOpacity
-                      style={styles.iconsContainer}
-                      onPress={() => {
-                        setNewProduct({ ...newProduct, name: item['name.singular'] });
-                        setIsAddModalVisible(false);
-                      }}
-                    >
-                    </TouchableOpacity>
-                  </View>
-                );
-              }}
-              scrollEnabled={true}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Hoeveelheid"
-              value={newProduct.quantity}
-              onChangeText={(text) => setNewProduct({ ...newProduct, quantity: text })}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Houdbaar tot"
-              value={newProduct.expiry}
-              onChangeText={(text) => setNewProduct({ ...newProduct, expiry: text })}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Categorie"
-              value={newProduct.category}
-              onChangeText={(text) => setNewProduct({ ...newProduct, category: text })}
-            />
-
-            <TouchableOpacity style={styles.addProductButton} onPress={handleAddProduct}>
-              <Text style={styles.addProductButtonText}>Voeg product toe</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-
     </SafeAreaView>
   );
 };
@@ -241,6 +186,12 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: "#ffffff",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 16,
+    fontFamily: "ABeeZee",
   },
   searchContainer: {
     flexDirection: "row",
@@ -254,7 +205,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     backgroundColor: "#f5f5f5",
-    fontFamily: 'ABeeZee',
+    fontFamily: "ABeeZee",
   },
   filterButton: {
     padding: 10,
@@ -277,18 +228,18 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "#333",
-    fontFamily: 'ABeeZee',
+    fontFamily: "ABeeZee",
   },
   productDetails: {
     fontSize: 14,
     color: "#666",
-    fontFamily: 'ABeeZee',
+    fontFamily: "ABeeZee",
   },
   productExpiry: {
     fontSize: 14,
     color: "#d32f2f",
     fontWeight: "600",
-    fontFamily: 'ABeeZee',
+    fontFamily: "ABeeZee",
   },
   iconsContainer: {
     position: "absolute",
@@ -312,9 +263,9 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },  
+    flexDirection: "row",
+    alignItems: "center",
+  },
   modalContainer: {
     flex: 1,
     justifyContent: "center",
@@ -332,27 +283,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
-    fontFamily: 'ABeeZee',
+    fontFamily: "ABeeZee",
   },
-  input: {
-    width: "100%",
-    padding: 10,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    fontFamily: 'ABeeZee',
-  },
-  addProductButton: {
-    backgroundColor: "#4CAF50",
-    padding: 12,
-    borderRadius: 8,
-  },
-  addProductButtonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-  // New styles for filterOption and filterOptionText
   filterOption: {
     padding: 10,
     marginVertical: 5,
@@ -364,26 +296,8 @@ const styles = StyleSheet.create({
   filterOptionText: {
     fontSize: 16,
     color: "#333",
-    fontFamily: 'ABeeZee',
+    fontFamily: "ABeeZee",
   },
-
-  closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    backgroundColor: 'red',
-    width: 22,
-    height: 22,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  closeButtonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-
 });
 
 export default FridgePage;
