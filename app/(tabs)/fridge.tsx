@@ -1,3 +1,5 @@
+// app/tabs/fridge.tsx
+
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -14,7 +16,6 @@ import { useFonts } from "expo-font";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useLocalSearchParams, Link } from "expo-router";
 
-// Definieer een interface voor het product
 interface Product {
   id: string;
   name: string;
@@ -28,10 +29,7 @@ const FridgePage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
-
-  // Definieer de state voor de producten en favorieten met het juiste type
   const [products, setProducts] = useState<Product[]>([]);
-  const [favorites, setFavorites] = useState<Product[]>([]);
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
@@ -39,7 +37,6 @@ const FridgePage = () => {
 
   const params = useLocalSearchParams();
 
-  // ✅ Controleer op nieuwe producten via URL
   useEffect(() => {
     const newProductParam = Array.isArray(params.newProduct)
       ? params.newProduct[0]
@@ -50,7 +47,7 @@ const FridgePage = () => {
         const parsedProduct = JSON.parse(newProductParam);
         const newProductWithId = {
           ...parsedProduct,
-          id: Date.now().toString(), // unieke ID
+          id: Date.now().toString(),
           isFavorite: false,
         };
         setProducts((prev) => [...prev, newProductWithId]);
@@ -68,12 +65,6 @@ const FridgePage = () => {
           : product
       )
     );
-
-    // Verplaats het product naar de favorieten als het een favoriet wordt
-    setFavorites((prevFavorites) => {
-      const updatedFavorites = products.filter((product) => product.isFavorite);
-      return updatedFavorites;
-    });
   };
 
   const filteredProducts = products.filter(
@@ -85,7 +76,7 @@ const FridgePage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Mijn Voorraad</Text>
-      
+
       <View style={styles.searchContainer}>
         <TextInput
           style={styles.searchInput}
@@ -133,7 +124,20 @@ const FridgePage = () => {
         )}
       />
 
-      {/* Voeg-knop met link naar handmatig toevoegen */}
+      {/* Favorieten-knop */}
+      <Link
+        href={{
+          pathname: "/favorites",
+          params: { products: JSON.stringify(products) },
+        }}
+        asChild
+      >
+        <TouchableOpacity style={styles.favoritesFloatingButton}>
+          <Icon name="heart" size={20} color="#fff" />
+        </TouchableOpacity>
+      </Link>
+
+      {/* Voeg-knop */}
       <Link href="/add_food" asChild>
         <TouchableOpacity style={styles.addButton}>
           <Plus size={20} color="#4CAF50" style={{ marginRight: 6 }} />
@@ -182,22 +186,9 @@ const FridgePage = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: "#ffffff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-    fontFamily: "ABeeZee",
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 16,
-  },
+  container: { flex: 1, padding: 16, backgroundColor: "#ffffff" },
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16, fontFamily: "ABeeZee" },
+  searchContainer: { flexDirection: "row", alignItems: "center", marginBottom: 16 },
   searchInput: {
     flex: 1,
     borderWidth: 1,
@@ -224,17 +215,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     position: "relative",
   },
-  productName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    fontFamily: "ABeeZee",
-  },
-  productDetails: {
-    fontSize: 14,
-    color: "#666",
-    fontFamily: "ABeeZee",
-  },
+  productName: { fontSize: 18, fontWeight: "bold", color: "#333", fontFamily: "ABeeZee" },
+  productDetails: { fontSize: 14, color: "#666", fontFamily: "ABeeZee" },
   productExpiry: {
     fontSize: 14,
     color: "#d32f2f",
@@ -265,6 +247,19 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     flexDirection: "row",
     alignItems: "center",
+  },
+  favoritesFloatingButton: {
+    position: "absolute",
+    bottom: 90,
+    right: 20,
+    backgroundColor: "#ff4081",
+    padding: 16,
+    borderRadius: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    zIndex: 10,
   },
   modalContainer: {
     flex: 1,
