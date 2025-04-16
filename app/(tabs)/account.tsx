@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'ABeeZee',
     color: '#2e7d32',
-    marginBottom: 10,
+    marginBottom: 0,
   },
   donateButton: {
     backgroundColor: '#4CAF50',
