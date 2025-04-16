@@ -22,10 +22,10 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;  // Animatie voor schaling
 
   const leftTabs = state.routes.filter(
-    (r: any) => r.name === 'home' || r.name === 'fridge'
+    (r: any) => r.name === 'home' || r.name === 'discover'
   );
   const rightTabs = state.routes.filter(
-    (r: any) => r.name === 'discover' || r.name === 'account'
+    (r: any) => r.name === 'fridge' || r.name === 'account'
   );
   
 
