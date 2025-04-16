@@ -1,5 +1,3 @@
-// app/tabs/favorites.tsx
-
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation, useLocalSearchParams } from "expo-router";
