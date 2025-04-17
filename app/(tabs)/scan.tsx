@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, Button, TouchableOpacity, SafeAreaView } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useFonts } from "expo-font";
@@ -7,13 +7,26 @@ import { useFonts } from "expo-font";
 const ScanScreen = () => {
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState<string | null>(null);
-  const router = useRouter();
-  const [facing, setFacing] = useState<CameraType>('back');
+  const [scanError, setScanError] = useState(false);
+  const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
+  const router = useRouter();
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
   });
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+
+    if (!scanned) {
+      timeout = setTimeout(() => {
+        setScanError(true);
+      }, 10000); // 10 seconden timeout
+    }
+
+    return () => clearTimeout(timeout);
+  }, [scanned]);
 
   if (!permission) {
     return <View />;
@@ -35,25 +48,10 @@ const ScanScreen = () => {
 
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     setScanned(true);
+    setScanError(false); // Reset eventuele foutmelding
     setScannedData(data);
     console.log("Gescannde data:", data);
   };
-
-  // if (hasPermission === null) {
-  //   return (
-  //     <View style={styles.centered}>
-  //       <Text style={styles.text}>Toestemming wordt gevraagd...</Text>
-  //     </View>
-  //   );
-  // }
-
-  // if (hasPermission === false) {
-  //   return (
-  //     <View style={styles.centered}>
-  //       <Text style={styles.text}>Geen toegang tot camera</Text>
-  //     </View>
-  //   );
-  // }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -73,7 +71,22 @@ const ScanScreen = () => {
       </View>
 
       <View style={styles.infoContainer}>
-        {scanned ? (
+        {scanError ? (
+          <>
+            <Text style={styles.errorText}>
+              Barcode niet herkend. Probeer opnieuw of voer het product handmatig in.
+            </Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                setScanned(false);
+                setScanError(false);
+              }}
+            >
+              <Text style={styles.buttonText}>Opnieuw proberen</Text>
+            </TouchableOpacity>
+          </>
+        ) : scanned ? (
           <>
             <Text style={styles.scanResult}>Gescande code: {scannedData}</Text>
             <TouchableOpacity style={styles.button} onPress={() => setScanned(false)}>
@@ -121,6 +134,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: "ABeeZee",
     textAlign: "center",
+  },
+  errorText: {
+    color: "#ff6b6b",
+    fontSize: 16,
+    fontFamily: "ABeeZee",
+    textAlign: "center",
+    marginBottom: 20,
   },
   button: {
     backgroundColor: "#A0E07C",
@@ -177,7 +197,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
-    elevation: 5, 
+    elevation: 5,
   },
   permissionButtonText: {
     fontSize: 18,
