@@ -10,8 +10,6 @@ import Animated, {
     useScrollViewOffset,
 } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
-import { Link } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -27,6 +25,7 @@ const HomeScreen = () => {
     const [co2Reduction, setCo2Reduction] = useState(0);
     const progress = useSharedValue(0);
     const [greeting, setGreeting] = useState('');
+    const [currentDate, setCurrentDate] = useState('');
 
     const greetingOpacity = useSharedValue(0);
     const greetingTranslateY = useSharedValue(10);
@@ -45,6 +44,15 @@ const HomeScreen = () => {
             timeGreeting = 'Goedenavond 🌙';
         }
         setGreeting(timeGreeting);
+
+        const today = new Date();
+        const formattedDate = today.toLocaleDateString('nl-NL', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+        });
+        setCurrentDate(formattedDate);
 
         greetingOpacity.value = withTiming(1, { duration: 800 });
         greetingTranslateY.value = withTiming(0, { duration: 800 });
@@ -95,8 +103,11 @@ const HomeScreen = () => {
                             {greeting}
                         </Animated.Text>
 
-                        <View style={styles.divider} />
+                        <Animated.Text style={[styles.dateText, greetingStyle]}>
+                            {currentDate}
+                        </Animated.Text>
 
+                        <View style={styles.divider} />
                     </View>
 
                     <View style={styles.statsContainer}>
@@ -173,13 +184,14 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 3,
     },
-    pageTitle: {
-        fontSize: 20,
-        fontWeight: 'bold',
+    dateText: {
+        fontSize: 16,
         color: 'white',
-        fontFamily: "ABeeZee",
-        textAlign: 'center',
+        fontFamily: 'ABeeZee',
         marginTop: 5,
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
     },
     statsContainer: {
         marginVertical: 20,
@@ -193,7 +205,6 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 5,
     },
-    
     statsTitle: {
         fontSize: 18,
         fontWeight: 'bold',
@@ -225,28 +236,6 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
         marginTop: 10,
     },
-    bottomTextContainer: {
-        marginTop: 40,
-        padding: 15,
-        alignItems: 'center',
-        width: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        borderRadius: 10,
-    },
-    bottomTextRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    bottomText: {
-        fontSize: 16,
-        color: 'white',
-        fontFamily: "ABeeZee",
-        marginRight: 10,
-    },
-    icon: {
-        marginLeft: 10,
-    },
     divider: {
         height: 1,
         backgroundColor: 'white',
@@ -265,7 +254,7 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 3,
         marginTop: 80,
-    },      
+    },
 });
 
 export default HomeScreen;
