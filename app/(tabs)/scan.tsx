@@ -48,7 +48,7 @@ const ScanScreen = () => {
 
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     setScanned(true);
-    setScanError(false); // Reset eventuele foutmelding
+    setScanError(false);
     setScannedData(data);
     console.log("Gescannde data:", data);
   };
@@ -74,17 +74,25 @@ const ScanScreen = () => {
         {scanError ? (
           <>
             <Text style={styles.errorText}>
-              Barcode niet herkend. Probeer opnieuw of voer het product handmatig in.
+              We konden de barcode niet herkennen. Probeer opnieuw of voeg het product handmatig toe.
             </Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => {
-                setScanned(false);
-                setScanError(false);
-              }}
-            >
-              <Text style={styles.buttonText}>Opnieuw proberen</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={styles.secondaryButton}
+                onPress={() => {
+                  setScanned(false);
+                  setScanError(false);
+                }}
+              >
+                <Text style={styles.secondaryButtonText}>Opnieuw proberen</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => router.push("/add_food")}
+              >
+                <Text style={styles.buttonText}>Voeg handmatig toe</Text>
+              </TouchableOpacity>
+            </View>
           </>
         ) : scanned ? (
           <>
@@ -116,12 +124,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  centered: {
-    flex: 1,
-    backgroundColor: "#000",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   text: {
     color: "#fff",
     fontSize: 16,
@@ -142,13 +144,32 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
   },
+  buttonRow: {
+    flexDirection: "row",
+    gap: 10,
+    justifyContent: "center",
+    flexWrap: "wrap",
+  },
   button: {
     backgroundColor: "#A0E07C",
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 10,
+    marginTop: 10,
   },
   buttonText: {
+    fontFamily: "ABeeZee",
+    color: "#000",
+    fontSize: 16,
+  },
+  secondaryButton: {
+    backgroundColor: "#fff",
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  secondaryButtonText: {
     fontFamily: "ABeeZee",
     color: "#000",
     fontSize: 16,
