@@ -8,6 +8,7 @@ import {
   Animated,
   Easing,
   StyleSheet,
+  SafeAreaView,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BlurView } from 'expo-blur';
@@ -140,56 +141,60 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
         </TouchableWithoutFeedback>
       )}
 
-      <View style={styles.tabBar}>
-        <View style={styles.sideContainer}>
-          {leftTabs.map(renderTabButton)}
-        </View>
+      <SafeAreaView>
+        <View style={styles.tabBar}>
+          <View style={styles.sideContainer}>
+            {leftTabs.map(renderTabButton)}
+          </View>
 
-        <View style={styles.centerSpacer} />
+          <View style={styles.centerSpacer} />
 
-        <View style={styles.sideContainer}>
-          {rightTabs.map(renderTabButton)}
-        </View>
-
-        <View style={styles.centerWrapper}>
-          <TouchableOpacity
-            style={styles.plusButton}
-            onPress={() => setMenuOpen((prev) => !prev)}
-            activeOpacity={0.8}
-          >
-            <Ionicons name={menuOpen ? 'close' : 'add'} size={28} color="#fff" />
-          </TouchableOpacity>
-
-          <Animated.View
-            pointerEvents={menuOpen ? 'auto' : 'none'}
-            style={[styles.fabMenu, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}
-          >
+          <View style={styles.centerWrapper}>
             <TouchableOpacity
-              style={styles.fabItem}
-              onPress={() => {
-                router.push('/scan');
-                setMenuOpen(false);
-              }}
+              style={styles.plusButton}
+              onPress={() => setMenuOpen((prev) => !prev)}
+              activeOpacity={0.8}
             >
-              <Ionicons name="barcode" size={20} color="#fff" />
-              <Text style={styles.fabText}>Scan barcode</Text>
+              <Ionicons name={menuOpen ? 'close' : 'add'} size={28} color="#fff" />
             </TouchableOpacity>
-            
-            <View style={styles.divider} /> 
 
-            <TouchableOpacity
-              style={styles.fabItem}
-              onPress={() => {
-                router.push('/add_food');
-                setMenuOpen(false);
-              }}
+            <Animated.View
+              pointerEvents={menuOpen ? 'auto' : 'none'}
+              style={[styles.fabMenu, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}
             >
-              <Ionicons name="restaurant" size={20} color="#fff" />
-              <Text style={styles.fabText}>Voedsel toevoegen</Text>
-            </TouchableOpacity>
-          </Animated.View>
+              <TouchableOpacity
+                style={styles.fabItem}
+                onPress={() => {
+                  router.push('/scan');
+                  setMenuOpen(false);
+                }}
+              >
+                <Ionicons name="barcode" size={20} color="#fff" />
+                <Text style={styles.fabText}>Scan barcode</Text>
+              </TouchableOpacity>
+              
+
+              <TouchableOpacity
+                style={styles.fabItem}
+                onPress={() => {
+                  router.push('/add_food');
+                  setMenuOpen(false);
+                }}
+              >
+                <Ionicons name="restaurant" size={20} color="#fff" />
+                <Text style={styles.fabText}>Voedsel toevoegen</Text>
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
+          
+          <View style={styles.centerSpacer} />
+          
+          <View style={styles.sideContainer}>
+            {rightTabs.map(renderTabButton)}
+          </View>
+
         </View>
-      </View>
+      </SafeAreaView>
     </>
   );
 };
@@ -206,8 +211,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 }, // Positie van de schaduw
     shadowOpacity: 0.15, // Schaduw doorzichtigheid verhoogd voor meer nadruk
     shadowRadius: 10, // Schaduw radius verhoogd voor een meer dramatisch effect
-    alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 24,
     position: 'relative',
   },
@@ -217,40 +220,37 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   centerSpacer: {
-    width: 90, // iets breder voor meer ademruimte rond de +
+    width: 10, // iets breder voor meer ademruimte rond de +
   },
   tabButton: {
     alignItems: 'center',
     justifyContent: 'center',
   },
   centerWrapper: {
-    position: 'absolute',
-    bottom: 7, // Verplaatst de knop iets omhoog
-    left: '50%',
-    transform: [{ translateX: -30 }], // Verplaatst de knop iets naar rechts
-    zIndex: 10,
+    position: 'relative',
+    width: 56,
+    alignItems: 'center',
   },
   plusButton: {
+    top: 5,
     backgroundColor: '#4CAF50',
     borderRadius: 28,
-    width: 56,
     height: 56,
+    width: 56,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
   },
   fabMenu: {
     position: 'absolute',
-    bottom: 80,
-    left: '-56%',
-    transform: [{ translateX: -80 }],
+    bottom: '100%', 
     backgroundColor: '#4CAF50',
-    borderRadius: 12,
-    padding: 12,
+    borderRadius: 16,
+    padding: 10,
+    elevation: 10,
+    minWidth: 140,
     flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: 10,
-    zIndex: 20,
+    alignItems: 'center',
   },
   fabItem: {
     flexDirection: 'row',
@@ -268,12 +268,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.2)',
     zIndex: 5,
-  },
-  divider: {
-    width: '100%',
-    height: 1,
-    backgroundColor: '#fff',
-    marginVertical: 6, // Ruimte tussen de knoppen
   },
 });
 
