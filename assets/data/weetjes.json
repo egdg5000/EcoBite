@@ -1,13 +1,102 @@
 [
-    "Je kunt groentenresten gebruiken om je eigen bouillon te maken.",
-    "Ongeveer 1/3 van al het voedsel wereldwijd wordt verspild.",
-    "Brood is het meest verspilde product in Nederland.",
-    "Restjes invriezen is een makkelijke manier om voedselverspilling tegen te gaan.",
-    "Een gemiddelde Nederlander verspilt jaarlijks zo’n 34 kilo voedsel.",
-    "Je neus is een goede indicator: voedsel is vaak nog goed, ook na de houdbaarheidsdatum.",
-    "Schillen van groenten bevatten vaak de meeste voedingsstoffen.",
-    "Bewaar tomaten buiten de koelkast voor de beste smaak.",
-    "Een goed georganiseerde koelkast helpt verspilling te verminderen.",
-    "Gebruik oudere ingrediënten eerst: 'first in, first out' principe!"
+    {
+      "id": 1,
+      "feit": "Ongeveer een vijfde van het voedsel dat jaarlijks wordt geproduceerd voor menselijke consumptie – zo'n 1,3 miljard ton, ter waarde van 1 biljoen dollar – wordt verspild of verloren. Dit is genoeg om 3 miljard mensen te voeden."
+    },
+    {
+      "id": 2,
+      "feit": "Voedselverspilling leidt tot verspilling van een kwart van onze watervoorziening in de vorm van niet opgegeten voedsel. Dat komt neer op ongeveer 172 miljard dollar aan verspild water."
+    },
+    {
+      "id": 3,
+      "feit": "Rekening houdend met alle middelen die nodig zijn om voedsel te produceren, verbruikt voedselverspilling tot 21% van het zoetwater, 19% van de meststoffen, 18% van het landbouwgrond, en 21% van het stortplaatsvolume."
+    },
+    {
+      "id": 4,
+      "feit": "Het water dat nodig is om het verspilde voedsel te produceren, zou voldoende zijn voor 9 miljard mensen bij een verbruik van 200 liter per persoon per dag."
+    },
+    {
+      "id": 5,
+      "feit": "Het voedsel dat momenteel in Europa wordt verspild, zou 200 miljoen mensen kunnen voeden; in Latijns-Amerika 300 miljoen, en in Afrika nog eens 300 miljoen."
+    },
+    {
+      "id": 6,
+      "feit": "De jaarlijkse voedselverspilling per persoon ligt tussen de 95-115 kilogram in Europa en Noord-Amerika, terwijl dit in Zuid- en Zuidoost-Azië slechts 6-11 kilogram is."
+    },
+    {
+      "id": 7,
+      "feit": "Voedselverlies en -verspilling zijn verantwoordelijk voor ongeveer 4,4 gigaton aan broeikasgasemissies per jaar."
+    },
+    {
+      "id": 8,
+      "feit": "Als voedselverspilling een land zou zijn, zou het de derde grootste uitstoter van broeikasgassen zijn, na China en de VS."
+    },
+    {
+      "id": 9,
+      "feit": "Ontwikkelde en ontwikkelingslanden verspillen ongeveer evenveel voedsel per jaar: respectievelijk 670 en 630 miljoen ton. Alleen al in de EU wordt 88 miljoen ton verspild."
+    },
+    {
+      "id": 10,
+      "feit": "Verlies en verspilling per voedselgroep per jaar: ongeveer 30% van de granen, 40-50% van wortelgewassen en groenten/fruit, 20% van oliehoudende zaden, vlees en zuivel, en 35% van vis."
+    },
+    {
+      "id": 11,
+      "feit": "Als 25% van het wereldwijd verloren of verspilde voedsel werd gered, zou dit genoeg zijn om 870 miljoen mensen te voeden."
+    },
+    {
+      "id": 12,
+      "feit": "Tegen het midden van deze eeuw zal de wereldbevolking 9 miljard bereiken. Om aan deze vraag te voldoen, moet de voedselproductie met 70% toenemen ten opzichte van het huidige niveau."
+    },
+    {
+      "id": 13,
+      "feit": "Voedselverliezen vertalen zich in verloren inkomsten voor boeren en hogere prijzen voor consumenten — een economische reden om voedselverspilling aan te pakken."
+    },
+    {
+      "id": 14,
+      "feit": "In ontwikkelingslanden vindt 40% van het verlies plaats na de oogst en tijdens de verwerking; in ontwikkelde landen gebeurt meer dan 40% van het verlies op detailhandel- en consumentenniveau."
+    },
+    {
+      "id": 15,
+      "feit": "Op retailniveau wordt veel voedsel verspild door de nadruk op uiterlijk. De helft van al het groente en fruit in de VS wordt weggegooid omdat het er “lelijk” uitziet; dit komt neer op 60 miljoen ton."
+    },
+    {
+      "id": 16,
+      "feit": "Een gebied groter dan China en 25% van het wereldwijde zoetwater wordt gebruikt om voedsel te verbouwen dat nooit gegeten wordt."
+    },
+    {
+      "id": 17,
+      "feit": "In China gaat jaarlijks meer dan 35 miljoen ton voedsel verloren of wordt verspild — ongeveer 6% van de totale voedselproductie. Dit gebeurt vooral in restaurants en huishoudens, waar het cultureel gebruikelijk is om meer eten te bestellen dan nodig is."
+    },
+    {
+      "id": 18,
+      "feit": "De Duurzame Ontwikkelingsdoelen van de VN streven ernaar om de voedselverspilling per hoofd van de bevolking op retail- en consumentenniveau te halveren en verliezen in de productie- en toeleveringsketen te verminderen, inclusief na de oogst."
+    },
+    {
+      "id": 19,
+      "feit": "Aanbiedingen in supermarkten kunnen leiden tot meer voedselverspilling; mensen kopen meer dan nodig als ze denken dat ze waar voor hun geld krijgen."
+    },
+    {
+      "id": 20,
+      "feit": "Volgens een enquête van Respect Food weet 63% van de mensen het verschil niet tussen “ten minste houdbaar tot” en “te gebruiken tot”. Producten met “te gebruiken tot” moeten vóór die datum gegeten worden. Producten met “ten minste houdbaar tot” kunnen daarna nog veilig gegeten worden, maar zijn mogelijk van mindere kwaliteit."
+    },
+    {
+      "id": 21,
+      "feit": "Door kwaliteitseisen die te veel leunen op uiterlijk, worden gewassen soms niet geoogst en blijven ze op het veld rotten."
+    },
+    {
+      "id": 22,
+      "feit": "In Europa wordt 40-60% van de gevangen vis weggegooid omdat deze niet voldoet aan de kwaliteitseisen van supermarkten."
+    },
+    {
+      "id": 23,
+      "feit": "In de VS is organisch afval de grootste bron van methaanuitstoot — een broeikasgas dat 80 keer krachtiger is dan CO₂."
+    },
+    {
+      "id": 24,
+      "feit": "Nieuwe internettrends zoals “Mukbang”, waarin mensen live grote hoeveelheden voedsel eten, zorgen voor extra voedselverspilling."
+    },
+    {
+      "id": 25,
+      "feit": "Als we zouden stoppen met voedsel weggooien, zouden we 17 ton CO₂ kunnen besparen — vergelijkbaar met het effect van vijf auto’s van de weg halen in het VK."
+    }
   ]
-  

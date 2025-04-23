@@ -35,7 +35,7 @@ const HomeScreen = () => {
     useEffect(() => {
         progress.value = withTiming(75, { duration: 2000 });
         setCo2Reduction(75);
-
+    
         const currentHour = new Date().getHours();
         let timeGreeting = '';
         if (currentHour < 12) {
@@ -46,7 +46,7 @@ const HomeScreen = () => {
             timeGreeting = 'Goedenavond 🌙';
         }
         setGreeting(timeGreeting);
-
+    
         const today = new Date();
         const formattedDate = today.toLocaleDateString('nl-NL', {
             weekday: 'long',
@@ -55,13 +55,17 @@ const HomeScreen = () => {
             year: 'numeric',
         });
         setCurrentDate(formattedDate);
-
-        const index = today.getDate() % weetjesData.length;
-        setWeetje(weetjesData[index]);
-
+    
+        // Nieuw: dagelijks weetje kiezen
+        const startDate = new Date(2024, 0, 1); // 1 januari 2024
+        const daysSinceStart = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        const index = daysSinceStart % weetjesData.length;
+        setWeetje(weetjesData[index].feit); // Hier alleen de feit-string doorgeven
+    
         greetingOpacity.value = withTiming(1, { duration: 800 });
         greetingTranslateY.value = withTiming(0, { duration: 800 });
     }, []);
+    
 
     const greetingStyle = useAnimatedStyle(() => ({
         opacity: greetingOpacity.value,
