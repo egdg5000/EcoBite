@@ -117,7 +117,7 @@ const HomeScreen = () => {
                         </Animated.Text>
 
                         <View style={styles.factContainer}>
-                            <Text style={styles.factLabel}>Wist je dat?</Text>
+                            <Text style={styles.factLabel}>💡 Wist je dat?</Text>
                             <Text style={styles.factText}>{weetje}</Text>
                         </View>
 
@@ -211,23 +211,36 @@ const styles = StyleSheet.create({
     factContainer: {
         marginTop: 10,
         marginBottom: 20,
-        backgroundColor: 'rgba(255,255,255,0.15)',
-        padding: 12,
-        borderRadius: 10,
-        width: '85%',
+        backgroundColor: 'rgba(255,255,255,0.25)',
+        padding: 16,
+        borderRadius: 15,
+        width: '90%',
+        borderLeftWidth: 5,
+        borderLeftColor: '#66FF66',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 6,
     },
     factLabel: {
-        color: 'white',
+        color: '#2E8B57',
         fontWeight: 'bold',
-        fontSize: 16,
-        marginBottom: 5,
+        fontSize: 18,
+        marginBottom: 10,
         fontFamily: 'ABeeZee',
+        textTransform: 'uppercase',
+        letterSpacing: 1,
+        textShadowColor: 'rgba(0, 0, 0, 0.4)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
     },
     factText: {
         color: 'white',
-        fontSize: 14,
+        fontSize: 16,
         fontFamily: 'ABeeZee',
-    },
+        lineHeight: 22,
+    },    
     divider: {
         height: 1,
         backgroundColor: 'white',
