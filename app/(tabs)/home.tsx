@@ -10,21 +10,9 @@ import Animated, {
     useScrollViewOffset,
 } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
+import weetjesData from '../../assets/data/weetjes.json';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
-
-const weetjes = [
-    "Je kunt groentenresten gebruiken om je eigen bouillon te maken.",
-    "Ongeveer 1/3 van al het voedsel wereldwijd wordt verspild.",
-    "Brood is het meest verspilde product in Nederland.",
-    "Restjes invriezen is een makkelijke manier om voedselverspilling tegen te gaan.",
-    "Een gemiddelde Nederlander verspilt jaarlijks zo’n 34 kilo voedsel.",
-    "Je neus is een goede indicator: voedsel is vaak nog goed, ook na de houdbaarheidsdatum.",
-    "Schillen van groenten bevatten vaak de meeste voedingsstoffen.",
-    "Bewaar tomaten buiten de koelkast voor de beste smaak.",
-    "Een goed georganiseerde koelkast helpt verspilling te verminderen.",
-    "Gebruik oudere ingrediënten eerst: 'first in, first out' principe!"
-];
 
 const HomeScreen = () => {
     const [fontsLoaded] = useFonts({
@@ -39,7 +27,7 @@ const HomeScreen = () => {
     const progress = useSharedValue(0);
     const [greeting, setGreeting] = useState('');
     const [currentDate, setCurrentDate] = useState('');
-    const [dailyFact, setDailyFact] = useState('');
+    const [weetje, setWeetje] = useState('');
 
     const greetingOpacity = useSharedValue(0);
     const greetingTranslateY = useSharedValue(10);
@@ -68,9 +56,8 @@ const HomeScreen = () => {
         });
         setCurrentDate(formattedDate);
 
-        // ✅ Kies weetje op basis van de dag
-        const index = today.getDate() % weetjes.length;
-        setDailyFact(weetjes[index]);
+        const index = today.getDate() % weetjesData.length;
+        setWeetje(weetjesData[index]);
 
         greetingOpacity.value = withTiming(1, { duration: 800 });
         greetingTranslateY.value = withTiming(0, { duration: 800 });
@@ -107,7 +94,7 @@ const HomeScreen = () => {
         <SafeAreaView style={{ flex: 1 }}>
             <Animated.View style={[styles.container, backgroundColor]}>
                 <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
-                    
+
                     <View style={styles.header}>
                         <View style={styles.logoContainer}>
                             <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
@@ -125,11 +112,10 @@ const HomeScreen = () => {
                             {currentDate}
                         </Animated.Text>
 
-                        {/* ✅ Dagelijks weetje */}
-                        <Animated.View style={[styles.factContainer, greetingStyle]}>
-                            <Text style={styles.factTitle}>Wist je dat?</Text>
-                            <Text style={styles.factText}>{dailyFact}</Text>
-                        </Animated.View>
+                        <View style={styles.factContainer}>
+                            <Text style={styles.factLabel}>Wist je dat?</Text>
+                            <Text style={styles.factText}>{weetje}</Text>
+                        </View>
 
                         <View style={styles.divider} />
                     </View>
@@ -158,6 +144,7 @@ const HomeScreen = () => {
                         <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
                         <Image source={getTreeImage()} style={styles.treeImage} />
                     </View>
+
                 </ScrollView>
             </Animated.View>
         </SafeAreaView>
@@ -165,42 +152,85 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1 },
-    scrollContainer: { alignItems: 'center', paddingBottom: 500 },
-    header: { padding: 20, alignItems: 'center' },
-    logoContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
-    logo: { width: 50, height: 50, resizeMode: 'contain', marginRight: 10 },
-    title: { fontSize: 24, fontWeight: 'bold', fontFamily: 'ABeeZee' },
-    darkGreen: { color: '#006400' },
-    lightGreen: { color: '#66C466' },
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        alignItems: 'center',
+        paddingBottom: 500,
+    },
+    header: {
+        padding: 20,
+        alignItems: 'center',
+    },
+    logoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    logo: {
+        width: 50,
+        height: 50,
+        resizeMode: 'contain',
+        marginRight: 10,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        fontFamily: "ABeeZee",
+    },
+    darkGreen: {
+        color: '#006400',
+    },
+    lightGreen: {
+        color: '#66C466',
+    },
     greetingText: {
-        fontSize: 22, fontWeight: '600', color: 'white', marginTop: 10,
-        fontFamily: 'ABeeZee', textShadowColor: 'rgba(0, 0, 0, 0.3)',
-        textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 3,
+        fontSize: 22,
+        fontWeight: '600',
+        color: 'white',
+        marginTop: 10,
+        fontFamily: "ABeeZee",
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
     },
     dateText: {
-        fontSize: 16, color: 'white', fontFamily: 'ABeeZee', marginTop: 5,
-        textShadowColor: 'rgba(0, 0, 0, 0.3)', textShadowOffset: { width: 1, height: 1 }, textShadowRadius: 2,
+        fontSize: 16,
+        color: 'white',
+        fontFamily: 'ABeeZee',
+        marginTop: 5,
+        textShadowColor: 'rgba(0, 0, 0, 0.3)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
     },
     factContainer: {
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        borderRadius: 12,
-        padding: 12,
         marginTop: 10,
-        marginBottom: 10,
-        width: '90%',
+        marginBottom: 20,
+        backgroundColor: 'rgba(255,255,255,0.15)',
+        padding: 12,
+        borderRadius: 10,
+        width: '85%',
     },
-    factTitle: {
-        fontSize: 16,
-        fontWeight: 'bold',
+    factLabel: {
         color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+        marginBottom: 5,
         fontFamily: 'ABeeZee',
-        marginBottom: 4,
     },
     factText: {
-        fontSize: 14,
         color: 'white',
+        fontSize: 14,
         fontFamily: 'ABeeZee',
+    },
+    divider: {
+        height: 1,
+        backgroundColor: 'white',
+        width: '80%',
+        marginTop: 15,
+        marginBottom: 10,
+        opacity: 0.4,
     },
     statsContainer: {
         marginVertical: 20,
@@ -214,8 +244,17 @@ const styles = StyleSheet.create({
         shadowRadius: 6,
         elevation: 5,
     },
-    statsTitle: { fontSize: 18, fontWeight: 'bold', color: 'white', fontFamily: 'ABeeZee' },
-    statsText: { fontSize: 16, color: 'white', fontFamily: 'ABeeZee' },
+    statsTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'white',
+        fontFamily: "ABeeZee",
+    },
+    statsText: {
+        fontSize: 16,
+        color: 'white',
+        fontFamily: "ABeeZee",
+    },
     groundContainer: {
         marginVertical: 20,
         alignItems: 'center',
@@ -224,15 +263,24 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         width: '80%',
     },
-    groundTitle: { fontSize: 18, fontWeight: 'bold', color: 'white', fontFamily: 'ABeeZee' },
-    treeImage: { width: 150, height: 150, resizeMode: 'contain', marginTop: 10 },
-    divider: { height: 1, backgroundColor: 'white', width: '80%', marginTop: 15, marginBottom: 10, opacity: 0.4 },
+    groundTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: 'white',
+        fontFamily: "ABeeZee",
+    },
+    treeImage: {
+        width: 150,
+        height: 150,
+        resizeMode: 'contain',
+        marginTop: 10,
+    },
     statsPercentage: {
         position: 'absolute',
         fontSize: 24,
         fontWeight: 'bold',
         color: '#66FF66',
-        fontFamily: 'ABeeZee',
+        fontFamily: "ABeeZee",
         textShadowColor: 'rgba(0, 0, 0, 0.4)',
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 3,
