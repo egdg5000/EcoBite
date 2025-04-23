@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Image, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Image, Dimensions, Animated } from "react-native";
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { Link, useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';  // Voeg Ionicons toe voor iconen
 
 SplashScreen.preventAutoHideAsync();
 
@@ -11,17 +12,15 @@ SplashScreen.setOptions({
   fade: true,
 });
 
-
 const { width, height } = Dimensions.get("window"); // Haal de schermgrootte op
 
 export default function App() {
-      return (
-      <Splash>
-        <MainScreen />
-      </Splash>
-    );
+  return (
+    <Splash>
+      <MainScreen />
+    </Splash>
+  );
 }
-
 
 function Splash({ children }: { children: React.ReactNode }) {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -29,7 +28,7 @@ function Splash({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function prepare() {
       try {
-        // Pre-load fonts, make any API calls you need to do here
+        // Pre-load fonts, maak eventuele API-aanroepen hier
         await Font.loadAsync({ 'ABeeZee': require('../assets/fonts/ABeeZee.ttf') });
       } catch (e) {
         console.warn(e);
@@ -43,11 +42,7 @@ function Splash({ children }: { children: React.ReactNode }) {
 
   const onLayoutRootView = useCallback(() => {
     if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
+      // Dit vertelt het splash scherm om direct te verdwijnen!
       SplashScreen.hide();
     }
   }, [appIsReady]);
@@ -64,46 +59,78 @@ function Splash({ children }: { children: React.ReactNode }) {
     </View>
   );
 }
+
 async function checkLogin() {
-    const router = useRouter();
-    const response = await fetch('http://localhost:3000/users/loginStatus', {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    
-    const data = await response.json();
-    if (!response.ok) {
-      console.log("Something went wrong");
-      console.log(response);
-    }
-    if (data.success){
-      console.log('Logged in!');
-      router.push('/home');
-    } else console.log(response);
+  const router = useRouter();
+  const response = await fetch('http://localhost:3000/users/loginStatus', {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const data = await response.json();
+  if (!response.ok) {
+    console.log("Something went wrong");
+    console.log(response);
+  }
+  if (data.success) {
+    console.log('Logged in!');
+    router.push('/home');
+  } else console.log(response);
 }
 
 function MainScreen() {
   checkLogin();
+  
+  const [logoOpacity] = useState(new Animated.Value(0));
+  const [buttonOpacity] = useState(new Animated.Value(0));
+  const [buttonTranslateY] = useState(new Animated.Value(20));
+
+  useEffect(() => {
+    Animated.timing(logoOpacity, {
+      toValue: 1,
+      duration: 1500,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(buttonOpacity, {
+      toValue: 1,
+      duration: 1500,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(buttonTranslateY, {
+      toValue: 0,
+      duration: 1500,
+      useNativeDriver: true,
+    }).start();
+  }, [logoOpacity, buttonOpacity, buttonTranslateY]);
+
   return (
     <ImageBackground
       source={require("../assets/images/spinach.jpg")}
       style={styles.backgroundImage}
     >
       <View style={styles.overlay}>
-        <Image source={require("../assets/images/EcoBite2.png")} style={styles.logo} />
+        <Animated.Image 
+          source={require("../assets/images/EcoBite2.png")}
+          style={[styles.logo, { opacity: logoOpacity }]}
+        />
         <Text style={styles.title}>Welkom</Text>
 
-        <Link href='/Starting' asChild>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Aan de slag</Text>
-          </TouchableOpacity>
-        </Link>
+        <Animated.View style={[styles.buttonContainer, { opacity: buttonOpacity, transform: [{ translateY: buttonTranslateY }] }]}>
+          <Link href='/Starting' asChild>
+            <TouchableOpacity style={styles.button}>
+              <Text style={styles.buttonText}>Aan de slag</Text>
+            </TouchableOpacity>
+          </Link>
+        </Animated.View>
 
         <Link href='/login' asChild>
-          <TouchableOpacity>
+          <TouchableOpacity style={styles.linkContainer}>
+            <Ionicons name="log-in-outline" size={24} color="#fff" />
             <Text style={styles.link}>Ik heb al een account</Text>
           </TouchableOpacity>
         </Link>
@@ -129,7 +156,6 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: 150,
-
     height: 150,
     marginBottom: 30,
   },
@@ -140,12 +166,16 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontFamily: "ABeeZee",
   },
+  buttonContainer: {
+    width: "80%",
+    alignItems: "center",
+  },
   button: {
     backgroundColor: "#4CAF50",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 10,
-    width: "80%",
+    width: "100%",
     alignItems: "center",
     marginBottom: 10,
   },
@@ -155,10 +185,16 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontFamily: "ABeeZee",
   },
-  link: {
+  linkContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 10,
+  },
+  link: {
+    marginLeft: 5,
     color: "#fff",
     textDecorationLine: "underline",
     fontFamily: "ABeeZee",
   },
 });
+
