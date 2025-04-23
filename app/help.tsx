@@ -10,6 +10,7 @@ export default function HelpPage() {
     });
 
     return (
+        <View style={styles.container}>
         <SafeAreaView style={styles.safeArea}> {/* SafeAreaView toegevoegd */}
             <ScrollView style={styles.container}>
                 {/* Terugknop naar Accountpagina */}
@@ -58,6 +59,7 @@ export default function HelpPage() {
                 </View>
             </ScrollView>
         </SafeAreaView>
+        </View>
     );
 }
 

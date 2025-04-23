@@ -14,7 +14,8 @@ export default function NotificationsSettings() {
   const [donationReminders, setDonationReminders] = useState(true);
 
   return (
-    <SafeAreaView style={styles.safeArea}> {/* SafeAreaView toegevoegd */}
+    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea}> 
       <ScrollView style={styles.container}>
         <Text style={styles.title}>Notificatie-instellingen</Text>
         <Text style={styles.subtitle}>Beheer je meldingen voor de app.</Text>
@@ -58,6 +59,7 @@ export default function NotificationsSettings() {
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
+    </View>
   );
 }
 

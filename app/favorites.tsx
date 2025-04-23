@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { useNavigation, useLocalSearchParams } from "expo-router";
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -35,6 +35,7 @@ const FavoritesPage = () => {
 
   return (
     <View style={styles.container}>
+      <SafeAreaView>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Icon name="arrow-left" size={20} color="#4CAF50" />
         <Text style={styles.backText}>Terug</Text>
@@ -70,6 +71,7 @@ const FavoritesPage = () => {
           )}
         />
       )}
+      </SafeAreaView>
     </View>
   );
 };

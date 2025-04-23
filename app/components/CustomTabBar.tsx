@@ -8,11 +8,12 @@ import {
   Animated,
   Easing,
   StyleSheet,
-  SafeAreaView,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BlurView } from 'expo-blur';
 import { useRouter } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const CustomTabBar = ({ state, descriptors, navigation }: any) => {
   const router = useRouter();
@@ -141,7 +142,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
         </TouchableWithoutFeedback>
       )}
 
-      <SafeAreaView>
+      <SafeAreaView edges={['bottom']} style={styles.safeArea}>
         <View style={styles.tabBar}>
           <View style={styles.sideContainer}>
             {leftTabs.map(renderTabButton)}
@@ -200,9 +201,12 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    backgroundColor: 'black',
+  },
   tabBar: {
     flexDirection: 'row',
-    height: 70,
+    height: 100,
     backgroundColor: '#fff',
     borderTopWidth: 0,
     borderRadius: 15, // Afgeronde hoeken
@@ -212,7 +216,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15, // Schaduw doorzichtigheid verhoogd voor meer nadruk
     shadowRadius: 10, // Schaduw radius verhoogd voor een meer dramatisch effect
     paddingHorizontal: 24,
-    position: 'relative',
+    left: 0,
+    right: 0,
+    bottom: -15,
+    paddingBottom: 20,
+    position: 'absolute',
   },
   sideContainer: {
     flexDirection: 'row',

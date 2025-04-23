@@ -74,119 +74,121 @@ const FridgePage = () => {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Mijn Voorraad</Text>
+    <View style={styles.container}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <Text style={styles.title}>Mijn Voorraad</Text>
 
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Zoek product..."
-          placeholderTextColor="#888"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        <TouchableOpacity
-          style={styles.filterButton}
-          onPress={() => setIsFilterModalVisible(true)}
-        >
-          <Filter size={24} color="#4CAF50" />
-        </TouchableOpacity>
-      </View>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Zoek product..."
+            placeholderTextColor="#888"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          <TouchableOpacity
+            style={styles.filterButton}
+            onPress={() => setIsFilterModalVisible(true)}
+          >
+            <Filter size={24} color="#4CAF50" />
+          </TouchableOpacity>
+        </View>
 
-      <FlatList
-        data={filteredProducts}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.productCard}>
-            <Text style={styles.productName}>{item.name}</Text>
-            <Text style={styles.productDetails}>Hoeveelheid: {item.quantity}</Text>
-            <Text style={styles.productExpiry}>Houdbaar tot: {item.expiry}</Text>
+        <FlatList
+          data={filteredProducts}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.productCard}>
+              <Text style={styles.productName}>{item.name}</Text>
+              <Text style={styles.productDetails}>Hoeveelheid: {item.quantity}</Text>
+              <Text style={styles.productExpiry}>Houdbaar tot: {item.expiry}</Text>
 
-            <View style={styles.iconsContainer}>
-              <TouchableOpacity
-                onPress={() =>
-                  setProducts((prev) =>
-                    prev.filter((product) => product.id !== item.id)
-                  )
-                }
-              >
-                <Icon name="times" size={24} color="#d32f2f" />
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
-                <Icon
-                  name={item.isFavorite ? "heart" : "heart-o"}
-                  size={24}
-                  color={item.isFavorite ? "#ff4081" : "#888"}
-                />
-              </TouchableOpacity>
+              <View style={styles.iconsContainer}>
+                <TouchableOpacity
+                  onPress={() =>
+                    setProducts((prev) =>
+                      prev.filter((product) => product.id !== item.id)
+                    )
+                  }
+                >
+                  <Icon name="times" size={24} color="#d32f2f" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
+                  <Icon
+                    name={item.isFavorite ? "heart" : "heart-o"}
+                    size={24}
+                    color={item.isFavorite ? "#ff4081" : "#888"}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        )}
-      />
+          )}
+        />
 
-      {/* Favorieten-knop */}
-      <Link
-        href={{
-          pathname: "/favorites",
-          params: { products: JSON.stringify(products) },
-        }}
-        asChild
-      >
-        <TouchableOpacity style={styles.favoritesFloatingButton}>
-          <Icon name="heart" size={20} color="#fff" />
-        </TouchableOpacity>
-      </Link>
+        {/* Favorieten-knop */}
+        <Link
+          href={{
+            pathname: "/favorites",
+            params: { products: JSON.stringify(products) },
+          }}
+          asChild
+        >
+          <TouchableOpacity style={styles.favoritesFloatingButton}>
+            <Icon name="heart" size={20} color="#fff" />
+          </TouchableOpacity>
+        </Link>
 
-      {/* Voeg-knop */}
-      <Link href="/add_food" asChild>
-        <TouchableOpacity style={styles.addButton}>
-          <Plus size={20} color="#4CAF50" style={{ marginRight: 6 }} />
-          <Text style={{ color: "#4CAF50", fontWeight: "bold", fontFamily: "ABeeZee" }}>
-            Product
-          </Text>
-        </TouchableOpacity>
-      </Link>
+        {/* Voeg-knop */}
+        <Link href="/add_food" asChild>
+          <TouchableOpacity style={styles.addButton}>
+            <Plus size={20} color="#4CAF50" style={{ marginRight: 6 }} />
+            <Text style={{ color: "#4CAF50", fontWeight: "bold", fontFamily: "ABeeZee" }}>
+              Product
+            </Text>
+          </TouchableOpacity>
+        </Link>
 
-      {/* Filter modal */}
-      <Modal
-        visible={isFilterModalVisible}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setIsFilterModalVisible(false)}
-      >
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Filter op categorie</Text>
-            {Array.from(new Set(products.map((p) => p.category))).map((category) => (
+        {/* Filter modal */}
+        <Modal
+          visible={isFilterModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setIsFilterModalVisible(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Filter op categorie</Text>
+              {Array.from(new Set(products.map((p) => p.category))).map((category) => (
+                <TouchableOpacity
+                  key={category}
+                  style={styles.filterOption}
+                  onPress={() => {
+                    setSelectedCategory(category);
+                    setIsFilterModalVisible(false);
+                  }}
+                >
+                  <Text style={styles.filterOptionText}>{category}</Text>
+                </TouchableOpacity>
+              ))}
               <TouchableOpacity
-                key={category}
                 style={styles.filterOption}
                 onPress={() => {
-                  setSelectedCategory(category);
+                  setSelectedCategory(null);
                   setIsFilterModalVisible(false);
                 }}
               >
-                <Text style={styles.filterOptionText}>{category}</Text>
+                <Text style={styles.filterOptionText}>Alle categorieën</Text>
               </TouchableOpacity>
-            ))}
-            <TouchableOpacity
-              style={styles.filterOption}
-              onPress={() => {
-                setSelectedCategory(null);
-                setIsFilterModalVisible(false);
-              }}
-            >
-              <Text style={styles.filterOptionText}>Alle categorieën</Text>
-            </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: "#ffffff" },
+  container: { flex: 1, padding: 20, backgroundColor: "#ffffff" },
   title: { fontSize: 24, fontWeight: "bold", marginBottom: 16, fontFamily: "ABeeZee" },
   searchContainer: { flexDirection: "row", alignItems: "center", marginBottom: 16 },
   searchInput: {
@@ -234,7 +236,7 @@ const styles = StyleSheet.create({
   addButton: {
     position: "absolute",
     bottom: 20,
-    right: 20,
+    right: 0,
     backgroundColor: "#ffffff",
     paddingVertical: 12,
     paddingHorizontal: 16,
@@ -251,7 +253,7 @@ const styles = StyleSheet.create({
   favoritesFloatingButton: {
     position: "absolute",
     bottom: 90,
-    right: 20,
+    right: 0,
     backgroundColor: "#ff4081",
     padding: 16,
     borderRadius: 30,

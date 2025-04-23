@@ -95,63 +95,63 @@ const HomeScreen = () => {
     };
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <Animated.View style={[styles.container, backgroundColor]}>
+        <Animated.View style={[styles.container, backgroundColor]}>
+            <SafeAreaView style={[{ flex: 1, }]}>
                 <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
 
                     <View style={styles.header}>
-                        <View style={styles.logoContainer}>
-                            <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
-                            <Text style={styles.title}>
-                                <Text style={styles.darkGreen}>Eco</Text>
-                                <Text style={styles.lightGreen}>Bite</Text>
-                            </Text>
-                        </View>
-
-                        <Animated.Text style={[styles.greetingText, greetingStyle]}>
-                            {greeting}
-                        </Animated.Text>
-
-                        <Animated.Text style={[styles.dateText, greetingStyle]}>
-                            {currentDate}
-                        </Animated.Text>
-
-                        <View style={styles.factContainer}>
-                            <Text style={styles.factLabel}>💡 Wist je dat?</Text>
-                            <Text style={styles.factText}>{weetje}</Text>
-                        </View>
-
-                        <View style={styles.divider} />
+                    <View style={styles.logoContainer}>
+                        <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
+                        <Text style={styles.title}>
+                            <Text style={styles.darkGreen}>Eco</Text>
+                            <Text style={styles.lightGreen}>Bite</Text>
+                        </Text>
                     </View>
 
-                    <View style={styles.statsContainer}>
-                        <Text style={styles.statsTitle}>Jouw statistieken:</Text>
-                        <Svg height="150" width="150" viewBox="0 0 100 100">
-                            <Circle cx="50" cy="50" r="40" stroke="#ffffff66" strokeWidth="8" fill="none" />
-                            <AnimatedCircle
-                                cx="50"
-                                cy="50"
-                                r="40"
-                                stroke="#66C466"
-                                strokeWidth="8"
-                                strokeDasharray="251.2"
-                                animatedProps={animatedProps}
-                                fill="none"
-                                strokeLinecap="round"
-                            />
-                        </Svg>
-                        <Text style={styles.statsPercentage}>{co2Reduction}%</Text>
-                        <Text style={styles.statsText}>CO2-reductie</Text>
+                    <Animated.Text style={[styles.greetingText, greetingStyle]}>
+                        {greeting}
+                    </Animated.Text>
+
+                    <Animated.Text style={[styles.dateText, greetingStyle]}>
+                        {currentDate}
+                    </Animated.Text>
+
+                    <View style={styles.factContainer}>
+                        <Text style={styles.factLabel}>💡 Wist je dat?</Text>
+                        <Text style={styles.factText}>{weetje}</Text>
                     </View>
 
-                    <View style={styles.groundContainer}>
-                        <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
-                        <Image source={getTreeImage()} style={styles.treeImage} />
-                    </View>
+                    <View style={styles.divider} />
+                </View>
 
-                </ScrollView>
-            </Animated.View>
+                <View style={styles.statsContainer}>
+                    <Text style={styles.statsTitle}>Jouw statistieken:</Text>
+                    <Svg height="150" width="150" viewBox="0 0 100 100">
+                        <Circle cx="50" cy="50" r="40" stroke="#ffffff66" strokeWidth="8" fill="none" />
+                        <AnimatedCircle
+                            cx="50"
+                            cy="50"
+                            r="40"
+                            stroke="#66C466"
+                            strokeWidth="8"
+                            strokeDasharray="251.2"
+                            animatedProps={animatedProps}
+                            fill="none"
+                            strokeLinecap="round"
+                        />
+                    </Svg>
+                    <Text style={styles.statsPercentage}>{co2Reduction}%</Text>
+                    <Text style={styles.statsText}>CO2-reductie</Text>
+                </View>
+
+                <View style={styles.groundContainer}>
+                    <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
+                    <Image source={getTreeImage()} style={styles.treeImage} />
+                </View>
+
+            </ScrollView>
         </SafeAreaView>
+    </Animated.View>
     );
 };
 

@@ -1,6 +1,9 @@
 import { Tabs } from 'expo-router';
 import { useFonts } from 'expo-font';
 import CustomTabBar from '../components/CustomTabBar'; 
+import { router } from 'expo-router';
+
+globalThis.router = router;
 
 export default function TabLayout() {
   const [fontsLoaded] = useFonts({
