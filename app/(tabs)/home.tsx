@@ -10,6 +10,7 @@ import Animated, {
     useScrollViewOffset,
 } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
+import weetjesData from '../../assets/data/weetjes.json';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
@@ -26,6 +27,7 @@ const HomeScreen = () => {
     const progress = useSharedValue(0);
     const [greeting, setGreeting] = useState('');
     const [currentDate, setCurrentDate] = useState('');
+    const [weetje, setWeetje] = useState('');
 
     const greetingOpacity = useSharedValue(0);
     const greetingTranslateY = useSharedValue(10);
@@ -33,7 +35,7 @@ const HomeScreen = () => {
     useEffect(() => {
         progress.value = withTiming(75, { duration: 2000 });
         setCo2Reduction(75);
-
+    
         const currentHour = new Date().getHours();
         let timeGreeting = '';
         if (currentHour < 12) {
@@ -44,7 +46,7 @@ const HomeScreen = () => {
             timeGreeting = 'Goedenavond 🌙';
         }
         setGreeting(timeGreeting);
-
+    
         const today = new Date();
         const formattedDate = today.toLocaleDateString('nl-NL', {
             weekday: 'long',
@@ -53,10 +55,17 @@ const HomeScreen = () => {
             year: 'numeric',
         });
         setCurrentDate(formattedDate);
-
+    
+        // Nieuw: dagelijks weetje kiezen
+        const startDate = new Date(2024, 0, 1); // 1 januari 2024
+        const daysSinceStart = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+        const index = daysSinceStart % weetjesData.length;
+        setWeetje(weetjesData[index].feit); // Hier alleen de feit-string doorgeven
+    
         greetingOpacity.value = withTiming(1, { duration: 800 });
         greetingTranslateY.value = withTiming(0, { duration: 800 });
     }, []);
+    
 
     const greetingStyle = useAnimatedStyle(() => ({
         opacity: greetingOpacity.value,
@@ -89,7 +98,7 @@ const HomeScreen = () => {
         <SafeAreaView style={{ flex: 1 }}>
             <Animated.View style={[styles.container, backgroundColor]}>
                 <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
-                    
+
                     <View style={styles.header}>
                         <View style={styles.logoContainer}>
                             <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
@@ -106,6 +115,11 @@ const HomeScreen = () => {
                         <Animated.Text style={[styles.dateText, greetingStyle]}>
                             {currentDate}
                         </Animated.Text>
+
+                        <View style={styles.factContainer}>
+                            <Text style={styles.factLabel}>Wist je dat?</Text>
+                            <Text style={styles.factText}>{weetje}</Text>
+                        </View>
 
                         <View style={styles.divider} />
                     </View>
@@ -134,6 +148,7 @@ const HomeScreen = () => {
                         <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
                         <Image source={getTreeImage()} style={styles.treeImage} />
                     </View>
+
                 </ScrollView>
             </Animated.View>
         </SafeAreaView>
@@ -193,6 +208,34 @@ const styles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 2,
     },
+    factContainer: {
+        marginTop: 10,
+        marginBottom: 20,
+        backgroundColor: 'rgba(255,255,255,0.15)',
+        padding: 12,
+        borderRadius: 10,
+        width: '85%',
+    },
+    factLabel: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+        marginBottom: 5,
+        fontFamily: 'ABeeZee',
+    },
+    factText: {
+        color: 'white',
+        fontSize: 14,
+        fontFamily: 'ABeeZee',
+    },
+    divider: {
+        height: 1,
+        backgroundColor: 'white',
+        width: '80%',
+        marginTop: 15,
+        marginBottom: 10,
+        opacity: 0.4,
+    },
     statsContainer: {
         marginVertical: 20,
         alignItems: 'center',
@@ -235,14 +278,6 @@ const styles = StyleSheet.create({
         height: 150,
         resizeMode: 'contain',
         marginTop: 10,
-    },
-    divider: {
-        height: 1,
-        backgroundColor: 'white',
-        width: '80%',
-        marginTop: 15,
-        marginBottom: 10,
-        opacity: 0.4,
     },
     statsPercentage: {
         position: 'absolute',
