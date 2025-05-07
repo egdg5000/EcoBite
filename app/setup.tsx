@@ -1,138 +1,141 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
 import { useFonts } from 'expo-font';
-import { TouchableOpacity, Image } from 'react-native';
 import { Button, ListItem } from '@rneui/themed';
 import { useRouter } from "expo-router";
 
-
 const SetupScreen = () => {
-    const [fontsLoaded] = useFonts({
-        'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
-    });
-    const router = useRouter();
-    const [checkbox1, setCheckbox1] = useState(false);
-    const [checkbox2, setCheckbox2] = useState(false);
-    const [checkbox3, setCheckbox3] = useState(false);
-    const [checkbox4, setCheckbox4] = useState(false);
-    const [checkbox5, setCheckbox5] = useState(false);
+  const [fontsLoaded] = useFonts({
+    'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
+  });
 
+  const router = useRouter();
 
-    return (
-        <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
-            <View style={styles.container}>
-                <Image source={require('../assets/images/EcoBite2.png')} style={styles.logo} />
-                <Text style={styles.title}>Allergieën</Text>
-                <Text style={styles.subtitle}>Geef hier uw allergieën aan. U kunt dit altijd wijzigen in uw instellingen.</Text>
-                <View style={styles.list}>
-                <ListItem>
-                    <ListItem.CheckBox
-                    checked={checkbox1}
-                    onPress={() => setCheckbox1(!checkbox1)}
-                    />
-                    <ListItem.Content>
-                        <ListItem.Title style={styles.itemText}>Glutenallergie</ListItem.Title>
-                    </ListItem.Content>
-                </ListItem>
-                <ListItem>
-                    <ListItem.CheckBox
-                    checked={checkbox2}
-                    onPress={() => setCheckbox2(!checkbox2)}
-                    />
-                    <ListItem.Content>
-                        <ListItem.Title style={styles.itemText}>Notenallergie</ListItem.Title>
-                    </ListItem.Content>
-                </ListItem>
-                <ListItem>
-                    <ListItem.CheckBox
-                    checked={checkbox3}
-                    onPress={() => setCheckbox3(!checkbox3)}
-                    />
-                    <ListItem.Content>
-                        <ListItem.Title style={styles.itemText}>Pinda-allergie</ListItem.Title>
-                    </ListItem.Content>
-                </ListItem>
-                <ListItem>
-                    <ListItem.CheckBox
-                    checked={checkbox4}
-                    onPress={() => setCheckbox4(!checkbox4)}
-                    />
-                    <ListItem.Content>
-                        <ListItem.Title style={styles.itemText}>Lactose intolerantie</ListItem.Title>
-                    </ListItem.Content>
-                </ListItem>
-                <TouchableOpacity onPress={() => setCheckbox5(!checkbox5)}>
-                    <ListItem>
-                        <ListItem.CheckBox
-                        checked={checkbox5}
-                        containerStyle={{width: 0}}
-                        onPress={() => setCheckbox5(!checkbox5)}
-                        />
-                        <ListItem.Content>
-                            <ListItem.Title style={styles.itemText}>Lactose intolerantie</ListItem.Title>
-                        </ListItem.Content>
-                    </ListItem>
-                </TouchableOpacity>
-                
-                <Button 
-                  buttonStyle={styles.button}
-                  onPress={() => router.push('/home')}
-                  title={'Verder'}/>
-                <Button 
-                  buttonStyle={[styles.button, {backgroundColor: "#FFF", borderWidth: 2, borderColor: '#2DBE60'}]}
-                  onPress={() => router.push('/home')}
-                  title={'Overslaan'}
-                  titleStyle={{color: 'black'}}/>
-                </View>
-            </View>
-        </SafeAreaView>
-    );
+  const [allergies, setAllergies] = useState({
+    gluten: false,
+    noten: false,
+    pinda: false,
+    lactose: false,
+  });
+
+  const toggleAllergy = (key: keyof typeof allergies) => {
+    setAllergies(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <View style={styles.container}>
+        <Image source={require('../assets/images/EcoBite2.png')} style={styles.logo} />
+        <Text style={styles.title}>Allergieën</Text>
+        <Text style={styles.subtitle}>
+          Geef hier uw allergieën aan. U kunt dit altijd wijzigen in uw instellingen.
+        </Text>
+
+        <View style={styles.list}>
+          <ListItem bottomDivider>
+            <ListItem.CheckBox
+              checked={allergies.gluten}
+              onPress={() => toggleAllergy('gluten')}
+            />
+            <ListItem.Content>
+              <ListItem.Title style={styles.itemText}>Glutenallergie</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+
+          <ListItem bottomDivider>
+            <ListItem.CheckBox
+              checked={allergies.noten}
+              onPress={() => toggleAllergy('noten')}
+            />
+            <ListItem.Content>
+              <ListItem.Title style={styles.itemText}>Notenallergie</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+
+          <ListItem bottomDivider>
+            <ListItem.CheckBox
+              checked={allergies.pinda}
+              onPress={() => toggleAllergy('pinda')}
+            />
+            <ListItem.Content>
+              <ListItem.Title style={styles.itemText}>Pinda-allergie</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+
+          <ListItem bottomDivider>
+            <ListItem.CheckBox
+              checked={allergies.lactose}
+              onPress={() => toggleAllergy('lactose')}
+            />
+            <ListItem.Content>
+              <ListItem.Title style={styles.itemText}>Lactose-intolerantie</ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button
+            buttonStyle={styles.button}
+            title="Verder"
+            onPress={() => router.push('/home')}
+          />
+          <Button
+            buttonStyle={[styles.button, styles.skipButton]}
+            title="Overslaan"
+            titleStyle={{ color: '#2DBE60' }}
+            onPress={() => router.push('/home')}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    title: {
-        fontSize: 24,
-        fontFamily: 'ABeeZee'
-    },
-    logo: {
-        width: 100,
-        height: 100,
-        marginBottom: 20,
-    },
-    list: {
-        width: '100%',
-        padding: 20,
-        paddingTop: 10
-    },
-    subtitle: {
-        fontSize: 16,
-        fontFamily: 'ABeeZee',
-        marginTop: 20,
-        marginHorizontal: 20,
-    },
-    itemText: {
-        fontSize: 16,
-        fontFamily: 'ABeeZee',
-        margin: 5
-    },
-    button: {
-        backgroundColor: '#2DBE60',
-        padding: 10,
-        borderRadius: 8,
-        marginTop: 20,
-        width: '100%',
-    },
-    buttonText: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
-        fontFamily: 'ABeeZee', 
-    },
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    paddingTop: 30,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontFamily: 'ABeeZee',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+    textAlign: 'center',
+    marginHorizontal: 30,
+    marginBottom: 20,
+  },
+  list: {
+    width: '90%',
+    marginBottom: 30,
+  },
+  itemText: {
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+  },
+  buttonContainer: {
+    width: '90%',
+    gap: 10,
+  },
+  button: {
+    backgroundColor: '#2DBE60',
+    padding: 12,
+    borderRadius: 8,
+  },
+  skipButton: {
+    backgroundColor: '#FFF',
+    borderWidth: 2,
+    borderColor: '#2DBE60',
+  },
 });
 
 export default SetupScreen;
