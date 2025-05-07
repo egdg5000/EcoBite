@@ -26,22 +26,22 @@ export default function HelpPage() {
                     
                     <TouchableOpacity style={styles.question}>
                         <Text style={styles.questionText}>🔍 Hoe scan ik een barcode?</Text>
-                        <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan' en richt uw camera op de barcode. Zorg ervoor dat de barcode duidelijk in beeld is.</Text>
+                        <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan Barcode' wanneer u op de groene + knop drukt. Geef wanneer nodig toestemming voor het gebruiken van de camera en richt uw camera op de barcode. Zorg ervoor dat de barcode duidelijk in beeld is.</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.question}>
                         <Text style={styles.questionText}>📝 Hoe voeg ik handmatig een ingrediënt toe?</Text>
-                        <Text style={styles.answerText}>Druk op de knop Koelkast in de navigatiebalk. Druk op '+ Nieuw ingrediënt' en voer de naam en vervaldatum in.</Text>
+                        <Text style={styles.answerText}>Druk op de knop 'Voorraad' in de navigatiebalk. Druk op '+ Nieuw ingrediënt' en voer de gegevens van het product in. U kunt ook direct naar de pagina 'Voedsel toevoegen' in het menu van de groene + knop. Dit is handig voor als u een ingrediënt zonder barcode wilt toevoegen.</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.question}>
                         <Text style={styles.questionText}>🍽️ Hoe krijg ik recepten op basis van mijn ingrediënten?</Text>
-                        <Text style={styles.answerText}>Open de koelkast-pagina en selecteer de beschikbare ingrediënten. De app geeft recepten op basis van wat u heeft.</Text>
+                        <Text style={styles.answerText}>Open de voorraad en selecteer de beschikbare ingrediënten. De app geeft suggesties voor recepten op basis van wat u heeft. U kunt toegevoegde ingrediënten ook toevoegen aan de favorieten, zodat u ze sneller kan selecteren voor een volgende keer.</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.question}>
                         <Text style={styles.questionText}>❤️ Waar kan ik voedsel doneren?</Text>
-                        <Text style={styles.answerText}>Ga naar de Donatiepagina in de app om meer informatie en een lijst met lokale voedselbanken (Nederlandse Voedselbanken) te zien. De donatiepagina is rechtsboven te vinden op de homepagina.</Text>
+                        <Text style={styles.answerText}>Ga naar uw account in de app en ga naar de informatie over het doneren. Op de doneerpagina vind u meer informatie en een lijst met lokale voedselbanken (Nederlandse Voedselbanken).</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.question}>
