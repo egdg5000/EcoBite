@@ -10,11 +10,17 @@ const bcrypt = require('bcrypt');
 const jsonParser = bodyParser.json();
 
 const emailTransporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: false,
     auth: {
-        user: process.env.EMAIL,
+        user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
-    }
+    },
+    tls: {
+        rejectUnauthorized: true 
+    },
+    hello: 'mail.edg5000.com' 
 });
 
 router.get('/verification', (req, res) => {
@@ -92,7 +98,7 @@ router.post('/sendrecoverymail', jsonParser, (req, res) => {
         db.promise().query(query1, [token, userid]);
         const recoveryUrl = `https://edg5000.com/recovery?token=${token}`;
         const mailOptions = {
-            from: process.env.EMAIL,
+            from: 'ecobite@edg5000.com',
             to: email,
             subject: 'Reset your password',
             html: require('fs').readFileSync(path.join(__dirname, '../public/reset_password_email.html'), 'utf8').replace('{{ recoveryUrl }}', recoveryUrl)

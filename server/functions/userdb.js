@@ -6,11 +6,17 @@ const jwt = require('jsonwebtoken');
 const path = require('path')
 
 const emailTransporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: false,
     auth: {
-        user: process.env.EMAIL,
+        user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD
-    }
+    },
+    tls: {
+        rejectUnauthorized: true 
+    },
+    hello: 'mail.edg5000.com' 
 });
 
 async function registerUser(req, res){
@@ -36,7 +42,7 @@ async function registerUser(req, res){
     }, process.env.SESSION_SECRET, { expiresIn: '1h' });
     const verificationUrl = `https://edg5000.com/verification?token=${emailToken}`;
     const mailOptions = {
-        from: process.env.EMAIL,
+        from: 'ecobite@edg5000.com',
         to: email,
         subject: 'Verify Your Email',
         html: require('fs').readFileSync(path.join(__dirname, '../public/verification_email.html'), 'utf8').replace('{{ verificationUrl }}', verificationUrl)

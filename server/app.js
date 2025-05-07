@@ -7,7 +7,7 @@ const dotenv = require('dotenv').config()
 const MySQLStore = require('express-mysql-session')(session);
 
 app.use(cors({
-  origin: 'https://edg5000.com',
+  origin: 'http://localhost:8081',
   credentials: true
 }));
 
