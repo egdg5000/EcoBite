@@ -102,7 +102,7 @@ const RegistrationScreen = () => {
       email: newemail,
       password: password,
     });
-    const response = await fetch('http://localhost:3000/users/register', {
+    const response = await fetch('https://edg5000.com/users/register', {
       method: 'POST',
       credentials: 'include',
       headers: {

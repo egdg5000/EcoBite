@@ -34,7 +34,7 @@ async function registerUser(req, res){
     const emailToken = jwt.sign({
         email: email
     }, process.env.SESSION_SECRET, { expiresIn: '1h' });
-    const verificationUrl = `http://localhost:3000/verification?token=${emailToken}`;
+    const verificationUrl = `https://edg5000.com/verification?token=${emailToken}`;
     const mailOptions = {
         from: process.env.EMAIL,
         to: email,

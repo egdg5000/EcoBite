@@ -49,7 +49,7 @@ const LoginScreen = () => {
           username: email,
           password: password,
         })
-        const response = await fetch('http://localhost:3000/users/login', {
+        const response = await fetch('https://edg5000.com/users/login', {
           method: 'POST',
           credentials: 'include',
           headers: {

@@ -29,7 +29,7 @@ export default function ForgotPasswordScreen() {
     const body = JSON.stringify({
       email: email,
     })
-    const response = await fetch('http://localhost:3000/sendrecoverymail', {
+    const response = await fetch('https://edg5000.com/sendrecoverymail', {
       method: 'POST',
       credentials: 'include',
       headers: {

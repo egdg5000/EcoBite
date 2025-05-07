@@ -90,7 +90,7 @@ router.post('/sendrecoverymail', jsonParser, (req, res) => {
         const token = randomBytes(20).toString('base64').replace(/[^a-zA-Z0-9]/g, '')
         const query1 = `UPDATE users SET recovery_token = ? WHERE id = ?`;
         db.promise().query(query1, [token, userid]);
-        const recoveryUrl = `http://localhost:3000/recovery?token=${token}`;
+        const recoveryUrl = `https://edg5000.com/recovery?token=${token}`;
         const mailOptions = {
             from: process.env.EMAIL,
             to: email,

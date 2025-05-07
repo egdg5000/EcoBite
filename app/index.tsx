@@ -62,7 +62,7 @@ function Splash({ children }: { children: React.ReactNode }) {
 
 async function checkLogin() {
   const router = useRouter();
-  const response = await fetch('http://localhost:3000/users/loginStatus', {
+  const response = await fetch('https://edg5000.com/users/loginStatus', {
     method: 'GET',
     credentials: 'include',
     headers: {
