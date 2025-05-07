@@ -3,11 +3,41 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Mod
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
+import { Animated, Easing } from 'react-native';
+
 
 export default function AccountPage() {
   const [fontsLoaded] = useFonts({
     'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
   });
+
+  const { filtersSaved } = useLocalSearchParams();
+  const [fadeAnim] = useState(new Animated.Value(0));
+
+
+  useEffect(() => {
+    if (filtersSaved === 'true') {
+      // Start zichtbaar maken
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 300,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.ease),
+      }).start();
+  
+      // Na 3 sec vervagen
+      setTimeout(() => {
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+          easing: Easing.in(Easing.ease),
+        }).start();
+      }, 3000);
+    }
+  }, [filtersSaved]);
 
   const [userData] = useState({
     username: 'Placeholder',
@@ -50,6 +80,9 @@ export default function AccountPage() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
+      <Animated.View style={[styles.successBanner, { opacity: fadeAnim }]}>
+        <Text style={styles.successText}>Filters succesvol opgeslagen!</Text>
+      </Animated.View>
         <View style={styles.userInfo}>
           <View style={styles.userText}>
             <Text style={styles.userInfoText}>Gebruikersnaam: {userData.username}</Text>
@@ -268,5 +301,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+  },  
+  successBanner: {
+    backgroundColor: '#d4edda',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 15,
+  },
+  successText: {
+    color: '#155724',
+    fontFamily: 'ABeeZee',
+    textAlign: 'center',
   },  
 });
