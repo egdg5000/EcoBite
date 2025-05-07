@@ -41,7 +41,7 @@ export default function AboutPage() {
           <Text style={styles.infoText}>{updateStatus}</Text>
         </View>
         <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
-          <Text style={styles.backButtonText}>Terug naar Account</Text>
+          <Text style={styles.backButtonText}>Terug</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>  
@@ -71,14 +71,23 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   backButton: {
-    padding: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     backgroundColor: '#4CAF50',
     borderRadius: 10,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    alignSelf: 'center', // centreren op het scherm
+    marginTop: 10,
   },
   backButtonText: {
     fontSize: 16,
     color: '#fff',
     fontFamily: 'ABeeZee',
+    fontWeight: '500',
   },
 });
