@@ -3,41 +3,11 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Mod
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import { useLocalSearchParams } from 'expo-router';
-import { useEffect } from 'react';
-import { Animated, Easing } from 'react-native';
-
 
 export default function AccountPage() {
   const [fontsLoaded] = useFonts({
     'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
   });
-
-  const { filtersSaved } = useLocalSearchParams();
-  const [fadeAnim] = useState(new Animated.Value(0));
-
-
-  useEffect(() => {
-    if (filtersSaved === 'true') {
-      // Start zichtbaar maken
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 300,
-        useNativeDriver: true,
-        easing: Easing.out(Easing.ease),
-      }).start();
-  
-      // Na 3 sec vervagen
-      setTimeout(() => {
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver: true,
-          easing: Easing.in(Easing.ease),
-        }).start();
-      }, 3000);
-    }
-  }, [filtersSaved]);
 
   const [userData] = useState({
     username: 'Placeholder',
@@ -78,92 +48,93 @@ export default function AccountPage() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView style={styles.container}>
-      <Animated.View style={[styles.successBanner, { opacity: fadeAnim }]}>
-        <Text style={styles.successText}>Filters succesvol opgeslagen!</Text>
-      </Animated.View>
-        <View style={styles.userInfo}>
-          <View style={styles.userText}>
-            <Text style={styles.userInfoText}>Gebruikersnaam: {userData.username}</Text>
-            <Text style={styles.userInfoText}>Email: {userData.email}</Text>
+    <View style={{ flex: 1, backgroundColor: '#FFF' }}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView style={styles.container}>
+          <View style={styles.userInfo}>
+            <View style={styles.userText}>
+              <Text style={styles.userInfoText}>Gebruikersnaam: {userData.username}</Text>
+              <Text style={styles.userInfoText}>Email: {userData.email}</Text>
+            </View>
           </View>
-        </View>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handleFiltersPress}>
-            <Text style={styles.buttonText}>Filters</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-          <View style={styles.separator}></View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={handleFiltersPress}>
+              <Text style={styles.buttonText}>Filters</Text>
+              <Text style={styles.arrow}>→</Text>
+            </TouchableOpacity>
+            <View style={styles.separator}></View>
 
-          <TouchableOpacity style={styles.button} onPress={handleDetailsPress}>
-            <Text style={styles.buttonText}>Details</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-          <View style={styles.separator}></View>
+            <TouchableOpacity style={styles.button} onPress={handleDetailsPress}>
+              <Text style={styles.buttonText}>Details</Text>
+              <Text style={styles.arrow}>→</Text>
+            </TouchableOpacity>
+            <View style={styles.separator}></View>
 
-          <TouchableOpacity style={styles.button} onPress={handleNotificationsPress}>
-            <Text style={styles.buttonText}>Notificaties</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-          <View style={styles.separator}></View>
+            <TouchableOpacity style={styles.button} onPress={handleNotificationsPress}>
+              <Text style={styles.buttonText}>Notificaties</Text>
+              <Text style={styles.arrow}>→</Text>
+            </TouchableOpacity>
+            <View style={styles.separator}></View>
 
-          <TouchableOpacity style={styles.button} onPress={handleHelpPress}>
-            <Text style={styles.buttonText}>Help</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-          <View style={styles.separator}></View>
+            <TouchableOpacity style={styles.button} onPress={handleHelpPress}>
+              <Text style={styles.buttonText}>Help</Text>
+              <Text style={styles.arrow}>→</Text>
+            </TouchableOpacity>
+            <View style={styles.separator}></View>
 
-          <TouchableOpacity style={styles.button} onPress={handleAboutPress}>
-            <Text style={styles.buttonText}>Versie app</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-          <View style={styles.separator}></View>
+            <TouchableOpacity style={styles.button} onPress={handleAboutPress}>
+              <Text style={styles.buttonText}>Versie app</Text>
+              <Text style={styles.arrow}>→</Text>
+            </TouchableOpacity>
+            <View style={styles.separator}></View>
 
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/about')}>
-            <Text style={styles.buttonText}>Ons team</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.donateContainer}>
-          <View style={styles.donateHeader}>
-            <Ionicons name="heart" size={22} color="#D32F2F" style={{ marginRight: 8 }} />
-            <Text style={styles.donateTitle}>Voedsel doneren</Text>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/about')}>
+              <Text style={styles.buttonText}>Ons team</Text>
+              <Text style={styles.arrow}>→</Text>
+            </TouchableOpacity>
           </View>
-          <Text style={styles.donateDescription}>
-            Heb je voedsel dat je niet gaat gebruiken? Doneer het eenvoudig aan een voedselbank in de buurt en help verspilling verminderen.
-          </Text>
-          <TouchableOpacity style={styles.donateButton} onPress={() => router.push('/donate')}>
-            <Text style={styles.donateButtonText}>Meer Informatie</Text>
+
+          <View style={styles.donateContainer}>
+            <View style={styles.donateHeader}>
+              <Ionicons name="heart" size={22} color="#D32F2F" style={{ marginRight: 8 }} />
+              <Text style={styles.donateTitle}>Voedsel doneren</Text>
+            </View>
+            <Text style={styles.donateDescription}>
+              Heb je voedsel dat je niet gaat gebruiken? Doneer het eenvoudig aan een voedselbank in de buurt en help verspilling verminderen.
+            </Text>
+            <TouchableOpacity style={styles.donateButton} onPress={() => router.push('/donate')}>
+              <Text style={styles.donateButtonText}>Meer Informatie</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.legalHeader}>
+            <Ionicons name="document-text-outline" size={22} color="#4CAF50" style={{ marginRight: 8 }} />
+            <Text style={styles.categoryTitle}>Juridische Informatie</Text>
+          </View>
+
+
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/privacy_policy')}>
+              <Text style={styles.buttonText}>Privacybeleid</Text>
+              <Text style={styles.arrow}>→</Text>
+            </TouchableOpacity>
+            <View style={styles.separator}></View>
+
+            <TouchableOpacity style={styles.button} onPress={() => router.push('/terms')}>
+              <Text style={styles.buttonText}>Servicevoorwaarden</Text>
+              <Text style={styles.arrow}>→</Text>
+            </TouchableOpacity>
+          </View>
+
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Ionicons name="log-out" size={24} color="#D32F2F" />
+            <Text style={styles.logoutText}>Uitloggen</Text>
           </TouchableOpacity>
-        </View>
-
-        <View style={styles.legalHeader}>
-          <Ionicons name="document-text-outline" size={22} color="#4CAF50" style={{ marginRight: 8 }} />
-          <Text style={styles.categoryTitle}>Juridische Informatie</Text>
-        </View>
-
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/privacy_policy')}>
-            <Text style={styles.buttonText}>Privacybeleid</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-          <View style={styles.separator}></View>
-
-          <TouchableOpacity style={styles.button} onPress={() => router.push('/terms')}>
-            <Text style={styles.buttonText}>Servicevoorwaarden</Text>
-            <Text style={styles.arrow}>→</Text>
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out" size={24} color="#D32F2F" />
-          <Text style={styles.logoutText}>Uitloggen</Text>
-        </TouchableOpacity>
-      </ScrollView>
+          
+        </ScrollView>
+      </SafeAreaView>
+      
 
       <Modal
         transparent={true}
@@ -185,7 +156,7 @@ export default function AccountPage() {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -301,16 +272,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-  },  
-  successBanner: {
-    backgroundColor: '#d4edda',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 15,
-  },
-  successText: {
-    color: '#155724',
-    fontFamily: 'ABeeZee',
-    textAlign: 'center',
   },  
 });
