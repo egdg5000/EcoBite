@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginLeft: 20,
     marginBottom: 10,
+    fontFamily: 'ABeeZee'
   },
   searchInput: {
     backgroundColor: '#f0f0f0',
@@ -110,5 +111,6 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 14,
     textAlign: 'center',
+    fontFamily: 'ABeeZee'
   },
 });
