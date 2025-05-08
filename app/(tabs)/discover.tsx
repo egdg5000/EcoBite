@@ -9,9 +9,11 @@ import {
   Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 export default function DiscoverScreen() {
   const [filters, setFilters] = useState({});
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const loadFilters = async () => {
@@ -49,14 +51,31 @@ export default function DiscoverScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Vind recepten</Text>
-      <TextInput style={styles.searchInput} placeholder="Zoeken" />
+
+      {/* Zoekbalk met icoon */}
+      <View style={styles.searchContainer}>
+        <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Zoeken"
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholderTextColor="#888"
+        />
+      </View>
+
       <FlatList
         data={recipeCategories}
         numColumns={2}
         keyExtractor={(item) => item.title}
         contentContainerStyle={styles.grid}
+        showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <TouchableOpacity style={[styles.card, { backgroundColor: item.color }]}>
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: item.color }]}
+            activeOpacity={0.8}
+            onPress={() => console.log('Gekozen:', item.title)}
+          >
             <Image source={item.image} style={styles.cardImage} />
             <Text style={styles.cardText}>{item.title}</Text>
           </TouchableOpacity>
@@ -70,47 +89,64 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 60,
+    paddingHorizontal: 20,
     backgroundColor: '#fff',
   },
   header: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginLeft: 20,
-    marginBottom: 10,
-    fontFamily: 'ABeeZee'
+    marginBottom: 16,
+    fontFamily: 'ABeeZee',
+    color: '#333',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f7f7f7',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 24,
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  searchIcon: {
+    marginRight: 8,
   },
   searchInput: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 10,
-    marginHorizontal: 20,
-    padding: 10,
-    marginBottom: 20,
+    flex: 1,
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+    color: '#333',
   },
   grid: {
-    paddingHorizontal: 10,
+    paddingBottom: 20,
   },
   card: {
     flex: 1,
     margin: 10,
-    borderRadius: 16,
-    padding: 10,
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 150,
+    minHeight: 160,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
     elevation: 3,
   },
   cardImage: {
     width: 60,
     height: 60,
     resizeMode: 'contain',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   cardText: {
-    fontSize: 14,
+    fontSize: 15,
     textAlign: 'center',
-    fontFamily: 'ABeeZee'
+    fontFamily: 'ABeeZee',
+    color: '#333',
   },
 });
