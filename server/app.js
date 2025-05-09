@@ -5,6 +5,7 @@ const app = express();
 const port = 3000;
 const dotenv = require('dotenv').config()
 const MySQLStore = require('express-mysql-session')(session);
+const helmet = require('helmet');
 
 app.use(express.json({ limit: "50mb" }));
 
@@ -12,6 +13,17 @@ app.use(cors({
   origin: ['https://edg5000.com', 'http://localhost:8081'],
   credentials: true
 }));
+
+app.use(helmet());
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+    },
+  })
+);
 
 const sessionStore = new MySQLStore({
   host: 'localhost',
