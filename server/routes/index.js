@@ -4,24 +4,10 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const { db } = require('../database');
 const path = require('path')
-const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+const {emailTransporter} = require('../smtp.js');
 
 const jsonParser = bodyParser.json();
-
-const emailTransporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-    },
-    tls: {
-        rejectUnauthorized: true 
-    },
-    hello: 'mail.edg5000.com' 
-});
 
 router.get('/verification', (req, res) => {
     res.sendFile(path.join(__dirname + '/../public/verify_email.html'))

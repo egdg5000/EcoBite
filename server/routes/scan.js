@@ -4,7 +4,6 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const client = new vision.ImageAnnotatorClient();
 const fs = require('fs');
-const { debug } = require('console');
 
 const jsonParser = bodyParser.json();
 

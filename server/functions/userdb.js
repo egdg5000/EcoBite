@@ -1,23 +1,9 @@
 const dotenv = require('dotenv').config()
 const { db } = require('../database')
 const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const path = require('path')
-
-const emailTransporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: false,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-    },
-    tls: {
-        rejectUnauthorized: true 
-    },
-    hello: 'mail.edg5000.com' 
-});
+const {emailTransporter} = require('../smtp.js');
 
 async function registerUser(req, res){
     const { username, email, password } = req.body;
