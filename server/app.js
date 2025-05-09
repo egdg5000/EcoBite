@@ -5,6 +5,10 @@ const app = express();
 const port = 3000;
 const dotenv = require('dotenv').config()
 const MySQLStore = require('express-mysql-session')(session);
+const nodemailer = require('nodemailer');
+const net = require('net');
+
+app.use(express.json({ limit: "50mb" }));
 
 app.use(cors({
   origin: ['https://edg5000.com', 'http://localhost:8081'],
@@ -41,10 +45,46 @@ sessionStore.onReady().then(() => {
 
 //Routes
 app.use("/users", require('./routes/users.js'));
-app.use("/", require('./routes/index.js'))
-app.use("/products", require('./routes/products.js'))
+app.use("/", require('./routes/index.js'));
+app.use("/products", require('./routes/products.js'));
+app.use("/scan", require('./routes/scan.js'));
+
+//SMTP
+const emailTransporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: false,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD
+    },
+    tls: {
+        rejectUnauthorized: true 
+    },
+    hello: 'mail.edg5000.com' 
+});
+
+const options = {
+  host: process.env.EMAIL_HOST,
+  port: process.env.EMAIL_PORT
+};
+
+const client = net.createConnection(options, () => {
+  console.log(`SMTP server reachable: ${process.env.EMAIL_HOST}:${process.env.EMAIL_PORT}`);
+  client.write('EHLO edg5000.com\r\n');
+});
+client.on('end', () => {
+  console.log('Disconnected from server');
+});
+client.on('error', (err) => {
+  console.error('Connection error:', err);
+});
+
+
 
 
 app.listen(port, () => {
   console.log(`server listening on port ${port}`)
 });
+
+module.exports = {emailTransporter};

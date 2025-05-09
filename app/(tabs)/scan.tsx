@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-native";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
@@ -10,7 +10,9 @@ const ScanScreen = () => {
   const [scanError, setScanError] = useState(false);
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
-  const router = useRouter();
+  const router = useRouter();	
+
+  const camera = useRef(null)
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
@@ -53,6 +55,30 @@ const ScanScreen = () => {
     console.log("Gescannde data:", data);
   };
 
+  const takePicture = async () => {
+    if (!camera.current) return;
+    try {
+        const options = { quality: 0.5, base64: true };
+        const data = await camera.current.takePictureAsync(options);
+        console.log(data.uri);
+        const body = JSON.stringify({
+          image: data
+        })
+        const response = await fetch('http://localhost:3000/scan/detect', {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body
+        });
+        const responseData = await response.json();
+        console.log(responseData, '<<<<<<<<<<<<<<<<<<<<<');
+    } catch (error) {
+        console.log(error, "ERROR <<<<<<<<<<<<<")
+    }
+};
+
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
@@ -61,14 +87,20 @@ const ScanScreen = () => {
 
       <View style={styles.scannerContainer}>
         <CameraView
+          ref={camera}
           facing={facing}
           barcodeScannerSettings={{
             barcodeTypes: ["ean13"],
           }}
           onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
-        />
+        >
+        </CameraView>
       </View>
+      
+      <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
+          <Text style={styles.text}>Maak een foto</Text>
+      </TouchableOpacity>
 
       <View style={styles.infoContainer}>
         {scanError ? (
@@ -225,6 +257,10 @@ const styles = StyleSheet.create({
     fontFamily: "ABeeZee",
     color: "#000",
     fontWeight: "bold",
+  },
+  cameraButton: {
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
 
