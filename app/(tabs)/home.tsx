@@ -153,10 +153,10 @@ const HomeScreen = () => {
                             <View style={[styles.xpBarFill, { width: `${xpProgress * 100}%` }]} />
                         </View>
                         <Text style={styles.xpText}>{xp} / {xpForNextLevel} XP</Text>
-                        <View style={styles.streakContainer}>
+                        <Pressable onPress={() => setShowStreakPopup(true)} style={styles.streakContainer}>
                             <Ionicons name="flame-outline" size={24} color="#FFA500" />
                             <Text style={styles.streakText}>{streakDays} dagen streak</Text>
-                        </View>
+                        </Pressable>
                         <Modal
                             visible={showStreakPopup}
                             animationType="fade"
@@ -399,23 +399,42 @@ const styles = StyleSheet.create({
         marginVertical: 2,
     },
     modalBackdrop: {
-    flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: 'white', padding: 20, borderRadius: 15, width: '80%', alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 18, fontWeight: 'bold', marginBottom: 10, fontFamily: 'ABeeZee',
-  },
-  modalText: {
-    fontSize: 16, textAlign: 'center', fontFamily: 'ABeeZee', marginBottom: 20,
-  },
-  modalButton: {
-    backgroundColor: '#66C466', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 10,
-  },
-  modalButtonText: {
-    color: 'white', fontWeight: 'bold', fontSize: 16,
-  },
+        flex: 1, 
+        backgroundColor: 'rgba(0,0,0,0.5)', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+    },
+    modalContent: {
+        backgroundColor: 'white', 
+        padding: 20, 
+        borderRadius: 15, 
+        width: '80%', 
+        alignItems: 'center',
+    },
+    modalTitle: {
+        fontSize: 18, 
+        fontWeight: 'bold', 
+        marginBottom: 10, 
+        fontFamily: 'ABeeZee',
+    },
+    modalText: {
+        fontSize: 16, 
+        textAlign: 'center', 
+        fontFamily: 'ABeeZee', 
+        marginBottom: 20,
+    },
+    modalButton: {
+        backgroundColor: '#66C466', 
+        paddingVertical: 10, 
+        paddingHorizontal: 20, 
+        borderRadius: 10,
+    },
+    modalButtonText: {
+        color: 'white', 
+        fontWeight: 'bold', 
+        fontSize: 16,
+        fontFamily: 'ABeeZee',
+    },
 });
 
 export default HomeScreen;
