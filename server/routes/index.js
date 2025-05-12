@@ -21,7 +21,13 @@ router.post('/verify', jsonParser, (req, res) => {
     db.promise().query(query, token).then(([result]) => {
         if (result.length > 0) {
             if (currentTime > new Date(result[0].verification_expires)) {
-                res.status(400).json({success: false, message: "Verification token expired"}); 
+                const query__ = `DELETE FROM users WHERE verification_token = ?`;
+                db.promise().query(query__, token).then(() => {
+                    res.status(400).json({success: false, message: "Verification token expired"}); 
+                }).catch(err => {
+                    console.error(err);
+                    res.status(500).json({success: false, message: 'Internal Server Error'});
+                });
                 return;
             }
             else {
