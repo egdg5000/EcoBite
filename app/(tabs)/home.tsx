@@ -129,7 +129,7 @@ const HomeScreen = () => {
 
                     {/* Boom + CO2 statistiek */}
                    <View style={styles.treeStatContainer}>
-                        <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
+                        <Text style={styles.groundTitle}>Jouw Boom:</Text>
                         <Image source={getTreeImage()} style={styles.treeImage} />
 
                         <View style={styles.co2MinimalBox}>
@@ -172,12 +172,44 @@ const HomeScreen = () => {
                         </Modal>
                     </View>
 
-                    {/* Leaderboard */}
-                    <View style={styles.leaderboardContainer}>
+                   <View style={styles.leaderboardContainer}>
                         <Text style={styles.leaderboardTitle}>🏆 Leaderboard</Text>
-                        <Text style={styles.leaderboardText}>1. Anna - 1520 XP</Text>
-                        <Text style={styles.leaderboardText}>2. Jij - {xp} XP</Text>
-                        <Text style={styles.leaderboardText}>3. Tom - 290 XP</Text>
+
+                        <View style={styles.podiumContainer}>
+                            {/* 2nd place */}
+                            <View style={[styles.second]}>
+                                <Text style={styles.podiumRank}>2</Text>
+                                <Text style={styles.podiumName}>Tom</Text>
+                                <Text style={styles.podiumXP}>980 XP</Text>
+                            </View>
+
+                            {/* 1st place */}
+                            <View style={[styles.first]}>
+                                <Text style={styles.podiumRank}>1</Text>
+                                <Text style={styles.podiumName}>Anna</Text>
+                                <Text style={styles.podiumXP}>1520 XP</Text>
+                            </View>
+
+                            {/* 3rd place */}
+                            <View style={[styles.third]}>
+                                <Text style={styles.podiumRank}>3</Text>
+                                <Text style={styles.podiumName}>Jij</Text>
+                                <Text style={styles.podiumXP}>{xp} XP</Text>
+                            </View>
+                        </View>
+
+                        <View style={styles.divider} />
+
+                        {/* Places 4-10 */}
+                        <View style={styles.topList}>
+                            <Text style={styles.leaderboardText}>4. Sara - 750 XP</Text>
+                            <Text style={styles.leaderboardText}>5. Milan - 600 XP</Text>
+                            <Text style={styles.leaderboardText}>6. Noor - 580 XP</Text>
+                            <Text style={styles.leaderboardText}>7. Max - 550 XP</Text>
+                            <Text style={styles.leaderboardText}>8. Lotte - 510 XP</Text>
+                            <Text style={styles.leaderboardText}>9. Finn - 480 XP</Text>
+                            <Text style={styles.leaderboardText}>10. Isa - 450 XP</Text>
+                        </View>
                     </View>
                 </ScrollView>
             </SafeAreaView>
@@ -419,6 +451,75 @@ const styles = StyleSheet.create({
         color: '#eee',
         marginTop: 2,
         fontFamily: 'ABeeZee',
+    },
+    podiumContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'flex-end',
+        marginVertical: 20,
+        gap: 10,
+    },
+    first: {
+        height: 130,
+        width: 90,
+        zIndex: 2,
+        backgroundColor: '#FFD700', 
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingVertical: 10,
+        position: 'relative',
+    },
+    second: {
+        height: 100,
+        width: 90,
+        marginTop: 30,
+        backgroundColor: '#C0C0C0', 
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingVertical: 10,
+        position: 'relative',
+    },
+    third: {
+        height: 90,
+        width: 90,
+        marginTop: 40,
+        backgroundColor: '#CD7F32', 
+        borderRadius: 12,
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        paddingVertical: 10,
+        position: 'relative',
+    },
+    podiumRank: {
+        position: 'absolute',
+        top: -20,
+        fontSize: 18,
+        fontWeight: 'bold',
+        backgroundColor: '#fff',
+        color: '#66C466',
+        borderRadius: 20,
+        width: 30,
+        height: 30,
+        textAlign: 'center',
+        lineHeight: 30,
+        overflow: 'hidden',
+    },
+    podiumName: {
+        fontSize: 16,
+        color: '#000',
+        fontWeight: 'bold',
+        marginTop: 40,
+        fontFamily: 'ABeeZee', 
+    },
+    podiumXP: {
+        fontSize: 14,
+        color: '#333',
+        fontFamily: 'ABeeZee', 
+    },
+    topList: {
+        marginTop: 10,
     },
 });
 
