@@ -25,10 +25,10 @@ const HomeScreen = () => {
     const maxScroll = 400;
 
     const [co2Reduction, setCo2Reduction] = useState(0);
-    const [xp, setXp] = useState(320); // Voorbeeldwaarde
+    const [xp, setXp] = useState(320);
     const [level, setLevel] = useState(3);
-    const [xpForNextLevel, setXpForNextLevel] = useState(500); // Voorbeeldwaarde
-    const [streakDays, setStreakDays] = useState(5); // Voorbeeldwaarde
+    const [xpForNextLevel, setXpForNextLevel] = useState(500);
+    const [streakDays, setStreakDays] = useState(5);
 
     const progress = useSharedValue(0);
     const [greeting, setGreeting] = useState('');
@@ -127,26 +127,18 @@ const HomeScreen = () => {
                         <View style={styles.divider} />
                     </View>
 
-                    <View style={styles.statsContainer}>
-                        <Text style={styles.statsTitle}>Jouw statistieken:</Text>
-                        <Svg height="150" width="150" viewBox="0 0 100 100">
-                            <Circle cx="50" cy="50" r="40" stroke="#ffffff66" strokeWidth="8" fill="none" />
-                            <AnimatedCircle
-                                cx="50"
-                                cy="50"
-                                r="40"
-                                stroke="#66C466"
-                                strokeWidth="8"
-                                strokeDasharray="251.2"
-                                animatedProps={animatedProps}
-                                fill="none"
-                                strokeLinecap="round"
-                            />
-                        </Svg>
-                        <Text style={styles.statsPercentage}>{co2Reduction}%</Text>
-                        <Text style={styles.statsText}>CO2-reductie</Text>
+                    {/* Boom + CO2 statistiek */}
+                   <View style={styles.treeStatContainer}>
+                        <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
+                        <Image source={getTreeImage()} style={styles.treeImage} />
+
+                        <View style={styles.co2MinimalBox}>
+                            <Text style={styles.co2Value}>{co2Reduction}%</Text>
+                            <Text style={styles.co2Label}>CO₂-reductie</Text>
+                        </View>
                     </View>
 
+                    {/* XP en streak */}
                     <View style={styles.xpContainer}>
                         <Text style={styles.xpTitle}>Level {level}</Text>
                         <View style={styles.xpBarBackground}>
@@ -177,14 +169,10 @@ const HomeScreen = () => {
                                     </Pressable>
                                 </View>
                             </View>
-                         </Modal>
+                        </Modal>
                     </View>
 
-                    <View style={styles.groundContainer}>
-                        <Text style={styles.groundTitle}>Jouw stukje grond:</Text>
-                        <Image source={getTreeImage()} style={styles.treeImage} />
-                    </View>
-
+                    {/* Leaderboard */}
                     <View style={styles.leaderboardContainer}>
                         <Text style={styles.leaderboardTitle}>🏆 Leaderboard</Text>
                         <Text style={styles.leaderboardText}>1. Anna - 1520 XP</Text>
@@ -281,39 +269,14 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         opacity: 0.4,
     },
-    statsContainer: {
-        marginVertical: 20,
+    treeStatContainer: {
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
-        padding: 20,
-        borderRadius: 15,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
-        elevation: 5,
+        marginTop: 10,
     },
-    statsTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: 'white',
-        fontFamily: "ABeeZee",
-    },
-    statsText: {
-        fontSize: 16,
-        color: 'white',
-        fontFamily: "ABeeZee",
-    },
-    statsPercentage: {
-        position: 'absolute',
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#66FF66',
-        fontFamily: "ABeeZee",
-        textShadowColor: 'rgba(0, 0, 0, 0.4)',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 3,
-        marginTop: 80,
+    treeImage: {
+        width: 150,
+        height: 150,
+        resizeMode: 'contain',
     },
     groundContainer: {
         marginVertical: 20,
@@ -328,12 +291,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: 'white',
         fontFamily: "ABeeZee",
-    },
-    treeImage: {
-        width: 150,
-        height: 150,
-        resizeMode: 'contain',
-        marginTop: 10,
     },
     xpContainer: {
         width: '90%',
@@ -433,6 +390,34 @@ const styles = StyleSheet.create({
         color: 'white', 
         fontWeight: 'bold', 
         fontSize: 16,
+        fontFamily: 'ABeeZee',
+    },
+    co2MinimalBox: {
+        marginTop: 12,
+        backgroundColor: '#ffffff22',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 16,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1.5,
+        borderColor: '#66C466', 
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3, 
+    },
+    co2Value: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: '#fff',
+        fontFamily: 'ABeeZee',
+    },
+    co2Label: {
+        fontSize: 14,
+        color: '#eee',
+        marginTop: 2,
         fontFamily: 'ABeeZee',
     },
 });
