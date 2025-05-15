@@ -73,9 +73,7 @@ const RegistrationScreen = () => {
     } else {
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
       if (!passwordRegex.test(password)) {
-        setErrorPassword(
-          'Het wachtwoord moet minstens één hoofdletter, één kleine letter en één cijfer bevatten en moet minstens 8 tekens lang zijn.'
-        );
+        setErrorPassword('Wachtwoord voldoet niet aan de vereisten');
         error = true;
       } else setErrorPassword('');
     }
@@ -97,29 +95,52 @@ const RegistrationScreen = () => {
   const register = async () => {
     if (!validate()) return;
     setLoadingStatus(true);
+    setErrorEmail('');
+    setErrorUsername('');
+    setErrorPassword('');
+
     const body = JSON.stringify({
       username: username,
       email: newemail,
       password: password,
     });
-    const response = await fetch('https://edg5000.com/users/register', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body,
-    });
 
-    const data = await response.json();
-    if (!response.ok) {
-      throwError(data);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 8000); // 8 seconden timeout
+
+    try {
+      const response = await fetch('https://edg5000.com/users/register', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throwError(data);
+      } else if (data.success) {
+        setRegisterText('Geregistreerd!');
+        router.push('/setup');
+      } else {
+        setRegisterText('Registreren');
+      }
+    } catch (error: any) {
+      if (error.name === 'AbortError') {
+        setErrorEmail('Netwerkfout: Probeer het later opnieuw');
+      } else {
+        setErrorEmail('Er is iets misgegaan. Probeer het opnieuw.');
+      }
+    } finally {
+      setLoadingStatus(false);
     }
-    if (data.success) {
-      setRegisterText('Geregistreerd!');
-      router.push('/setup');
-    } else setRegisterText('Registreren');
-    setLoadingStatus(false);
   };
 
   const PasswordCriteriaList = ({ criteria }: { criteria: typeof passwordCriteria }) => (
@@ -304,7 +325,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginBottom: 10,
     marginTop: 10,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   criteriaMet: {
     color: 'green',
