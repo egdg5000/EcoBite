@@ -202,25 +202,21 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 
 const styles = StyleSheet.create({
   safeArea: {
-    backgroundColor: 'black',
+    backgroundColor: 'white',
   },
   tabBar: {
     flexDirection: 'row',
-    height: 100,
+    alignItems: 'center', 
+    height: 90, 
     backgroundColor: '#fff',
     borderTopWidth: 0,
-    borderRadius: 15, // Afgeronde hoeken
-    elevation: 10, // Schaduw toegevoegd voor diepte
-    shadowColor: '#000', // Schaduw kleur
-    shadowOffset: { width: 0, height: 5 }, // Positie van de schaduw
-    shadowOpacity: 0.15, // Schaduw doorzichtigheid verhoogd voor meer nadruk
-    shadowRadius: 10, // Schaduw radius verhoogd voor een meer dramatisch effect
+    borderRadius: 15,
+    elevation: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
     paddingHorizontal: 24,
-    left: 0,
-    right: 0,
-    bottom: -15,
-    paddingBottom: 20,
-    position: 'absolute',
   },
   sideContainer: {
     flexDirection: 'row',
