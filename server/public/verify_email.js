@@ -21,13 +21,13 @@ fetch(`https://edg5000.com/verify`, {
         document.querySelector('.loading').style.display = "none";
         switch (data.message) {
             case 'Invalid token':
-                document.querySelector('.message').innerText = 'Token is niet geldig';
+                document.querySelector('.message').innerText = 'Token is niet geldig.';
                 break;
             case 'E-mail already verified':
                 document.querySelector('.message').innerText = 'Deze e-mail is al geverifieerd.';
                 break;
             case 'Verification token expired':
-                document.querySelector('.message').innerText = 'De verificatielink is verlopen';
+                document.querySelector('.message').innerText = 'De verificatielink is verlopen, registreer opnieuw.';
                 break;
             default:
                 document.querySelector('.message').innerText = data.message;

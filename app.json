@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "EcoBite",
-    "slug": "test-app",
+    "slug": "eco-bite",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -28,7 +28,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
+          "image": "./assets/images/icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -57,8 +57,9 @@
         "origin": false
       },
       "eas": {
-        "projectId": "5d9abc3b-532c-4664-8ba0-869516e02522"
+        "projectId": "2a7f62e4-b5f0-4179-b9ef-c785ab840c0b"
       }
-    }
+    },
+    "owner": "edg5000"
   }
 }
