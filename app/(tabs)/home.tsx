@@ -127,7 +127,6 @@ const HomeScreen = () => {
                         <View style={styles.divider} />
                     </View>
 
-                    {/* Boom + CO2 statistiek */}
                    <View style={styles.treeStatContainer}>
                         <Text style={styles.groundTitle}>Jouw Boom:</Text>
                         <Image source={getTreeImage()} style={styles.treeImage} />
@@ -138,7 +137,6 @@ const HomeScreen = () => {
                         </View>
                     </View>
 
-                    {/* XP en streak */}
                     <View style={styles.xpContainer}>
                         <Text style={styles.xpTitle}>Level {level}</Text>
                         <View style={styles.xpBarBackground}>
@@ -176,21 +174,18 @@ const HomeScreen = () => {
                         <Text style={styles.leaderboardTitle}>🏆 Leaderboard</Text>
 
                         <View style={styles.podiumContainer}>
-                            {/* 2nd place */}
                             <View style={[styles.second]}>
                                 <Text style={styles.podiumRank}>2</Text>
                                 <Text style={styles.podiumName}>Tom</Text>
                                 <Text style={styles.podiumXP}>980 XP</Text>
                             </View>
 
-                            {/* 1st place */}
                             <View style={[styles.first]}>
                                 <Text style={styles.podiumRank}>1</Text>
                                 <Text style={styles.podiumName}>Anna</Text>
                                 <Text style={styles.podiumXP}>1520 XP</Text>
                             </View>
 
-                            {/* 3rd place */}
                             <View style={[styles.third]}>
                                 <Text style={styles.podiumRank}>3</Text>
                                 <Text style={styles.podiumName}>Jij</Text>
@@ -200,7 +195,6 @@ const HomeScreen = () => {
 
                         <View style={styles.divider} />
 
-                        {/* Places 4-10 */}
                         <View style={styles.topList}>
                             <Text style={styles.leaderboardText}>4. Sara - 750 XP</Text>
                             <Text style={styles.leaderboardText}>5. Milan - 600 XP</Text>
