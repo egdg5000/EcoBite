@@ -43,8 +43,16 @@ export default function AccountPage() {
   };
 
   const confirmLogout = () => {
-    setLogoutModalVisible(false);
-    router.push('/');
+    fetch('https://edg5000.com/users/logout', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }).then(() => {
+      setLogoutModalVisible(false);
+      router.push('/');
+    })
   };
 
   return (

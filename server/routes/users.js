@@ -35,4 +35,10 @@ router.get('/loginStatus', (req, res) => {
         res.status(200).json({success: false, message: 'User is not logged in'})
     }
 })
+
+router.post('/logout', (req, res) => {
+    req.session.destroy();
+    res.status(200).json({success: true, message: 'User is logged out'})
+})
+
 module.exports = router;
