@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useFonts } from "expo-font";
@@ -41,7 +42,27 @@ export default function FridgePage() {
       }
     };
 
+    const fetchDeleted = async () => {
+      try {
+        const res = await fetch("https://edg5000.com/products/deleted/1", {
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (data.deleted.length > 0) {
+          Alert.alert(
+            "Verlopen producten verwijderd",
+            data.deleted
+              .map((p: any) => `• ${p.item_name} (${p.category})`)
+              .join("\n")
+          );
+        }
+      } catch (err) {
+        console.error("Fout bij ophalen verwijderde producten:", err);
+      }
+    };
+
     fetchProducts();
+    fetchDeleted();
   }, []);
 
   const toggleFavorite = (id: number) => {
@@ -123,10 +144,7 @@ export default function FridgePage() {
               <Text style={styles.name}>{item.item_name}</Text>
               <View style={styles.row}>
                 <Icon name="scale" size={16} color="#4CAF50" />
-                <Text style={styles.details}>
-                  {" "}
-                  {item.quantity} {item.unit}
-                </Text>
+                <Text style={styles.details}> {item.quantity} {item.unit}</Text>
               </View>
               <View style={styles.row}>
                 <Icon name="calendar-today" size={16} color="#4CAF50" />

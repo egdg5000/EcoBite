@@ -52,3 +52,14 @@ CREATE TABLE saved_recipes (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
+
+CREATE TABLE deleted_inventory (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  item_name VARCHAR(255) NOT NULL,
+  quantity VARCHAR(50),
+  unit VARCHAR(20),
+  expiration_date DATE,
+  category VARCHAR(50),
+  deleted_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
