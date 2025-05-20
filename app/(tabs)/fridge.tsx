@@ -24,6 +24,7 @@ export default function FridgePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [activeTab, setActiveTab] = useState<"all" | "favorites">("all");
+  const [expiringSoon, setExpiringSoon] = useState<Product[]>([]);
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
@@ -37,6 +38,18 @@ export default function FridgePage() {
         });
         const data = await response.json();
         setProducts(data.products);
+
+        // 🔔 Filter producten die over 1 of 7 dagen verlopen
+        const today = new Date();
+        const soon = data.products.filter((product: Product) => {
+          const expiry = new Date(product.expiration_date);
+          const diffDays = Math.ceil(
+            (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          return diffDays === 7 || diffDays === 1;
+        });
+
+        setExpiringSoon(soon);
       } catch (error) {
         console.error("Fout bij ophalen producten:", error);
       }
@@ -95,6 +108,25 @@ export default function FridgePage() {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Mijn Voorraad</Text>
 
+      {/* 🔔 Waarschuwing bijna verlopen */}
+      {expiringSoon.length > 0 && (
+        <View style={styles.alertBox}>
+          <Text style={styles.alertTitle}>⏰ Let op!</Text>
+          {expiringSoon.map((item) => {
+            const daysLeft = Math.ceil(
+              (new Date(item.expiration_date).getTime() - new Date().getTime()) /
+                (1000 * 60 * 60 * 24)
+            );
+            return (
+              <Text key={item.id} style={styles.alertItem}>
+                {item.item_name} verloopt over {daysLeft} dag
+                {daysLeft > 1 ? "en" : ""}
+              </Text>
+            );
+          })}
+        </View>
+      )}
+
       {/* Tabs */}
       <View style={styles.tabs}>
         <TouchableOpacity
@@ -131,7 +163,7 @@ export default function FridgePage() {
         </TouchableOpacity>
       </View>
 
-      {/* Lijst */}
+      {/* Productlijst */}
       {filteredProducts.length === 0 ? (
         <Text style={styles.empty}>Geen producten gevonden</Text>
       ) : (
@@ -256,5 +288,24 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     padding: 4,
+  },
+  alertBox: {
+    backgroundColor: "#FFF8E1",
+    borderLeftWidth: 4,
+    borderLeftColor: "#FFB300",
+    padding: 12,
+    marginBottom: 16,
+    borderRadius: 6,
+  },
+  alertTitle: {
+    fontFamily: "ABeeZee",
+    fontWeight: "bold",
+    marginBottom: 6,
+    color: "#FF6F00",
+  },
+  alertItem: {
+    fontFamily: "ABeeZee",
+    fontSize: 14,
+    color: "#444",
   },
 });

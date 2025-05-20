@@ -61,6 +61,7 @@ app.use("/scan", require('./routes/scan.js'));
 
 const cron = require("node-cron");
 const axios = require("axios");
+const sendPushNotification = require("./utils/push");
 
 cron.schedule("0 2 * * *", async () => {
   console.log("Dagelijkse opruimactie gestart");
@@ -69,6 +70,39 @@ cron.schedule("0 2 * * *", async () => {
     console.log("Verlopen producten automatisch verwijderd");
   } catch (err) {
     console.error("Fout bij automatisch opruimen:", err);
+  }
+});
+
+cron.schedule("0 3 * * *", async () => {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  const nextWeek = new Date(today);
+
+  tomorrow.setDate(today.getDate() + 1);
+  nextWeek.setDate(today.getDate() + 7);
+
+  const format = (d) => d.toISOString().split("T")[0];
+  const expDates = [format(tomorrow), format(nextWeek)];
+
+  try {
+    const [rows] = await db
+      .promise()
+      .query(
+        `SELECT i.item_name, i.expiration_date, u.push_token 
+         FROM inventory i
+         JOIN users u ON i.user_id = u.id
+         WHERE i.expiration_date IN (?, ?) AND u.push_token IS NOT NULL`,
+        expDates
+      );
+
+    for (const item of rows) {
+      const days =
+        item.expiration_date === format(tomorrow) ? "morgen" : "over 7 dagen";
+      const message = `${item.item_name} verloopt ${days}`;
+      await sendPushNotification(item.push_token, "Houdbaarheid", message);
+    }
+  } catch (err) {
+    console.error("Cron-notificatie fout:", err);
   }
 });
 

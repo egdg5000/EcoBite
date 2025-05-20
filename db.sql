@@ -13,6 +13,7 @@ CREATE TABLE users (
     email_verified BOOLEAN DEFAULT FALSE, 
     verification_token VARCHAR(255), 
     verification_expires DATETIME
+    ALTER TABLE users ADD COLUMN push_token VARCHAR(255);
 );
 
 CREATE TABLE user_profiles (
