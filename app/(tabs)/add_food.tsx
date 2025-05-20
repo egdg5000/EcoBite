@@ -10,21 +10,18 @@ import {
   ScrollView,
   Platform,
 } from "react-native";
-import { useRouter } from "expo-router";
-import Icon from "react-native-vector-icons/MaterialIcons";
 import { useFonts } from "expo-font";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 const AddFoodPage = () => {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
   const [expiry, setExpiry] = useState("");
   const [category, setCategory] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-  // Foutmeldingen state
   const [errors, setErrors] = useState({
     name: "",
     quantity: "",
@@ -56,39 +53,56 @@ const AddFoodPage = () => {
       category: "",
     };
 
-    if (!name) {
-      newErrors.name = "Vul de productnaam in";
-    }
-    if (!quantity) {
-      newErrors.quantity = "Vul de hoeveelheid in";
-    }
-    if (!expiry) {
-      newErrors.expiry = "Selecteer een houdbaarheidsdatum";
-    }
-    if (!category) {
-      newErrors.category = "Selecteer een categorie";
-    }
+    if (!name) newErrors.name = "Vul de productnaam in";
+    if (!quantity) newErrors.quantity = "Vul de hoeveelheid in";
+    if (!expiry) newErrors.expiry = "Selecteer een houdbaarheidsdatum";
+    if (!category) newErrors.category = "Selecteer een categorie";
 
     setErrors(newErrors);
-
-    // Als er geen fouten zijn, return true om het formulier te verzenden
     return Object.values(newErrors).every((error) => error === "");
   };
 
-  const handleSubmit = () => {
-    if (!validateForm()) {
-      return;
-    }
+  const parseDutchDate = (dutchDate: string): string => {
+    const [day, month, year] = dutchDate.split("/");
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+  };
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+
+    const formattedExpiry = parseDutchDate(expiry);
 
     const newProduct = {
-      name,
+      user_id: 1, // Vervang later door de echte ingelogde gebruiker
+      item_name: name,
       quantity,
-      expiry,
+      unit: "", // Voeg eenheid toe indien nodig
+      expiration_date: formattedExpiry,
       category,
     };
 
-    const encodedProduct = encodeURIComponent(JSON.stringify(newProduct));
-    router.push(`/fridge?newProduct=${encodedProduct}`);
+    try {
+      const response = await fetch("https://edg5000.com/products/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(newProduct),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        Alert.alert("Succes!", "Product is toegevoegd.");
+        setName("");
+        setQuantity("");
+        setExpiry("");
+        setCategory("");
+      } else {
+        Alert.alert("Fout", "Toevoegen mislukt.");
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Serverfout", "Kon geen verbinding maken met de server.");
+    }
   };
 
   if (!fontsLoaded) return null;
@@ -114,7 +128,9 @@ const AddFoodPage = () => {
           value={quantity}
           onChangeText={setQuantity}
         />
-        {errors.quantity && <Text style={styles.errorText}>{errors.quantity}</Text>}
+        {errors.quantity && (
+          <Text style={styles.errorText}>{errors.quantity}</Text>
+        )}
 
         <Text style={styles.label}>Houdbaar tot</Text>
         <TouchableOpacity
@@ -153,7 +169,9 @@ const AddFoodPage = () => {
             <Picker.Item label="Zuivel" value="zuivel" />
           </Picker>
         </View>
-        {errors.category && <Text style={styles.errorText}>{errors.category}</Text>}
+        {errors.category && (
+          <Text style={styles.errorText}>{errors.category}</Text>
+        )}
 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Toevoegen</Text>
