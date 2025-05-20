@@ -78,6 +78,7 @@ async function loginUser(req, res) {
     await db.promise().query(query_, [lastSignUp, username, username]);
     req.session.isLoggedIn = true;
     req.session.user = result[0].username;
+    req.session.userId = result[0].id;
     console.log(req.session);
     return res.status(200).json({success: true, message: `Login successful, Welcome ${req.session.user}`});
 }
