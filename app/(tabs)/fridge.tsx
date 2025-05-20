@@ -3,8 +3,8 @@ import {
   View,
   Text,
   FlatList,
-  StyleSheet,
   SafeAreaView,
+  StyleSheet,
   TouchableOpacity,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -21,6 +21,9 @@ interface Product {
 
 export default function FridgePage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [activeTab, setActiveTab] = useState<"all" | "favorites">("all");
+
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
   });
@@ -41,17 +44,78 @@ export default function FridgePage() {
     fetchProducts();
   }, []);
 
+  const toggleFavorite = (id: number) => {
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
+    );
+  };
+
+  const deleteProduct = async (id: number) => {
+    try {
+      await fetch(`https://edg5000.com/products/delete/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      setFavorites((prev) => prev.filter((f) => f !== id));
+    } catch (err) {
+      console.error("Verwijderen mislukt:", err);
+    }
+  };
+
+  const filteredProducts =
+    activeTab === "favorites"
+      ? products.filter((p) => favorites.includes(p.id))
+      : products;
+
   if (!fontsLoaded) return null;
 
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Mijn Voorraad</Text>
 
-      {products.length === 0 ? (
+      {/* Tabs */}
+      <View style={styles.tabs}>
+        <TouchableOpacity
+          onPress={() => setActiveTab("all")}
+          style={[
+            styles.tab,
+            activeTab === "all" && styles.activeTab,
+          ]}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "all" && styles.activeTabText,
+            ]}
+          >
+            Alles
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setActiveTab("favorites")}
+          style={[
+            styles.tab,
+            activeTab === "favorites" && styles.activeTab,
+          ]}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "favorites" && styles.activeTabText,
+            ]}
+          >
+            Favorieten
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Lijst */}
+      {filteredProducts.length === 0 ? (
         <Text style={styles.empty}>Geen producten gevonden</Text>
       ) : (
         <FlatList
-          data={products}
+          data={filteredProducts}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={{ paddingBottom: 30 }}
           renderItem={({ item }) => (
@@ -71,6 +135,29 @@ export default function FridgePage() {
               <View style={styles.row}>
                 <Icon name="category" size={16} color="#4CAF50" />
                 <Text style={styles.details}> {item.category}</Text>
+              </View>
+
+              <View style={styles.actionRow}>
+                <TouchableOpacity
+                  onPress={() => toggleFavorite(item.id)}
+                  style={styles.iconButton}
+                >
+                  <Icon
+                    name={
+                      favorites.includes(item.id)
+                        ? "favorite"
+                        : "favorite-border"
+                    }
+                    size={22}
+                    color="#e91e63"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => deleteProduct(item.id)}
+                  style={styles.iconButton}
+                >
+                  <Icon name="delete" size={22} color="#f44336" />
+                </TouchableOpacity>
               </View>
             </View>
           )}
@@ -96,11 +183,35 @@ const styles = StyleSheet.create({
     marginTop: 50,
     color: "#777",
   },
+  tabs: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 12,
+    gap: 16,
+  },
+  tab: {
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    backgroundColor: "#e0e0e0",
+  },
+  activeTab: {
+    backgroundColor: "#4CAF50",
+  },
+  tabText: {
+    fontFamily: "ABeeZee",
+    fontSize: 14,
+    color: "#555",
+  },
+  activeTabText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
   card: {
     backgroundColor: "#f1f1f1",
     borderRadius: 12,
     padding: 16,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   name: {
     fontSize: 18,
@@ -118,5 +229,14 @@ const styles = StyleSheet.create({
     fontFamily: "ABeeZee",
     fontSize: 14,
     color: "#444",
+  },
+  actionRow: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 8,
+    gap: 16,
+  },
+  iconButton: {
+    padding: 4,
   },
 });

@@ -59,6 +59,18 @@ app.use("/", require('./routes/index.js'));
 app.use("/products", require('./routes/products.js'));
 app.use("/scan", require('./routes/scan.js'));
 
+const cron = require("node-cron");
+const axios = require("axios");
+
+cron.schedule("0 2 * * *", async () => {
+  console.log("Dagelijkse opruimactie gestart");
+  try {
+    await axios.delete("http://localhost:3000/products/expired/cleanup");
+    console.log("Verlopen producten automatisch verwijderd");
+  } catch (err) {
+    console.error("Fout bij automatisch opruimen:", err);
+  }
+});
 
 app.listen(port, () => {
   console.log(`server listening on port ${port}`)
