@@ -7,13 +7,23 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+interface Ingredient {
+  id: string;
+  name: string;
+  quantity: string;
+  category: string;
+  expiry?: string; // optioneel, als je het later wil gebruiken
+}
+
 export default function DiscoverScreen() {
   const [filters, setFilters] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
 
   useEffect(() => {
     const loadFilters = async () => {
@@ -22,7 +32,16 @@ export default function DiscoverScreen() {
         setFilters(JSON.parse(storedFilters));
       }
     };
+
+    const loadIngredients = async () => {
+      const stored = await AsyncStorage.getItem('selectedIngredients');
+      if (stored) {
+        setIngredients(JSON.parse(stored));
+      }
+    };
+
     loadFilters();
+    loadIngredients();
   }, []);
 
   const recipeCategories = [
@@ -49,10 +68,10 @@ export default function DiscoverScreen() {
   ];
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <Text style={styles.header}>Vind recepten</Text>
 
-      {/* Zoekbalk met icoon */}
+      {/* Zoekbalk */}
       <View style={styles.searchContainer}>
         <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
         <TextInput
@@ -64,12 +83,13 @@ export default function DiscoverScreen() {
         />
       </View>
 
+      {/* Categorieën */}
       <FlatList
         data={recipeCategories}
         numColumns={2}
         keyExtractor={(item) => item.title}
         contentContainerStyle={styles.grid}
-        showsVerticalScrollIndicator={false}
+        scrollEnabled={false}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[styles.card, { backgroundColor: item.color }]}
@@ -81,7 +101,21 @@ export default function DiscoverScreen() {
           </TouchableOpacity>
         )}
       />
-    </View>
+
+      {/* Dynamische recepten op basis van ingrediënten */}
+      <Text style={styles.subheader}>Recepten op basis van je voorraad</Text>
+      {ingredients.length === 0 ? (
+        <Text style={styles.noData}>Geen ingrediënten gevonden uit je voorraad.</Text>
+      ) : (
+        ingredients.map((item, index) => (
+          <View key={index} style={styles.ingredientCard}>
+            <Text style={styles.ingredientName}>{item.name}</Text>
+            <Text style={styles.ingredientDetail}>Hoeveelheid: {item.quantity}</Text>
+            <Text style={styles.ingredientDetail}>Categorie: {item.category}</Text>
+          </View>
+        ))
+      )}
+    </ScrollView>
   );
 }
 
@@ -98,6 +132,13 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontFamily: 'ABeeZee',
     color: '#333',
+  },
+  subheader: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginVertical: 20,
+    fontFamily: 'ABeeZee',
+    color: '#2e7d32',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -120,7 +161,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   grid: {
-    paddingBottom: 20,
+    paddingBottom: 10,
   },
   card: {
     flex: 1,
@@ -148,5 +189,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'ABeeZee',
     color: '#333',
+  },
+  ingredientCard: {
+    backgroundColor: '#f1f8e9',
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 12,
+  },
+  ingredientName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    fontFamily: 'ABeeZee',
+    color: '#33691e',
+  },
+  ingredientDetail: {
+    fontSize: 14,
+    fontFamily: 'ABeeZee',
+    color: '#555',
+  },
+  noData: {
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+    color: '#777',
   },
 });
