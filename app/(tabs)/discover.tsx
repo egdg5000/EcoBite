@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -38,9 +39,7 @@ export default function DiscoverScreen() {
   useEffect(() => {
     const loadData = async () => {
       const storedFilters = await AsyncStorage.getItem('recipeFilters');
-      if (storedFilters) {
-        setFilters(JSON.parse(storedFilters));
-      }
+      if (storedFilters) setFilters(JSON.parse(storedFilters));
 
       const storedIngredients = await AsyncStorage.getItem('selectedIngredients');
       if (storedIngredients) {
@@ -83,6 +82,22 @@ export default function DiscoverScreen() {
     setLoadingAi(false);
   };
 
+  const completeRecipe = async (recipeId: number) => {
+    const userId = await AsyncStorage.getItem('userId');
+    if (!userId) return;
+
+    try {
+      await fetch('https://edg5000.com/gamification/add-xp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: Number(userId), recipeId }),
+      });
+      Alert.alert('✅ Recept voltooid!', 'Je hebt XP en CO₂ bespaard!');
+    } catch (err) {
+      console.error('Fout bij XP-registratie:', err);
+    }
+  };
+
   const recipeCategories = [
     {
       title: 'Favoriete Recepten',
@@ -107,10 +122,9 @@ export default function DiscoverScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.container}>
       <Text style={styles.header}>Vind recepten</Text>
 
-      {/* Zoekbalk */}
       <View style={styles.searchContainer}>
         <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
         <TextInput
@@ -122,7 +136,6 @@ export default function DiscoverScreen() {
         />
       </View>
 
-      {/* Categorieën */}
       <FlatList
         data={recipeCategories}
         numColumns={2}
@@ -132,8 +145,7 @@ export default function DiscoverScreen() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[styles.card, { backgroundColor: item.color }]}
-            activeOpacity={0.8}
-            onPress={() => console.log('Gekozen:', item.title)}
+            onPress={() => console.log('Categorie:', item.title)}
           >
             <Image source={item.image} style={styles.cardImage} />
             <Text style={styles.cardText}>{item.title}</Text>
@@ -141,30 +153,28 @@ export default function DiscoverScreen() {
         )}
       />
 
-      {/* Recepten op basis van voorraad */}
-      <Text style={styles.subheader}>Recepten op basis van je voorraad</Text>
+      <Text style={styles.subheader}>Op basis van je voorraad</Text>
       {recipes.length === 0 ? (
-        <Text style={styles.noData}>Geen recepten gevonden voor je ingrediënten.</Text>
+        <Text style={styles.noData}>Geen recepten gevonden.</Text>
       ) : (
         recipes.map((recipe) => (
-          <View key={recipe.id} style={styles.recipeCard}>
+          <TouchableOpacity
+            key={recipe.id}
+            style={styles.recipeCard}
+            onPress={() => completeRecipe(recipe.id)}
+          >
             <Text style={styles.recipeTitle}>{recipe.title}</Text>
             {recipe.description && <Text style={styles.recipeText}>{recipe.description}</Text>}
             {recipe.estimated_time && (
               <Text style={styles.recipeTime}>⏱️ {recipe.estimated_time} min</Text>
             )}
-          </View>
+          </TouchableOpacity>
         ))
       )}
 
-      {/* AI Suggestie */}
-      <TouchableOpacity
-        style={styles.aiButton}
-        onPress={handleAISuggestions}
-        disabled={loadingAi}
-      >
+      <TouchableOpacity style={styles.aiButton} onPress={handleAISuggestions} disabled={loadingAi}>
         <Text style={styles.aiButtonText}>
-          {loadingAi ? 'AI denkt na...' : '🔮 Vraag AI om receptsuggestie'}
+          {loadingAi ? 'AI denkt na...' : '🔮 Vraag AI om suggestie'}
         </Text>
       </TouchableOpacity>
 
@@ -179,29 +189,10 @@ export default function DiscoverScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 60,
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    fontFamily: 'ABeeZee',
-    color: '#333',
-  },
-  subheader: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginVertical: 20,
-    fontFamily: 'ABeeZee',
-    color: '#2e7d32',
-  },
+  container: { flex: 1, paddingTop: 60, paddingHorizontal: 20, backgroundColor: '#fff' },
+  header: { fontSize: 24, fontWeight: 'bold', fontFamily: 'ABeeZee', marginBottom: 16 },
   searchContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#f7f7f7',
     borderRadius: 12,
     paddingHorizontal: 12,
@@ -209,19 +200,11 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     borderWidth: 1,
     borderColor: '#ddd',
+    alignItems: 'center',
   },
-  searchIcon: {
-    marginRight: 8,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    fontFamily: 'ABeeZee',
-    color: '#333',
-  },
-  grid: {
-    paddingBottom: 10,
-  },
+  searchIcon: { marginRight: 8 },
+  searchInput: { flex: 1, fontSize: 16, fontFamily: 'ABeeZee', color: '#333' },
+  grid: { paddingBottom: 10 },
   card: {
     flex: 1,
     margin: 10,
@@ -231,48 +214,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 160,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
   },
-  cardImage: {
-    width: 60,
-    height: 60,
-    resizeMode: 'contain',
-    marginBottom: 12,
-  },
-  cardText: {
-    fontSize: 15,
-    textAlign: 'center',
-    fontFamily: 'ABeeZee',
-    color: '#333',
-  },
+  cardImage: { width: 60, height: 60, marginBottom: 12, resizeMode: 'contain' },
+  cardText: { fontSize: 15, fontFamily: 'ABeeZee' },
+  subheader: { fontSize: 20, fontWeight: 'bold', fontFamily: 'ABeeZee', marginVertical: 20 },
   recipeCard: {
     backgroundColor: '#e8f5e9',
     padding: 16,
     borderRadius: 12,
     marginBottom: 12,
   },
-  recipeTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'ABeeZee',
-    color: '#1b5e20',
-  },
-  recipeText: {
-    fontSize: 14,
-    fontFamily: 'ABeeZee',
-    color: '#555',
-    marginTop: 4,
-  },
-  recipeTime: {
-    marginTop: 4,
-    fontSize: 13,
-    fontFamily: 'ABeeZee',
-    color: '#888',
-  },
+  recipeTitle: { fontSize: 18, fontWeight: 'bold', fontFamily: 'ABeeZee', color: '#1b5e20' },
+  recipeText: { fontSize: 14, fontFamily: 'ABeeZee', color: '#555', marginTop: 4 },
+  recipeTime: { fontSize: 13, fontFamily: 'ABeeZee', color: '#888', marginTop: 4 },
   aiButton: {
     backgroundColor: '#4CAF50',
     padding: 15,
@@ -280,33 +234,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
   },
-  aiButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: 'ABeeZee',
-  },
-  aiCard: {
-    backgroundColor: '#f1f8e9',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 20,
-  },
-  aiTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    fontFamily: 'ABeeZee',
-    marginBottom: 6,
-    color: '#1b5e20',
-  },
-  aiText: {
-    fontSize: 15,
-    fontFamily: 'ABeeZee',
-    color: '#444',
-  },
-  noData: {
-    fontSize: 16,
-    fontFamily: 'ABeeZee',
-    color: '#777',
-    textAlign: 'center',
-  },
+  aiButtonText: { color: '#fff', fontSize: 16, fontFamily: 'ABeeZee' },
+  aiCard: { backgroundColor: '#f1f8e9', borderRadius: 12, padding: 16, marginBottom: 20 },
+  aiTitle: { fontSize: 18, fontWeight: 'bold', fontFamily: 'ABeeZee', marginBottom: 6 },
+  aiText: { fontSize: 15, fontFamily: 'ABeeZee', color: '#444' },
+  noData: { fontSize: 16, fontFamily: 'ABeeZee', color: '#777', textAlign: 'center' },
 });

@@ -66,3 +66,11 @@ CREATE TABLE deleted_inventory (
   category VARCHAR(50),
   deleted_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE users_gamification (
+  user_id INT PRIMARY KEY,
+  level INT DEFAULT 1,
+  xp INT DEFAULT 0,
+  co2_saved DECIMAL(10, 2) DEFAULT 0.0,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);

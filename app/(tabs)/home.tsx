@@ -1,107 +1,142 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, SafeAreaView, Modal, Pressable } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  Modal,
+  Pressable,
+} from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
-    useSharedValue,
-    withTiming,
-    useAnimatedProps,
-    useAnimatedStyle,
-    useAnimatedRef,
-    useScrollViewOffset,
+  useSharedValue,
+  withTiming,
+  useAnimatedProps,
+  useAnimatedStyle,
+  useAnimatedRef,
+  useScrollViewOffset,
 } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import weetjesData from '../../assets/data/weetjes.json';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 
 const HomeScreen = () => {
-    const [fontsLoaded] = useFonts({
-        'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
-    });
+  const [fontsLoaded] = useFonts({
+    ABeeZee: require('../../assets/fonts/ABeeZee.ttf'),
+  });
 
-    const animatedRef = useAnimatedRef<Animated.ScrollView>();
-    const scrollY = useScrollViewOffset(animatedRef);
-    const maxScroll = 400;
+  const animatedRef = useAnimatedRef<Animated.ScrollView>();
+  const scrollY = useScrollViewOffset(animatedRef);
+  const maxScroll = 400;
 
-    const [co2Reduction, setCo2Reduction] = useState(0);
-    const [xp, setXp] = useState(320);
-    const [level, setLevel] = useState(3);
-    const [xpForNextLevel, setXpForNextLevel] = useState(500);
-    const [streakDays, setStreakDays] = useState(5);
+  const [co2Reduction, setCo2Reduction] = useState(0);
+  const [xp, setXp] = useState(0);
+  const [level, setLevel] = useState(1);
+  const [xpForNextLevel, setXpForNextLevel] = useState(100); // Kan dynamisch op basis van level
+  const [streakDays, setStreakDays] = useState(5);
 
-    const progress = useSharedValue(0);
-    const [greeting, setGreeting] = useState('');
-    const [currentDate, setCurrentDate] = useState('');
-    const [weetje, setWeetje] = useState('');
-    const [showStreakPopup, setShowStreakPopup] = useState(false);
+  const progress = useSharedValue(0);
+  const [greeting, setGreeting] = useState('');
+  const [currentDate, setCurrentDate] = useState('');
+  const [weetje, setWeetje] = useState('');
+  const [showStreakPopup, setShowStreakPopup] = useState(false);
 
-    const greetingOpacity = useSharedValue(0);
-    const greetingTranslateY = useSharedValue(10);
+  const greetingOpacity = useSharedValue(0);
+  const greetingTranslateY = useSharedValue(10);
 
-    useEffect(() => {
-        progress.value = withTiming(75, { duration: 2000 });
-        setCo2Reduction(75);
+  useEffect(() => {
+    const fetchProgress = async () => {
+      const userId = await AsyncStorage.getItem('userId');
+      if (!userId) return;
 
-        const currentHour = new Date().getHours();
-        setGreeting(
-            currentHour < 12
-                ? 'Goedemorgen 🌅'
-                : currentHour < 18
-                ? 'Goedemiddag 🌤️'
-                : 'Goedenavond 🌙'
-        );
-
-        const today = new Date();
-        const formattedDate = today.toLocaleDateString('nl-NL', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-        });
-        setCurrentDate(formattedDate);
-
-        const startDate = new Date(2024, 0, 1);
-        const daysSinceStart = Math.floor((today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-        const index = daysSinceStart % weetjesData.length;
-        setWeetje(weetjesData[index].feit);
-
-        greetingOpacity.value = withTiming(1, { duration: 800 });
-        greetingTranslateY.value = withTiming(0, { duration: 800 });
-    }, []);
-
-    const greetingStyle = useAnimatedStyle(() => ({
-        opacity: greetingOpacity.value,
-        transform: [{ translateY: greetingTranslateY.value }],
-    }));
-
-    const animatedProps = useAnimatedProps(() => ({
-        strokeDashoffset: 251.2 - (progress.value / 100) * 251.2,
-    }));
-
-    const backgroundColor = useAnimatedStyle(() => {
-        let red1 = 135, green1 = 206, blue1 = 235;
-        let red2 = 107, green2 = 62, blue2 = 38;
-        let red = red1 - ((red1 - red2) / maxScroll * scrollY.value);
-        let green = green1 - ((green1 - green2) / maxScroll * scrollY.value);
-        let blue = blue1 - ((blue1 - blue2) / maxScroll * scrollY.value);
-        return { backgroundColor: `rgb(${red}, ${green}, ${blue})` };
-    });
-
-    const getTreeImage = () => {
-        if (co2Reduction >= 80) return require('../../assets/images/tree5.png');
-        if (co2Reduction >= 60) return require('../../assets/images/tree4.png');
-        if (co2Reduction >= 40) return require('../../assets/images/tree3.png');
-        if (co2Reduction >= 20) return require('../../assets/images/tree2.png');
-        return require('../../assets/images/tree1.png');
+      try {
+        const response = await fetch(`https://edg5000.com/gamification/${userId}`);
+        const data = await response.json();
+        setXp(data.xp || 0);
+        setLevel(data.level || 1);
+        setCo2Reduction(parseFloat(data.co2_saved) || 0);
+      } catch (err) {
+        console.error('Fout bij ophalen gamification:', err);
+      }
     };
 
-    const xpProgress = Math.min(xp / xpForNextLevel, 1);
+    fetchProgress();
 
-    return (
-        <Animated.View style={[styles.container, backgroundColor]}>
-            <SafeAreaView style={{ flex: 1 }}>
-                <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef} scrollEventThrottle={16}>
+    // animatie en tekst
+    const currentHour = new Date().getHours();
+    setGreeting(
+      currentHour < 12
+        ? 'Goedemorgen 🌅'
+        : currentHour < 18
+        ? 'Goedemiddag 🌤️'
+        : 'Goedenavond 🌙'
+    );
+
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('nl-NL', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+    setCurrentDate(formattedDate);
+
+    const startDate = new Date(2024, 0, 1);
+    const daysSinceStart = Math.floor(
+      (today.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
+    const index = daysSinceStart % weetjesData.length;
+    setWeetje(weetjesData[index].feit);
+
+    greetingOpacity.value = withTiming(1, { duration: 800 });
+    greetingTranslateY.value = withTiming(0, { duration: 800 });
+  }, []);
+
+  const greetingStyle = useAnimatedStyle(() => ({
+    opacity: greetingOpacity.value,
+    transform: [{ translateY: greetingTranslateY.value }],
+  }));
+
+  const animatedProps = useAnimatedProps(() => ({
+    strokeDashoffset: 251.2 - (progress.value / 100) * 251.2,
+  }));
+
+  const backgroundColor = useAnimatedStyle(() => {
+    let red1 = 135,
+      green1 = 206,
+      blue1 = 235;
+    let red2 = 107,
+      green2 = 62,
+      blue2 = 38;
+    let red = red1 - ((red1 - red2) / maxScroll) * scrollY.value;
+    let green = green1 - ((green1 - green2) / maxScroll) * scrollY.value;
+    let blue = blue1 - ((blue1 - blue2) / maxScroll) * scrollY.value;
+    return { backgroundColor: `rgb(${red}, ${green}, ${blue})` };
+  });
+
+  const getTreeImage = () => {
+    if (co2Reduction >= 80) return require('../../assets/images/tree5.png');
+    if (co2Reduction >= 60) return require('../../assets/images/tree4.png');
+    if (co2Reduction >= 40) return require('../../assets/images/tree3.png');
+    if (co2Reduction >= 20) return require('../../assets/images/tree2.png');
+    return require('../../assets/images/tree1.png');
+  };
+
+  const xpProgress = Math.min(xp / xpForNextLevel, 1);
+
+  return (
+    <Animated.View style={[styles.container, backgroundColor]}>
+      <SafeAreaView style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          ref={animatedRef}
+          scrollEventThrottle={16}
+        >
                     <View style={styles.header}>
                         <View style={styles.logoContainer}>
                             <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
