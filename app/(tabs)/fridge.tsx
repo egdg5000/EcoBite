@@ -1,300 +1,311 @@
-// app/tabs/fridge.tsx
-
 import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
   SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
-import { Plus, Filter } from "lucide-react-native";
+import Icon from "react-native-vector-icons/MaterialIcons";
 import { useFonts } from "expo-font";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { useLocalSearchParams, Link } from "expo-router";
 
 interface Product {
-  id: string;
-  name: string;
-  quantity: string;
-  expiry: string;
+  id: number;
+  item_name: string;
+  quantity: number;
+  unit: string;
+  expiration_date: string;
   category: string;
-  isFavorite: boolean;
 }
 
-const FridgePage = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
+export default function FridgePage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [activeTab, setActiveTab] = useState<"all" | "favorites">("all");
+  const [expiringSoon, setExpiringSoon] = useState<Product[]>([]);
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
   });
 
-  const params = useLocalSearchParams();
-
   useEffect(() => {
-    const newProductParam = Array.isArray(params.newProduct)
-      ? params.newProduct[0]
-      : params.newProduct;
-
-    if (newProductParam) {
+    const fetchProducts = async () => {
       try {
-        const parsedProduct = JSON.parse(newProductParam);
-        const newProductWithId = {
-          ...parsedProduct,
-          id: Date.now().toString(),
-          isFavorite: false,
-        };
-        setProducts((prev) => [...prev, newProductWithId]);
-      } catch (error) {
-        console.error("Fout bij het verwerken van het nieuwe product:", error);
-      }
-    }
-  }, [params.newProduct]);
+        const response = await fetch("https://edg5000.com/products/user/1", {
+          credentials: "include",
+        });
+        const data = await response.json();
+        setProducts(data.products);
 
-  const toggleFavorite = (productId: string) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === productId
-          ? { ...product, isFavorite: !product.isFavorite }
-          : product
-      )
+        // 🔔 Filter producten die over 1 of 7 dagen verlopen
+        const today = new Date();
+        const soon = data.products.filter((product: Product) => {
+          const expiry = new Date(product.expiration_date);
+          const diffDays = Math.ceil(
+            (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          return diffDays === 7 || diffDays === 1;
+        });
+
+        setExpiringSoon(soon);
+      } catch (error) {
+        console.error("Fout bij ophalen producten:", error);
+      }
+    };
+
+    const fetchDeleted = async () => {
+      try {
+        const res = await fetch("https://edg5000.com/products/deleted/1", {
+          credentials: "include",
+        });
+        const data = await res.json();
+        if (data.deleted.length > 0) {
+          Alert.alert(
+            "Verlopen producten verwijderd",
+            data.deleted
+              .map((p: any) => `• ${p.item_name} (${p.category})`)
+              .join("\n")
+          );
+        }
+      } catch (err) {
+        console.error("Fout bij ophalen verwijderde producten:", err);
+      }
+    };
+
+    fetchProducts();
+    fetchDeleted();
+  }, []);
+
+  const toggleFavorite = (id: number) => {
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((f) => f !== id) : [...prev, id]
     );
   };
 
-  const filteredProducts = products.filter(
-    (product) =>
-      product.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-      (selectedCategory ? product.category === selectedCategory : true)
-  );
+  const deleteProduct = async (id: number) => {
+    try {
+      await fetch(`https://edg5000.com/products/delete/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      setFavorites((prev) => prev.filter((f) => f !== id));
+    } catch (err) {
+      console.error("Verwijderen mislukt:", err);
+    }
+  };
+
+  const filteredProducts =
+    activeTab === "favorites"
+      ? products.filter((p) => favorites.includes(p.id))
+      : products;
+
+  if (!fontsLoaded) return null;
 
   return (
-    <View style={styles.container}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Text style={styles.title}>Mijn Voorraad</Text>
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}>Mijn Voorraad</Text>
 
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Zoek product..."
-            placeholderTextColor="#888"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-          <TouchableOpacity
-            style={styles.filterButton}
-            onPress={() => setIsFilterModalVisible(true)}
-          >
-            <Filter size={24} color="#4CAF50" />
-          </TouchableOpacity>
+      {/* 🔔 Waarschuwing bijna verlopen */}
+      {expiringSoon.length > 0 && (
+        <View style={styles.alertBox}>
+          <Text style={styles.alertTitle}>⏰ Let op!</Text>
+          {expiringSoon.map((item) => {
+            const daysLeft = Math.ceil(
+              (new Date(item.expiration_date).getTime() - new Date().getTime()) /
+                (1000 * 60 * 60 * 24)
+            );
+            return (
+              <Text key={item.id} style={styles.alertItem}>
+                {item.item_name} verloopt over {daysLeft} dag
+                {daysLeft > 1 ? "en" : ""}
+              </Text>
+            );
+          })}
         </View>
+      )}
 
+      {/* Tabs */}
+      <View style={styles.tabs}>
+        <TouchableOpacity
+          onPress={() => setActiveTab("all")}
+          style={[
+            styles.tab,
+            activeTab === "all" && styles.activeTab,
+          ]}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "all" && styles.activeTabText,
+            ]}
+          >
+            Alles
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setActiveTab("favorites")}
+          style={[
+            styles.tab,
+            activeTab === "favorites" && styles.activeTab,
+          ]}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "favorites" && styles.activeTabText,
+            ]}
+          >
+            Favorieten
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Productlijst */}
+      {filteredProducts.length === 0 ? (
+        <Text style={styles.empty}>Geen producten gevonden</Text>
+      ) : (
         <FlatList
           data={filteredProducts}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.id.toString()}
+          contentContainerStyle={{ paddingBottom: 30 }}
           renderItem={({ item }) => (
-            <View style={styles.productCard}>
-              <Text style={styles.productName}>{item.name}</Text>
-              <Text style={styles.productDetails}>Hoeveelheid: {item.quantity}</Text>
-              <Text style={styles.productExpiry}>Houdbaar tot: {item.expiry}</Text>
+            <View style={styles.card}>
+              <Text style={styles.name}>{item.item_name}</Text>
+              <View style={styles.row}>
+                <Icon name="scale" size={16} color="#4CAF50" />
+                <Text style={styles.details}> {item.quantity} {item.unit}</Text>
+              </View>
+              <View style={styles.row}>
+                <Icon name="calendar-today" size={16} color="#4CAF50" />
+                <Text style={styles.details}> {item.expiration_date}</Text>
+              </View>
+              <View style={styles.row}>
+                <Icon name="category" size={16} color="#4CAF50" />
+                <Text style={styles.details}> {item.category}</Text>
+              </View>
 
-              <View style={styles.iconsContainer}>
+              <View style={styles.actionRow}>
                 <TouchableOpacity
-                  onPress={() =>
-                    setProducts((prev) =>
-                      prev.filter((product) => product.id !== item.id)
-                    )
-                  }
+                  onPress={() => toggleFavorite(item.id)}
+                  style={styles.iconButton}
                 >
-                  <Icon name="times" size={24} color="#d32f2f" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => toggleFavorite(item.id)}>
                   <Icon
-                    name={item.isFavorite ? "heart" : "heart-o"}
-                    size={24}
-                    color={item.isFavorite ? "#ff4081" : "#888"}
+                    name={
+                      favorites.includes(item.id)
+                        ? "favorite"
+                        : "favorite-border"
+                    }
+                    size={22}
+                    color="#e91e63"
                   />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => deleteProduct(item.id)}
+                  style={styles.iconButton}
+                >
+                  <Icon name="delete" size={22} color="#f44336" />
                 </TouchableOpacity>
               </View>
             </View>
           )}
         />
-
-        {/* Favorieten-knop */}
-        <Link
-          href={{
-            pathname: "/favorites",
-            params: { products: JSON.stringify(products) },
-          }}
-          asChild
-        >
-          <TouchableOpacity style={styles.favoritesFloatingButton}>
-            <Icon name="heart" size={20} color="#fff" />
-          </TouchableOpacity>
-        </Link>
-
-        {/* Voeg-knop */}
-        <Link href="/add_food" asChild>
-          <TouchableOpacity style={styles.addButton}>
-            <Plus size={20} color="#4CAF50" style={{ marginRight: 6 }} />
-            <Text style={{ color: "#4CAF50", fontWeight: "bold", fontFamily: "ABeeZee" }}>
-              Product
-            </Text>
-          </TouchableOpacity>
-        </Link>
-
-        {/* Filter modal */}
-        <Modal
-          visible={isFilterModalVisible}
-          transparent={true}
-          animationType="slide"
-          onRequestClose={() => setIsFilterModalVisible(false)}
-        >
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Filter op categorie</Text>
-              {Array.from(new Set(products.map((p) => p.category))).map((category) => (
-                <TouchableOpacity
-                  key={category}
-                  style={styles.filterOption}
-                  onPress={() => {
-                    setSelectedCategory(category);
-                    setIsFilterModalVisible(false);
-                  }}
-                >
-                  <Text style={styles.filterOptionText}>{category}</Text>
-                </TouchableOpacity>
-              ))}
-              <TouchableOpacity
-                style={styles.filterOption}
-                onPress={() => {
-                  setSelectedCategory(null);
-                  setIsFilterModalVisible(false);
-                }}
-              >
-                <Text style={styles.filterOptionText}>Alle categorieën</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-      </SafeAreaView>
-    </View>
+      )}
+    </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#ffffff" },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 16, fontFamily: "ABeeZee" },
-  searchContainer: { flexDirection: "row", alignItems: "center", marginBottom: 16 },
-  searchInput: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
-    backgroundColor: "#f5f5f5",
+  container: { flex: 1, backgroundColor: "#fff", padding: 20 },
+  title: {
+    fontSize: 24,
     fontFamily: "ABeeZee",
-  },
-  filterButton: {
-    padding: 10,
-    backgroundColor: "#e0e0e0",
-    borderRadius: 8,
-    marginLeft: 8,
-  },
-  productCard: {
-    padding: 12,
-    marginTop: 8,
-    backgroundColor: "#f9f9f9",
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    position: "relative",
-  },
-  productName: { fontSize: 18, fontWeight: "bold", color: "#333", fontFamily: "ABeeZee" },
-  productDetails: { fontSize: 14, color: "#666", fontFamily: "ABeeZee" },
-  productExpiry: {
-    fontSize: 14,
-    color: "#d32f2f",
-    fontWeight: "600",
-    fontFamily: "ABeeZee",
-  },
-  iconsContainer: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    width: 50,
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 20,
-    right: 0,
-    backgroundColor: "#ffffff",
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#4CAF50",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  favoritesFloatingButton: {
-    position: "absolute",
-    bottom: 90,
-    right: 0,
-    backgroundColor: "#ff4081",
-    padding: 16,
-    borderRadius: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    zIndex: 10,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: 300,
-    alignItems: "center",
-  },
-  modalTitle: {
-    fontSize: 18,
     fontWeight: "bold",
-    marginBottom: 10,
-    fontFamily: "ABeeZee",
+    color: "#4CAF50",
+    marginBottom: 16,
   },
-  filterOption: {
-    padding: 10,
-    marginVertical: 5,
-    backgroundColor: "#f0f0f0",
-    width: "100%",
-    alignItems: "center",
-    borderRadius: 5,
-  },
-  filterOptionText: {
+  empty: {
     fontSize: 16,
-    color: "#333",
     fontFamily: "ABeeZee",
+    textAlign: "center",
+    marginTop: 50,
+    color: "#777",
+  },
+  tabs: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginBottom: 12,
+    gap: 16,
+  },
+  tab: {
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    backgroundColor: "#e0e0e0",
+  },
+  activeTab: {
+    backgroundColor: "#4CAF50",
+  },
+  tabText: {
+    fontFamily: "ABeeZee",
+    fontSize: 14,
+    color: "#555",
+  },
+  activeTabText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  card: {
+    backgroundColor: "#f1f1f1",
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
+  name: {
+    fontSize: 18,
+    fontFamily: "ABeeZee",
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 6,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  details: {
+    fontFamily: "ABeeZee",
+    fontSize: 14,
+    color: "#444",
+  },
+  actionRow: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    marginTop: 8,
+    gap: 16,
+  },
+  iconButton: {
+    padding: 4,
+  },
+  alertBox: {
+    backgroundColor: "#FFF8E1",
+    borderLeftWidth: 4,
+    borderLeftColor: "#FFB300",
+    padding: 12,
+    marginBottom: 16,
+    borderRadius: 6,
+  },
+  alertTitle: {
+    fontFamily: "ABeeZee",
+    fontWeight: "bold",
+    marginBottom: 6,
+    color: "#FF6F00",
+  },
+  alertItem: {
+    fontFamily: "ABeeZee",
+    fontSize: 14,
+    color: "#444",
   },
 });
-
-export default FridgePage;
