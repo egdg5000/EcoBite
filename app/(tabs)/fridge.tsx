@@ -33,7 +33,7 @@ export default function FridgePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch("https://edg5000.com/products/user/1", {
+        const response = await fetch("https://edg5000.com/products/inventory", {
           credentials: "include",
         });
         const data = await response.json();

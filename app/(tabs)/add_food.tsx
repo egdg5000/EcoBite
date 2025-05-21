@@ -73,7 +73,6 @@ const AddFoodPage = () => {
     const formattedExpiry = parseDutchDate(expiry);
 
     const newProduct = {
-      user_id: 1, // Vervang later door de echte ingelogde gebruiker
       item_name: name,
       quantity,
       unit: "", // Voeg eenheid toe indien nodig
