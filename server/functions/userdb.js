@@ -88,17 +88,22 @@ async function hashpassword(password) {
 }
 
 async function loginStatus(req, res, next) {
-    if (req.session.isLoggedIn) {
-        const lastSignIn = new Date();
-        const query_ = `UPDATE users SET last_signin = ? WHERE id = ?`;
-        db.promise().query(query_, [lastSignIn, req.session.userId]).then(() => {
-            next();
-        }).catch(err => {
+    if (req.session && req.session.isLoggedIn) {
+        try {
+            const lastSignIn = new Date();
+            const query_ = `UPDATE users SET last_signin = ? WHERE id = ?`;
+            await db.promise().query(query_, [lastSignIn, req.session.userId]);
+            // If next is provided, call it, otherwise send success response
+            if (typeof next === 'function') {
+                return next();
+            }
+            return res.status(200).json({success: true, message: 'User is logged in'});
+        } catch (err) {
             console.error(err);
-            res.status(500).json({success: false, message: 'Internal Server Error'});
-        });
-    } else{
-        res.status(200).json({success: false, message: 'User is not logged in'})
+            return res.status(500).json({success: false, message: 'Internal Server Error'});
+        }
+    } else {
+        return res.status(200).json({success: false, message: 'User is not logged in'});
     }
 }
 
