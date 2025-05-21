@@ -45,28 +45,47 @@ const LoginScreen = () => {
       const login = async () => {
         if (!validate()) return;
         setLoadingStatus(true);
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 seconden timeout
+
         const body = JSON.stringify({
           username: email,
           password: password,
-        })
-        const response = await fetch('https://edg5000.com/users/login', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body
         });
-        
-        const data = await response.json();
-        if (!response.ok) {
-          throwError(data);
+
+        try {
+          const response = await fetch('https://edg5000.com/users/login', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body,
+            signal: controller.signal,
+          });
+
+          clearTimeout(timeoutId);
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throwError(data);
+          } else if (data.success){
+            setLoginText('Succesvol ingelogd!');
+            router.push('/home');
+          } else {
+            setLoginText('Inloggen');
+          }
+        } catch (error: any) {
+          if (error.name === 'AbortError') {
+            setErrorUsername('Netwerkfout: Probeer het later opnieuw');
+          } else {
+            setErrorUsername('Er is iets misgegaan. Probeer het opnieuw.');
+          }
+        } finally {
+          setLoadingStatus(false);
         }
-        if (data.success){
-          setLoginText('Successvol ingelogd!');
-          router.push('/home');
-        } else setLoginText('Inloggen')
-        setLoadingStatus(false);
       };
 
     return (
@@ -181,6 +200,7 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         width: '100%',
         marginTop: 5,
+        fontFamily: 'ABeeZee', 
     },
     passwordContainer: {
         flexDirection: "row",
@@ -221,12 +241,6 @@ const styles = StyleSheet.create({
         color: "#007BFF",
         fontFamily: 'ABeeZee', 
         fontWeight: "bold"
-    },
-    errorMessage: {
-        flex: 1,
-        backgroundColor: 'blue',
-        width: '100%',
-        fontFamily: 'ABeeZee', 
     },
 });
 
