@@ -1,52 +1,74 @@
 const db = require('../database');
 
-async function getProgress(userId) {
-  const [rows] = await db.query('SELECT * FROM users_gamification WHERE user_id = ?', [userId]);
-
-  if (rows.length === 0) {
-    // Eerste keer? Init record
-    await db.query('INSERT INTO users_gamification (user_id) VALUES (?)', [userId]);
-    return { user_id: userId, level: 1, xp: 0, co2_saved: 0.0 };
-  }
-
-  return rows[0];
+function getXpForNextLevel(level) {
+  return 100 + (level - 1) * 50; // Lineaire groei
 }
 
-async function addXpForRecipe(userId, recipeId) {
-  // Voeg 50 XP en 0.3 kg CO₂ toe per recept als voorbeeld
-  const XP_GAIN = 50;
-  const CO2_GAIN = 0.3;
+async function getProgress(userId) {
+  const [rows] = await db.query(
+    'SELECT level, xp, co2_saved FROM users_gamification WHERE user_id = ?',
+    [userId]
+  );
+  const row = rows[0] || { level: 1, xp: 0, co2_saved: 0 };
+  return {
+    user_id: userId,
+    level: row.level,
+    xp: row.xp,
+    co2_saved: row.co2_saved,
+    xp_for_next_level: getXpForNextLevel(row.level),
+  };
+}
 
-  await db.query(`
-    INSERT INTO users_gamification (user_id, xp, co2_saved)
-    VALUES (?, ?, ?)
-    ON DUPLICATE KEY UPDATE
-      xp = xp + VALUES(xp),
-      co2_saved = co2_saved + VALUES(co2_saved)
-  `, [userId, XP_GAIN, CO2_GAIN]);
+async function addXpForRecipe(userId, earnedXp) {
+  const [rows] = await db.query(
+    'SELECT level, xp FROM users_gamification WHERE user_id = ?',
+    [userId]
+  );
+  let level = 1;
+  let xp = 0;
 
-  // Check level-up logica
-  const [rows] = await db.query('SELECT xp, level FROM users_gamification WHERE user_id = ?', [userId]);
-  let { xp, level } = rows[0];
-
-  const XP_PER_LEVEL = 100;
-
-  while (xp >= level * XP_PER_LEVEL) {
-    xp -= level * XP_PER_LEVEL;
-    level++;
+  if (rows.length > 0) {
+    level = rows[0].level;
+    xp = rows[0].xp;
   }
 
-  await db.query('UPDATE users_gamification SET level = ?, xp = ? WHERE user_id = ?', [level, xp, userId]);
+  xp += earnedXp;
+  let nextLevelXp = getXpForNextLevel(level);
+  while (xp >= nextLevelXp) {
+    xp -= nextLevelXp;
+    level++;
+    nextLevelXp = getXpForNextLevel(level);
+  }
 
-  return { level, xp, co2_saved: CO2_GAIN };
+  await db.query(
+    'INSERT INTO users_gamification (user_id, level, xp) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE level = ?, xp = ?',
+    [userId, level, xp, level, xp]
+  );
+
+  return { level, xp, xp_for_next_level: nextLevelXp };
+}
+
+async function updateCo2(userId, newValue) {
+  await db.query(
+    'UPDATE users_gamification SET co2_saved = ? WHERE user_id = ?',
+    [newValue, userId]
+  );
+}
+
+async function getLeaderboard() {
+  const [rows] = await db.query(`
+    SELECT users.username, g.xp
+    FROM users_gamification g
+    JOIN users ON users.id = g.user_id
+    ORDER BY g.xp DESC
+    LIMIT 10
+  `);
+  return rows;
 }
 
 module.exports = {
   getProgress,
   addXpForRecipe,
+  updateCo2,
+  getLeaderboard,
 };
-
-function getXpForNextLevel(level) {
-  // bijv. 100 * level (lineair), of iets uitdagender
-  return 100 + (level - 1) * 50; // Level 1: 100 XP, Level 2: 150 XP, Level 3: 200 XP, etc.
-}

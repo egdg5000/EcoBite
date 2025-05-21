@@ -1,17 +1,18 @@
-const express = require('express')
+const express = require('express');
 const session = require('express-session');
-const cors = require('cors')
+const cors = require('cors');
 const app = express();
 const port = 3000;
-const dotenv = require('dotenv').config()
+const dotenv = require('dotenv').config();
 const MySQLStore = require('express-mysql-session')(session);
 const helmet = require('helmet');
 const recipeRoutes = require('./routes/recipes');
 const aiRoutes = require('./routes/ai');
+const gamificationRoutes = require('./routes/gamification'); // ✅ TOEGEVOEGD
+const sendPushNotification = require('./utils/push');
+const axios = require("axios");
 
-
-require('dotenv').config();
-
+// Middleware
 app.use(express.json({ limit: "50mb" }));
 
 app.use(cors({
@@ -20,7 +21,6 @@ app.use(cors({
 }));
 
 app.use(helmet());
-
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -30,45 +30,47 @@ app.use(
   })
 );
 
+// Sessions
 const sessionStore = new MySQLStore({
   host: 'localhost',
-	port: 3306,
+  port: 3306,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  database: process.env.SESSION_DB
+  database: process.env.SESSION_DB,
 });
 
 app.use(session({
-	key: 'session_cookie_name',
-	secret: 'session_cookie_secret',
+  key: 'session_cookie_name',
+  secret: 'session_cookie_secret',
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
-  cookie: { 
+  cookie: {
     httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000 //7 days
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 dagen
   }
 }));
 
-app.use(express.static(__dirname + '/public'));
-
 sessionStore.onReady().then(() => {
-	console.log('MySQLSessionStore ready');
+  console.log('MySQLSessionStore ready');
 }).catch(error => {
-	console.error(error);
+  console.error(error);
 });
 
-//Routes
+app.use(express.static(__dirname + '/public'));
+
+// ✅ ROUTES
 app.use("/users", require('./routes/users.js'));
 app.use("/", require('./routes/index.js'));
 app.use("/products", require('./routes/products.js'));
 app.use("/scan", require('./routes/scan.js'));
 app.use('/recipes', recipeRoutes);
 app.use('/ai', aiRoutes);
+app.use('/gamification', gamificationRoutes); // ✅ HIER TOEGEVOEGD
 
+// CRON - automatische opschoning en notificaties
 const cron = require("node-cron");
-const axios = require("axios");
-const sendPushNotification = require("./utils/push");
+const db = require("./database");
 
 cron.schedule("0 2 * * *", async () => {
   console.log("Dagelijkse opruimactie gestart");
@@ -113,6 +115,7 @@ cron.schedule("0 3 * * *", async () => {
   }
 });
 
+// Start server
 app.listen(port, () => {
-  console.log(`server listening on port ${port}`)
+  console.log(`server listening on port ${port}`);
 });
