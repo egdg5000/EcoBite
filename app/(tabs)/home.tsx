@@ -33,7 +33,7 @@ const HomeScreen = () => {
   const [level, setLevel] = useState(1);
   const [xpForNextLevel, setXpForNextLevel] = useState(100);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [streakDays, setStreakDays] = useState(5);
+  const [streakDays, setStreakDays] = useState(0);
 
   const progress = useSharedValue(0);
   const [greeting, setGreeting] = useState('');
