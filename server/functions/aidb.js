@@ -1,3 +1,5 @@
+require('dotenv').config(); // Zorg dat je dit hebt als eerste regel
+
 const { Configuration, OpenAIApi } = require('openai');
 
 const configuration = new Configuration({

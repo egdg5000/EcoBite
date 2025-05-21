@@ -9,6 +9,9 @@ const helmet = require('helmet');
 const recipeRoutes = require('./routes/recipes');
 const aiRoutes = require('./routes/ai');
 
+
+require('dotenv').config();
+
 app.use(express.json({ limit: "50mb" }));
 
 app.use(cors({
