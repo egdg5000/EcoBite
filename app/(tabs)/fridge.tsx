@@ -10,8 +10,6 @@ import {
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useFonts } from "expo-font";
-import { useRouter } from "expo-router";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Product {
   id: number;
@@ -27,37 +25,36 @@ export default function FridgePage() {
   const [favorites, setFavorites] = useState<number[]>([]);
   const [activeTab, setActiveTab] = useState<"all" | "favorites">("all");
   const [expiringSoon, setExpiringSoon] = useState<Product[]>([]);
-  const router = useRouter();
 
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
   });
 
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch("https://edg5000.com/products/inventory", {
+        credentials: "include",
+      });
+      const data = await response.json();
+      setProducts(data.products);
+
+      // 🔔 Filter producten die over 1 of 7 dagen verlopen
+      const today = new Date();
+      const soon = data.products.filter((product: Product) => {
+        const expiry = new Date(product.expiration_date);
+        const diffDays = Math.ceil(
+          (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+        );
+        return diffDays === 7 || diffDays === 1;
+      });
+
+      setExpiringSoon(soon);
+    } catch (error) {
+      console.error("Fout bij ophalen producten:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("https://edg5000.com/products/inventory", {
-          credentials: "include",
-        });
-        const data = await response.json();
-        setProducts(data.products);
-
-        // 🔔 Filter producten die over 1 of 7 dagen verlopen
-        const today = new Date();
-        const soon = data.products.filter((product: Product) => {
-          const expiry = new Date(product.expiration_date);
-          const diffDays = Math.ceil(
-            (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-          );
-          return diffDays === 7 || diffDays === 1;
-        });
-
-        setExpiringSoon(soon);
-      } catch (error) {
-        console.error("Fout bij ophalen producten:", error);
-      }
-    };
-
     const fetchDeleted = async () => {
       try {
         const res = await fetch("https://edg5000.com/products/deleted/", {
@@ -106,11 +103,6 @@ export default function FridgePage() {
       : products;
 
   if (!fontsLoaded) return null;
-
-  const handleDiscoverRecipes = async () => {
-    await AsyncStorage.setItem('selectedIngredients', JSON.stringify(products));
-    router.push('/discover');
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -221,9 +213,6 @@ export default function FridgePage() {
           )}
         />
       )}
-      <TouchableOpacity style={styles.recipeButton} onPress={() => router.push('/discover')}>
-        <Text style={styles.recipeButtonText}>Ontdek Recepten</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -318,20 +307,5 @@ const styles = StyleSheet.create({
     fontFamily: "ABeeZee",
     fontSize: 14,
     color: "#444",
-  },
-    recipeButton: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 15,
-    paddingHorizontal: 25,
-    borderRadius: 10,
-    alignItems: 'center',
-    marginVertical: 20,
-    marginHorizontal: 20,
-  },
-  recipeButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontFamily: 'ABeeZee',
-    fontWeight: 'bold',
   },
 });
