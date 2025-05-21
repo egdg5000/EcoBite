@@ -87,12 +87,12 @@ async function hashpassword(password) {
     return bcrypt.hash(password, 10);
 }
 
-async function loginStatus(req, res) {
+async function loginStatus(req, res, next) {
     if (req.session.isLoggedIn) {
         const lastSignIn = new Date();
         const query_ = `UPDATE users SET last_signin = ? WHERE username = ?`;
         db.promise().query(query_, [lastSignIn, req.session.user]).then(() => {
-            return;
+            next();
         }).catch(err => {
             console.error(err);
             res.status(500).json({success: false, message: 'Internal Server Error'});
