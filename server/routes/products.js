@@ -5,16 +5,23 @@ const {db} = require("../database");
 // ➕ Voeg nieuw product toe
 router.post("/add", async (req, res) => {
   const {item_name, quantity, unit, expiration_date, category } = req.body;
-  if (!item_name || !quantity || !unit || !expiration_date || !category) {
+  if (!item_name || !quantity || !unit || !category) {
     return res.status(400).json({ success: false, message: "Missing required fields" });
   }
+  if (expiration_date === "") {
+    expiration_date = null;
+  }
+  if (expiration_date && expiration_date < new Date().toISOString().split("T")[0]) {
+    return res.status(400).json({ success: false, message: "Expiration date cannot be in the past" });
+  }
+  const newDate = expiration_date ? new Date(expiration_date).toISOString().split("T")[0] : null;
   try {
     const [result] = await db
       .promise()
       .query(
         `INSERT INTO user_products (user_id, item_name, quantity, unit, expiration_date, category)
          VALUES (?, ?, ?, ?, ?, ?)`,
-        [req.session.userId, item_name, quantity, unit, expiration_date, category]
+        [req.session.userId, item_name, quantity, unit, newDate, category]
       );
     res.status(200).json({ success: true, message: "Product toegevoegd", id: result.insertId });
   } catch (err) {
