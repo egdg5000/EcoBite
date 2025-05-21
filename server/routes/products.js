@@ -5,7 +5,9 @@ const {db} = require("../database");
 // ➕ Voeg nieuw product toe
 router.post("/add", async (req, res) => {
   const {item_name, quantity, unit, expiration_date, category } = req.body;
-
+  if (!item_name || !quantity || !unit || !expiration_date || !category) {
+    return res.status(400).json({ success: false, message: "Missing required fields" });
+  }
   try {
     const [result] = await db
       .promise()
