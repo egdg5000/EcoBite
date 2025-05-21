@@ -272,11 +272,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#fff',
     fontFamily: 'ABeeZee',
+    fontWeight: 'bold',
   },
   dateText: {
     fontSize: 14,
     color: '#eee',
     fontFamily: 'ABeeZee',
+    fontWeight: 'bold',
   },
   factContainer: {
         marginTop: 10,
