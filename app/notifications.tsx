@@ -1,119 +1,137 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Switch, ScrollView, TouchableOpacity, SafeAreaView } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useFonts } from 'expo-font';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Switch,
+  StyleSheet,
+  SafeAreaView,
+  Alert,
+  ScrollView,
+  TouchableOpacity,
+} from "react-native";
+import { useRouter } from "expo-router"; // Gebruik dit als je expo-router gebruikt
 
-export default function NotificationsSettings() {
-  const router = useRouter();
-  const [fontsLoaded] = useFonts({
-    'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
-  });
+export default function NotificationsPage() {
+  const router = useRouter(); // ← Terugknop functionaliteit
 
-  const [expiryAlerts, setExpiryAlerts] = useState(true);
-  const [generalUpdates, setGeneralUpdates] = useState(false);
-  const [donationReminders, setDonationReminders] = useState(true);
+  const userId = 1; // 🔁 Vervang later met ingelogde gebruiker uit context
+
+  const [notifyExpiry, setNotifyExpiry] = useState(true);
+  const [notifyDeletion, setNotifyDeletion] = useState(true);
+
+  useEffect(() => {
+    const fetchPreferences = async () => {
+      try {
+        const response = await fetch(
+          `https://jouw-server.com/users/preferences/${userId}`,
+          {
+            credentials: "include",
+          }
+        );
+        const data = await response.json();
+        setNotifyExpiry(data.notify_expiry);
+        setNotifyDeletion(data.notify_deletion);
+      } catch (err) {
+        Alert.alert("Fout", "Kon voorkeuren niet ophalen.");
+        console.error(err);
+      }
+    };
+
+    fetchPreferences();
+  }, []);
+
+  const savePreferences = async (
+    newExpiry: boolean,
+    newDeletion: boolean
+  ) => {
+    try {
+      await fetch("https://jouw-server.com/users/preferences", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          user_id: userId,
+          notify_expiry: newExpiry,
+          notify_deletion: newDeletion,
+        }),
+      });
+    } catch (err) {
+      Alert.alert("Fout", "Kon voorkeuren niet opslaan.");
+      console.error(err);
+    }
+  };
 
   return (
-    <View style={styles.container}>
-    <SafeAreaView style={styles.safeArea}> 
-      <ScrollView style={styles.container}>
-        <Text style={styles.title}>Notificatie-instellingen</Text>
-        <Text style={styles.subtitle}>Beheer je meldingen voor de app.</Text>
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* 🔙 Terugknop */}
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Text style={styles.backText}>← Terug</Text>
+        </TouchableOpacity>
 
-        {/* Notificatie-opties */}
-        <View style={styles.section}>
-          <View style={styles.settingRow}>
-            <Text style={styles.settingText}>🔔 Producten die bijna verlopen</Text>
-            <Switch
-              value={expiryAlerts}
-              onValueChange={setExpiryAlerts}
-              trackColor={{ false: '#767577', true: '#4CAF50' }}
-              thumbColor={expiryAlerts ? '#fff' : '#f4f3f4'}
-            />
-          </View>
+        <Text style={styles.title}>Meldingsvoorkeuren</Text>
 
-          <View style={styles.settingRow}>
-            <Text style={styles.settingText}>📢 Algemene updates</Text>
-            <Switch
-              value={generalUpdates}
-              onValueChange={setGeneralUpdates}
-              trackColor={{ false: '#767577', true: '#4CAF50' }}
-              thumbColor={generalUpdates ? '#fff' : '#f4f3f4'}
-            />
-          </View>
-
-          <View style={styles.settingRow}>
-            <Text style={styles.settingText}>❤️ Donatieherinneringen</Text>
-            <Switch
-              value={donationReminders}
-              onValueChange={setDonationReminders}
-              trackColor={{ false: '#767577', true: '#4CAF50' }}
-              thumbColor={donationReminders ? '#fff' : '#f4f3f4'}
-            />
-          </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Melding bij bijna verlopen product</Text>
+          <Switch
+            value={notifyExpiry}
+            onValueChange={(value) => {
+              setNotifyExpiry(value);
+              savePreferences(value, notifyDeletion);
+            }}
+          />
         </View>
 
-        {/* Terug knop */}
-        <TouchableOpacity style={styles.backButton} onPress={() => router.push('/account')}>
-          <Text style={styles.backButtonText}>← Terug naar Account</Text>
-        </TouchableOpacity>
+        <View style={styles.row}>
+          <Text style={styles.label}>Melding bij automatisch verwijderen</Text>
+          <Switch
+            value={notifyDeletion}
+            onValueChange={(value) => {
+              setNotifyDeletion(value);
+              savePreferences(notifyExpiry, value);
+            }}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
-    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
+  },
+  content: {
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#4CAF50',
-    marginBottom: 10,
-    textAlign: 'center',
-    fontFamily: 'ABeeZee',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#555',
-    marginBottom: 20,
-    textAlign: 'center',
-    fontFamily: 'ABeeZee',
-  },
-  section: {
-    marginBottom: 30,
-  },
-  settingRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#f1f1f1',
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  settingText: {
-    fontSize: 16,
-    color: '#333',
-    fontFamily: 'ABeeZee',
-  },
   backButton: {
-    marginTop: 20,
-    padding: 15,
-    backgroundColor: '#4CAF50',
-    borderRadius: 10,
-    alignItems: 'center',
+    marginBottom: 16,
   },
-  backButtonText: {
+  backText: {
+    color: "#4CAF50",
     fontSize: 16,
-    color: '#fff',
+    fontWeight: "600",
+    fontFamily: 'ABeeZee',
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#4CAF50",
+    fontFamily: 'ABeeZee',
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    color: "#333",
+    flex: 1,
+    paddingRight: 12,
     fontFamily: 'ABeeZee',
   },
 });

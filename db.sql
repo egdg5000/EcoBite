@@ -14,6 +14,8 @@ CREATE TABLE users (
     verification_token VARCHAR(255), 
     verification_expires DATETIME
     ALTER TABLE users ADD COLUMN push_token VARCHAR(255);
+    ADD COLUMN notify_expiry BOOLEAN DEFAULT TRUE,
+    ADD COLUMN notify_deletion BOOLEAN DEFAULT TRUE;
 );
 
 CREATE TABLE user_profiles (
