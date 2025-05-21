@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 const AddFoodPage = () => {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [unit, setUnit] = useState("");
   const [expiry, setExpiry] = useState("");
   const [category, setCategory] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -25,6 +26,7 @@ const AddFoodPage = () => {
   const [errors, setErrors] = useState({
     name: "",
     quantity: "",
+    unit: "",
     expiry: "",
     category: "",
   });
@@ -41,20 +43,18 @@ const AddFoodPage = () => {
     }
   };
 
-  const handleCategorySelect = (selectedCategory: string) => {
-    setCategory(selectedCategory);
-  };
-
   const validateForm = () => {
     const newErrors: any = {
       name: "",
       quantity: "",
+      unit: "",
       expiry: "",
       category: "",
     };
 
     if (!name) newErrors.name = "Vul de productnaam in";
     if (!quantity) newErrors.quantity = "Vul de hoeveelheid in";
+    if (!unit) newErrors.unit = "Selecteer een eenheid";
     if (!expiry) newErrors.expiry = "Selecteer een houdbaarheidsdatum";
     if (!category) newErrors.category = "Selecteer een categorie";
 
@@ -63,24 +63,20 @@ const AddFoodPage = () => {
   };
 
   const parseDutchDate = (dutchDate: string): string => {
-    const [day, month, year] = dutchDate.split("/");
+    const [day, month, year] = dutchDate.split("-");
     return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
-
     const formattedExpiry = parseDutchDate(expiry);
-
     const newProduct = {
-      user_id: 1, // Vervang later door de echte ingelogde gebruiker
       item_name: name,
       quantity,
-      unit: "", // Voeg eenheid toe indien nodig
+      unit,
       expiration_date: formattedExpiry,
       category,
     };
-
     try {
       const response = await fetch("https://edg5000.com/products/add", {
         method: "POST",
@@ -94,6 +90,7 @@ const AddFoodPage = () => {
         Alert.alert("Succes!", "Product is toegevoegd.");
         setName("");
         setQuantity("");
+        setUnit("");
         setExpiry("");
         setCategory("");
       } else {
@@ -132,6 +129,20 @@ const AddFoodPage = () => {
           <Text style={styles.errorText}>{errors.quantity}</Text>
         )}
 
+        <Text style={styles.label}>Eenheid</Text>
+        <Picker
+          itemStyle={{ color: "black" }}
+          selectedValue={unit}
+          onValueChange={(itemValue) => setUnit(itemValue)}
+          style={styles.input}
+        >
+          <Picker.Item label="stuk(s)" value="stuk(s)" />
+          <Picker.Item label="Liter" value="L" />
+          <Picker.Item label="Gram" value="g" />
+          <Picker.Item label="Kilogram" value="kg" />
+        </Picker>
+        {errors.unit && <Text style={styles.errorText}>{errors.unit}</Text>}
+
         <Text style={styles.label}>Houdbaar tot</Text>
         <TouchableOpacity
           style={styles.dateInput}
@@ -144,6 +155,7 @@ const AddFoodPage = () => {
         </TouchableOpacity>
         {showDatePicker && (
           <DateTimePicker
+            textColor="black"
             value={new Date()}
             mode="date"
             display={Platform.OS === "ios" ? "spinner" : "default"}
@@ -154,21 +166,20 @@ const AddFoodPage = () => {
         {errors.expiry && <Text style={styles.errorText}>{errors.expiry}</Text>}
 
         <Text style={styles.label}>Categorie</Text>
-        <View style={styles.dropdownContainer}>
-          <Picker
-            selectedValue={category}
-            onValueChange={handleCategorySelect}
-            style={styles.dropdown}
-            dropdownIconColor="#4CAF50"
-          >
-            <Picker.Item label="Selecteer een categorie" value="" />
-            <Picker.Item label="Fruit" value="fruit" />
-            <Picker.Item label="Groente" value="groente" />
-            <Picker.Item label="Vlees" value="vlees" />
-            <Picker.Item label="Vis" value="vis" />
-            <Picker.Item label="Zuivel" value="zuivel" />
-          </Picker>
-        </View>
+        <Picker
+          itemStyle={{ color: "black" }}
+          selectedValue={category}
+          onValueChange={(itemValue) => setCategory(itemValue)}
+          dropdownIconColor="#4CAF50"
+          style={styles.input}
+        >
+          <Picker.Item label="Selecteer een categorie" value="" />
+          <Picker.Item label="Fruit" value="fruit" />
+          <Picker.Item label="Groente" value="groente" />
+          <Picker.Item label="Vlees" value="vlees" />
+          <Picker.Item label="Vis" value="vis" />
+          <Picker.Item label="Zuivel" value="zuivel" />
+        </Picker>
         {errors.category && (
           <Text style={styles.errorText}>{errors.category}</Text>
         )}
@@ -210,6 +221,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     backgroundColor: "#f5f5f5",
     fontFamily: "ABeeZee",
+  },
+  picker: {
+    
   },
   dateInput: {
     flexDirection: "row",

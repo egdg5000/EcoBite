@@ -26,7 +26,7 @@ CREATE TABLE user_profiles (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE inventory (
+CREATE TABLE user_products (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     item_name VARCHAR(255) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE saved_recipes (
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
-CREATE TABLE deleted_inventory (
+CREATE TABLE user_products_deleted (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
   item_name VARCHAR(255) NOT NULL,

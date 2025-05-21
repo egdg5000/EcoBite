@@ -78,6 +78,7 @@ async function loginUser(req, res) {
     await db.promise().query(query_, [lastSignUp, username, username]);
     req.session.isLoggedIn = true;
     req.session.user = result[0].username;
+    req.session.userId = result[0].id;
     console.log(req.session);
     return res.status(200).json({success: true, message: `Login successful, Welcome ${req.session.user}`});
 }
@@ -86,8 +87,28 @@ async function hashpassword(password) {
     return bcrypt.hash(password, 10);
 }
 
+async function loginStatus(req, res, next) {
+    if (!req.session || !req.session.isLoggedIn) {
+        return res.status(401).json({success: false, message: 'User is not logged in'});
+    }
+    
+    try {
+        const lastSignIn = new Date();
+        const query_ = `UPDATE users SET last_signin = ? WHERE id = ?`;
+        await db.promise().query(query_, [lastSignIn, req.session.userId]);
+        // If next is provided, call it, otherwise send success response
+        if (typeof next === 'function') {
+            return next();
+        }
+        return res.status(200).json({success: true, message: 'User is logged in'});
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({success: false, message: 'Internal Server Error'});
+    }
+}
 
 module.exports = {
     registerUser,
     loginUser,
+    loginStatus
 }

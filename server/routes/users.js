@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser } = require('../functions/userdb');
+const { registerUser, loginUser, loginStatus } = require('../functions/userdb');
 const bodyParser = require('body-parser');
 const { db } = require('../database');
 
@@ -21,20 +21,9 @@ router.post('/login', jsonParser, (req, res) => {
     })
 });
 
-router.get('/loginStatus', (req, res) => {
-    if (req.session.isLoggedIn) {
-        const lastSignIn = new Date();
-        const query_ = `UPDATE users SET last_signin = ? WHERE username = ?`;
-        db.promise().query(query_, [lastSignIn, req.session.user]).then(() => {
-            res.status(200).json({success: true, message: 'User is logged in'})
-        }).catch(err => {
-            console.error(err);
-            res.status(500).json({success: false, message: 'Internal Server Error'});
-        });
-    } else{
-        res.status(200).json({success: false, message: 'User is not logged in'})
-    }
-})
+router.get('/loginStatus', loginStatus, (req, res) => {
+    res.status(200).json({success: true, message: 'User is logged in'})
+});
 
 router.post('/logout', (req, res) => {
     req.session.destroy();
