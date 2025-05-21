@@ -73,4 +73,5 @@ CREATE TABLE users_gamification (
   xp INT DEFAULT 0,
   co2_saved DECIMAL(10, 2) DEFAULT 0.0,
   FOREIGN KEY (user_id) REFERENCES users(id)
+  ALTER TABLE users_gamification ADD streak_days INT DEFAULT 0;
 );

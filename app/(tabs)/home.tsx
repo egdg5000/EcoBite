@@ -56,6 +56,7 @@ const HomeScreen = () => {
         setLevel(data.level || 1);
         setCo2Reduction(parseFloat(data.co2_saved) || 0);
         setXpForNextLevel(data.xp_for_next_level || 100);
+        setStreakDays(data.streak_days || 0);
       } catch (err) {
         console.error('Fout bij ophalen gamification:', err);
       }
@@ -107,10 +108,6 @@ const HomeScreen = () => {
     transform: [{ translateY: greetingTranslateY.value }],
   }));
 
-  const animatedProps = useAnimatedProps(() => ({
-    strokeDashoffset: 251.2 - (progress.value / 100) * 251.2,
-  }));
-
   const backgroundColor = useAnimatedStyle(() => {
     let red1 = 135, green1 = 206, blue1 = 235;
     let red2 = 107, green2 = 62, blue2 = 38;
@@ -120,41 +117,49 @@ const HomeScreen = () => {
     return { backgroundColor: `rgb(${red}, ${green}, ${blue})` };
   });
 
-  const xpProgress = Math.min(xp / xpForNextLevel, 1);
+  const safeXp = Number.isFinite(xp) ? xp : 0;
+  const safeXpForNextLevel = xpForNextLevel || 100;
+  const xpProgress = Math.min(safeXp / safeXpForNextLevel, 1);
+
+  const getTreeImage = () => {
+    if (co2Reduction >= 80) return require('../../assets/images/tree5.png');
+    if (co2Reduction >= 60) return require('../../assets/images/tree4.png');
+    if (co2Reduction >= 40) return require('../../assets/images/tree3.png');
+    if (co2Reduction >= 20) return require('../../assets/images/tree2.png');
+    return require('../../assets/images/tree1.png');
+  };
 
   return (
     <Animated.View style={[styles.container, backgroundColor]}>
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView contentContainerStyle={styles.scrollContainer} ref={animatedRef}>
           <View style={styles.header}>
-            <Text style={styles.title}>Welkom terug!</Text>
+            <View style={styles.logoContainer}>
+              <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
+              <Text style={styles.title}>
+                <Text style={styles.darkGreen}>Eco</Text>
+                <Text style={styles.lightGreen}>Bite</Text>
+              </Text>
+            </View>
+
             <Animated.Text style={[styles.greetingText, greetingStyle]}>{greeting}</Animated.Text>
             <Animated.Text style={[styles.dateText, greetingStyle]}>{currentDate}</Animated.Text>
 
             <View style={styles.factContainer}>
-                <Text style={styles.factLabel}>💡 Wist je dat?</Text>
-                <Text style={styles.factText}>{weetje}</Text>
+              <Text style={styles.factLabel}>💡 Wist je dat?</Text>
+              <Text style={styles.factText}>{weetje}</Text>
             </View>
 
             <View style={styles.divider} />
           </View>
 
-          <View style={styles.treeContainer}>
-            <Image
-              source={
-                co2Reduction >= 80
-                  ? require('../../assets/images/tree5.png')
-                  : co2Reduction >= 60
-                  ? require('../../assets/images/tree4.png')
-                  : co2Reduction >= 40
-                  ? require('../../assets/images/tree3.png')
-                  : co2Reduction >= 20
-                  ? require('../../assets/images/tree2.png')
-                  : require('../../assets/images/tree1.png')
-              }
-              style={styles.treeImage}
-            />
-            <Text style={styles.co2Label}>{co2Reduction}% CO₂-reductie</Text>
+          <View style={styles.treeStatContainer}>
+            <Text style={styles.co2Label}>Jouw Boom:</Text>
+            <Image source={getTreeImage()} style={styles.treeImage} />
+            <View style={styles.co2Box}>
+              <Text style={styles.co2Value}>{co2Reduction}%</Text>
+              <Text style={styles.co2Label}>CO₂-reductie</Text>
+            </View>
           </View>
 
           <View style={styles.xpContainer}>
@@ -193,9 +198,32 @@ const HomeScreen = () => {
 
           <View style={styles.leaderboardContainer}>
             <Text style={styles.leaderboardTitle}>🏆 Leaderboard</Text>
-            {leaderboard.map((entry, index) => (
+
+            <View style={styles.podiumContainer}>
+              <View style={[styles.second]}>
+                <Text style={styles.podiumRank}>2</Text>
+                <Text style={styles.podiumName}>{leaderboard[1]?.username || '...'}</Text>
+                <Text style={styles.podiumXP}>{leaderboard[1]?.xp || 0} XP</Text>
+              </View>
+
+              <View style={[styles.first]}>
+                <Text style={styles.podiumRank}>1</Text>
+                <Text style={styles.podiumName}>{leaderboard[0]?.username || '...'}</Text>
+                <Text style={styles.podiumXP}>{leaderboard[0]?.xp || 0} XP</Text>
+              </View>
+
+              <View style={[styles.third]}>
+                <Text style={styles.podiumRank}>3</Text>
+                <Text style={styles.podiumName}>{leaderboard[2]?.username || '...'}</Text>
+                <Text style={styles.podiumXP}>{leaderboard[2]?.xp || 0} XP</Text>
+              </View>
+            </View>
+
+            <View style={styles.divider} />
+
+            {leaderboard.slice(3).map((entry, index) => (
               <Text key={index} style={styles.leaderboardText}>
-                {index + 1}. {entry.username} - {entry.xp} XP
+                {index + 4}. {entry.username} - {entry.xp} XP
               </Text>
             ))}
           </View>
@@ -204,7 +232,6 @@ const HomeScreen = () => {
     </Animated.View>
   );
 };
-
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollContainer: {
@@ -217,11 +244,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  logo: {
+    width: 50,
+    height: 50,
+    resizeMode: 'contain',
+    marginRight: 10,
+  },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
     fontFamily: 'ABeeZee',
     color: '#fff',
+  },
+  darkGreen: {
+    color: '#006400',
+  },
+  lightGreen: {
+    color: '#66C466',
   },
   greetingText: {
     fontSize: 20,
@@ -234,7 +278,48 @@ const styles = StyleSheet.create({
     color: '#eee',
     fontFamily: 'ABeeZee',
   },
-  treeContainer: {
+  factContainer: {
+        marginTop: 10,
+        marginBottom: 20,
+        backgroundColor: 'rgba(255,255,255,0.25)',
+        padding: 16,
+        borderRadius: 15,
+        width: '90%',
+        borderLeftWidth: 5,
+        borderLeftColor: '#66FF66',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+        elevation: 6,
+    },
+    factLabel: {
+        color: '#2E8B57',
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginBottom: 10,
+        fontFamily: 'ABeeZee',
+        textTransform: 'uppercase',
+        letterSpacing: 1,
+        textShadowColor: 'rgba(0, 0, 0, 0.4)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 3,
+    },
+    factText: {
+        color: 'white',
+        fontSize: 16,
+        fontFamily: 'ABeeZee',
+        lineHeight: 22,
+    },
+  divider: {
+    height: 1,
+    backgroundColor: 'white',
+    width: '80%',
+    marginTop: 15,
+    marginBottom: 10,
+    opacity: 0.4,
+  },
+  treeStatContainer: {
     alignItems: 'center',
     marginBottom: 20,
   },
@@ -243,11 +328,27 @@ const styles = StyleSheet.create({
     height: 140,
     resizeMode: 'contain',
   },
+  co2Box: {
+    marginTop: 12,
+    backgroundColor: '#ffffff22',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: '#66C466',
+  },
+  co2Value: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#fff',
+    fontFamily: 'ABeeZee',
+  },
   co2Label: {
     fontSize: 16,
-    fontFamily: 'ABeeZee',
     color: '#fff',
-    marginTop: 8,
+    fontFamily: 'ABeeZee',
   },
   xpContainer: {
     width: '100%',
@@ -329,44 +430,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'ABeeZee',
   },
-  factContainer: {
-        marginTop: 10,
-        marginBottom: 20,
-        backgroundColor: 'rgba(255,255,255,0.25)',
-        padding: 16,
-        borderRadius: 15,
-        width: '90%',
-        borderLeftWidth: 5,
-        borderLeftColor: '#66FF66',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
-        elevation: 6,
-    },
-    factLabel: {
-        color: '#2E8B57',
-        fontWeight: 'bold',
-        fontSize: 18,
-        marginBottom: 10,
-        fontFamily: 'ABeeZee',
-        textTransform: 'uppercase',
-        letterSpacing: 1,
-        textShadowColor: 'rgba(0, 0, 0, 0.4)',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 3,
-    },
-    factText: {
-        color: 'white',
-        fontSize: 16,
-        fontFamily: 'ABeeZee',
-        lineHeight: 22,
-    },
   leaderboardContainer: {
     width: '100%',
     backgroundColor: 'rgba(255,255,255,0.2)',
     borderRadius: 12,
     padding: 16,
+    marginBottom: 40,
   },
   leaderboardTitle: {
     fontSize: 18,
@@ -381,14 +450,69 @@ const styles = StyleSheet.create({
     fontFamily: 'ABeeZee',
     marginBottom: 4,
   },
-  divider: {
-  height: 1,
-  backgroundColor: 'white',
-  width: '80%',
-  marginTop: 15,
-  marginBottom: 10,
-  opacity: 0.4,
-},
+  podiumContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginVertical: 20,
+    gap: 10,
+  },
+  first: {
+    height: 130,
+    width: 90,
+    zIndex: 2,
+    backgroundColor: '#FFD700',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingVertical: 10,
+  },
+  second: {
+    height: 100,
+    width: 90,
+    marginTop: 30,
+    backgroundColor: '#C0C0C0',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingVertical: 10,
+  },
+  third: {
+    height: 90,
+    width: 90,
+    marginTop: 40,
+    backgroundColor: '#CD7F32',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    paddingVertical: 10,
+  },
+  podiumRank: {
+    position: 'absolute',
+    top: -20,
+    fontSize: 18,
+    fontWeight: 'bold',
+    backgroundColor: '#fff',
+    color: '#66C466',
+    borderRadius: 20,
+    width: 30,
+    height: 30,
+    textAlign: 'center',
+    lineHeight: 30,
+    overflow: 'hidden',
+  },
+  podiumName: {
+    fontSize: 16,
+    color: '#000',
+    fontWeight: 'bold',
+    marginTop: 40,
+    fontFamily: 'ABeeZee',
+  },
+  podiumXP: {
+    fontSize: 14,
+    color: '#333',
+    fontFamily: 'ABeeZee',
+  },
 });
 
-export default HomeScreen;
+ export default HomeScreen;

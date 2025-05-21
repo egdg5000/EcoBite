@@ -6,15 +6,16 @@ function getXpForNextLevel(level) {
 
 async function getProgress(userId) {
   const [rows] = await db.query(
-    'SELECT level, xp, co2_saved FROM users_gamification WHERE user_id = ?',
+    'SELECT level, xp, co2_saved, streak_days FROM users_gamification WHERE user_id = ?',
     [userId]
   );
-  const row = rows[0] || { level: 1, xp: 0, co2_saved: 0 };
+  const row = rows[0] || { level: 1, xp: 0, co2_saved: 0, streak_days: 0 };
   return {
     user_id: userId,
     level: row.level,
     xp: row.xp,
     co2_saved: row.co2_saved,
+    streak_days: row.streak_days || 0,
     xp_for_next_level: getXpForNextLevel(row.level),
   };
 }
