@@ -55,6 +55,7 @@
     "node-cron": "^4.0.5",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",
+    "openai": "^4.100.0",
     "react": "18.3.1",
     "react-native": "0.76.9",
     "react-native-reanimated": "~3.16.1",

@@ -7,6 +7,7 @@ const dotenv = require('dotenv').config()
 const MySQLStore = require('express-mysql-session')(session);
 const helmet = require('helmet');
 const recipeRoutes = require('./routes/recipes');
+const aiRoutes = require('./routes/ai');
 
 app.use(express.json({ limit: "50mb" }));
 
@@ -60,6 +61,7 @@ app.use("/", require('./routes/index.js'));
 app.use("/products", require('./routes/products.js'));
 app.use("/scan", require('./routes/scan.js'));
 app.use('/recipes', recipeRoutes);
+app.use('/ai', aiRoutes);
 
 const cron = require("node-cron");
 const axios = require("axios");

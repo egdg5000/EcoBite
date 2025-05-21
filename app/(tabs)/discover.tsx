@@ -32,6 +32,8 @@ export default function DiscoverScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
+  const [loadingAi, setLoadingAi] = useState(false);
 
   useEffect(() => {
     const loadData = async () => {
@@ -62,6 +64,24 @@ export default function DiscoverScreen() {
 
     loadData();
   }, []);
+
+  const handleAISuggestions = async () => {
+    setLoadingAi(true);
+    try {
+      const response = await fetch('https://edg5000.com/ai/recipe-suggestions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ingredients }),
+      });
+
+      const data = await response.json();
+      if (data.suggestions) setAiSuggestion(data.suggestions);
+    } catch (err) {
+      console.error('Fout bij AI suggestie:', err);
+      setAiSuggestion('Er ging iets mis bij het ophalen van AI suggesties.');
+    }
+    setLoadingAi(false);
+  };
 
   const recipeCategories = [
     {
@@ -121,7 +141,7 @@ export default function DiscoverScreen() {
         )}
       />
 
-      {/* Dynamische recepten op basis van ingrediënten */}
+      {/* Recepten op basis van voorraad */}
       <Text style={styles.subheader}>Recepten op basis van je voorraad</Text>
       {recipes.length === 0 ? (
         <Text style={styles.noData}>Geen recepten gevonden voor je ingrediënten.</Text>
@@ -135,6 +155,24 @@ export default function DiscoverScreen() {
             )}
           </View>
         ))
+      )}
+
+      {/* AI Suggestie */}
+      <TouchableOpacity
+        style={styles.aiButton}
+        onPress={handleAISuggestions}
+        disabled={loadingAi}
+      >
+        <Text style={styles.aiButtonText}>
+          {loadingAi ? 'AI denkt na...' : '🔮 Vraag AI om receptsuggestie'}
+        </Text>
+      </TouchableOpacity>
+
+      {aiSuggestion && (
+        <View style={styles.aiCard}>
+          <Text style={styles.aiTitle}>AI Suggestie</Text>
+          <Text style={styles.aiText}>{aiSuggestion}</Text>
+        </View>
       )}
     </ScrollView>
   );
@@ -234,6 +272,36 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'ABeeZee',
     color: '#888',
+  },
+  aiButton: {
+    backgroundColor: '#4CAF50',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  aiButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+  },
+  aiCard: {
+    backgroundColor: '#f1f8e9',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+  },
+  aiTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    fontFamily: 'ABeeZee',
+    marginBottom: 6,
+    color: '#1b5e20',
+  },
+  aiText: {
+    fontSize: 15,
+    fontFamily: 'ABeeZee',
+    color: '#444',
   },
   noData: {
     fontSize: 16,
