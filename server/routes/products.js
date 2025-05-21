@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const {db} = require("../database");
+const { loginStatus } = require("../functions/userdb");
 
 // ➕ Voeg nieuw product toe
-router.post("/add", async (req, res) => {
+router.post("/add", loginStatus, async (req, res) => {
   const {item_name, quantity, unit, expiration_date, category } = req.body;
   if (!item_name || !quantity || !unit || !category) {
     return res.status(400).json({ success: false, message: "Missing required fields" });
@@ -31,7 +32,7 @@ router.post("/add", async (req, res) => {
 });
 
 // 📥 Haal alle niet-verlopen producten van gebruiker op
-router.get("/inventory", async (req, res) => {
+router.get("/inventory", loginStatus, async (req, res) => {
   const userId = req.session.userId;
   const today = new Date().toISOString().split("T")[0];
 
@@ -50,7 +51,7 @@ router.get("/inventory", async (req, res) => {
 });
 
 // 🧹 Verwijder verlopen producten & log ze in user_products_deleted
-router.delete("/expired/cleanup", async (_req, res) => {
+router.delete("/expired/cleanup", loginStatus, async (_req, res) => {
   const today = new Date().toISOString().split("T")[0];
 
   try {
@@ -93,7 +94,7 @@ router.delete("/expired/cleanup", async (_req, res) => {
 });
 
 // 🗑️ Verwijder handmatig een product
-router.delete("/delete/:productId", async (req, res) => {
+router.delete("/delete/:productId", loginStatus, async (req, res) => {
   const productId = req.params.productId;
 
   try {
@@ -106,7 +107,7 @@ router.delete("/delete/:productId", async (req, res) => {
 });
 
 // 🔍 Haal laatste verwijderde producten op
-router.get("/deleted", async (req, res) => {
+router.get("/deleted", loginStatus, async (req, res) => {
   const userId = req.session.userId;
 
   try {
