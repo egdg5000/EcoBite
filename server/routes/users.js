@@ -46,4 +46,37 @@ router.post("/save-push-token", async (req, res) => {
   }
 });
 
+// 🔁 Haal meldingsvoorkeuren op
+router.get("/preferences/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const [rows] = await db
+      .promise()
+      .query("SELECT notify_expiry, notify_deletion FROM users WHERE id = ?", [userId]);
+    res.json(rows[0]);
+  } catch (err) {
+    console.error("Fout bij ophalen voorkeuren:", err);
+    res.status(500).json({});
+  }
+});
+
+// ✅ Opslaan van meldingsvoorkeuren
+router.post("/preferences", async (req, res) => {
+  const { user_id, notify_expiry, notify_deletion } = req.body;
+
+  try {
+    await db
+      .promise()
+      .query(
+        "UPDATE users SET notify_expiry = ?, notify_deletion = ? WHERE id = ?",
+        [notify_expiry, notify_deletion, user_id]
+      );
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Fout bij opslaan voorkeuren:", err);
+    res.status(500).json({ success: false });
+  }
+});
+
 module.exports = router;
