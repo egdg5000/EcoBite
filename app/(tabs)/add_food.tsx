@@ -18,6 +18,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 const AddFoodPage = () => {
   const [name, setName] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [unit, setUnit] = useState("");
   const [expiry, setExpiry] = useState("");
   const [category, setCategory] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -25,6 +26,7 @@ const AddFoodPage = () => {
   const [errors, setErrors] = useState({
     name: "",
     quantity: "",
+    unit: "",
     expiry: "",
     category: "",
   });
@@ -49,12 +51,14 @@ const AddFoodPage = () => {
     const newErrors: any = {
       name: "",
       quantity: "",
+      unit: "",
       expiry: "",
       category: "",
     };
 
     if (!name) newErrors.name = "Vul de productnaam in";
     if (!quantity) newErrors.quantity = "Vul de hoeveelheid in";
+    if (!unit) newErrors.unit = "Selecteer een eenheid";
     if (!expiry) newErrors.expiry = "Selecteer een houdbaarheidsdatum";
     if (!category) newErrors.category = "Selecteer een categorie";
 
@@ -75,7 +79,7 @@ const AddFoodPage = () => {
     const newProduct = {
       item_name: name,
       quantity,
-      unit: "", // Voeg eenheid toe indien nodig
+      unit,
       expiration_date: formattedExpiry,
       category,
     };
@@ -93,6 +97,7 @@ const AddFoodPage = () => {
         Alert.alert("Succes!", "Product is toegevoegd.");
         setName("");
         setQuantity("");
+        setUnit("");
         setExpiry("");
         setCategory("");
       } else {
@@ -131,6 +136,19 @@ const AddFoodPage = () => {
           <Text style={styles.errorText}>{errors.quantity}</Text>
         )}
 
+        <Text style={styles.label}>Eenheid</Text>
+        <Picker
+          selectedValue={unit}
+          onValueChange={(itemValue) => setUnit(itemValue)}
+          style={styles.input}
+        >
+          <Picker.Item label="stuk(s)" value="stuk(s)" />
+          <Picker.Item label="Liter" value="L" />
+          <Picker.Item label="Gram" value="g" />
+          <Picker.Item label="Kilogram" value="kg" />
+        </Picker>
+        {errors.unit && <Text style={styles.errorText}>{errors.unit}</Text>}
+
         <Text style={styles.label}>Houdbaar tot</Text>
         <TouchableOpacity
           style={styles.dateInput}
@@ -157,7 +175,7 @@ const AddFoodPage = () => {
           <Picker
             selectedValue={category}
             onValueChange={handleCategorySelect}
-            style={styles.dropdown}
+            style={[styles.dropdown, { color: "#4CAF50" }]}
             dropdownIconColor="#4CAF50"
           >
             <Picker.Item label="Selecteer een categorie" value="" />

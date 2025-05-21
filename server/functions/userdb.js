@@ -90,8 +90,8 @@ async function hashpassword(password) {
 async function loginStatus(req, res, next) {
     if (req.session.isLoggedIn) {
         const lastSignIn = new Date();
-        const query_ = `UPDATE users SET last_signin = ? WHERE username = ?`;
-        db.promise().query(query_, [lastSignIn, req.session.user]).then(() => {
+        const query_ = `UPDATE users SET last_signin = ? WHERE id = ?`;
+        db.promise().query(query_, [lastSignIn, req.session.userId]).then(() => {
             next();
         }).catch(err => {
             console.error(err);

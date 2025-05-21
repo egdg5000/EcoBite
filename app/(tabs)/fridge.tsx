@@ -57,7 +57,7 @@ export default function FridgePage() {
 
     const fetchDeleted = async () => {
       try {
-        const res = await fetch("https://edg5000.com/products/deleted/1", {
+        const res = await fetch("https://edg5000.com/products/deleted/", {
           credentials: "include",
         });
         const data = await res.json();
