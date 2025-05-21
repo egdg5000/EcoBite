@@ -91,9 +91,7 @@ async function loginStatus(req, res) {
     if (req.session.isLoggedIn) {
         const lastSignIn = new Date();
         const query_ = `UPDATE users SET last_signin = ? WHERE username = ?`;
-        db.promise().query(query_, [lastSignIn, req.session.user]).then(() => {
-            res.status(200).json({success: true, message: 'User is logged in'})
-        }).catch(err => {
+        db.promise().query(query_, [lastSignIn, req.session.user]).catch(err => {
             console.error(err);
             res.status(500).json({success: false, message: 'Internal Server Error'});
         });
