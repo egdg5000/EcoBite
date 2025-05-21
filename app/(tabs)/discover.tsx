@@ -17,31 +17,50 @@ interface Ingredient {
   name: string;
   quantity: string;
   category: string;
-  expiry?: string; // optioneel, als je het later wil gebruiken
+  expiry?: string;
+}
+
+interface Recipe {
+  id: number;
+  title: string;
+  description?: string;
+  estimated_time?: number;
 }
 
 export default function DiscoverScreen() {
   const [filters, setFilters] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [recipes, setRecipes] = useState<Recipe[]>([]);
 
   useEffect(() => {
-    const loadFilters = async () => {
+    const loadData = async () => {
       const storedFilters = await AsyncStorage.getItem('recipeFilters');
       if (storedFilters) {
         setFilters(JSON.parse(storedFilters));
       }
-    };
 
-    const loadIngredients = async () => {
-      const stored = await AsyncStorage.getItem('selectedIngredients');
-      if (stored) {
-        setIngredients(JSON.parse(stored));
+      const storedIngredients = await AsyncStorage.getItem('selectedIngredients');
+      if (storedIngredients) {
+        const parsed = JSON.parse(storedIngredients);
+        setIngredients(parsed);
+
+        try {
+          const response = await fetch('https://edg5000.com/recipes/from-ingredients', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ingredients: parsed }),
+          });
+
+          const data = await response.json();
+          if (data.recipes) setRecipes(data.recipes);
+        } catch (err) {
+          console.error('Fout bij ophalen recepten:', err);
+        }
       }
     };
 
-    loadFilters();
-    loadIngredients();
+    loadData();
   }, []);
 
   const recipeCategories = [
@@ -104,14 +123,16 @@ export default function DiscoverScreen() {
 
       {/* Dynamische recepten op basis van ingrediënten */}
       <Text style={styles.subheader}>Recepten op basis van je voorraad</Text>
-      {ingredients.length === 0 ? (
-        <Text style={styles.noData}>Geen ingrediënten gevonden uit je voorraad.</Text>
+      {recipes.length === 0 ? (
+        <Text style={styles.noData}>Geen recepten gevonden voor je ingrediënten.</Text>
       ) : (
-        ingredients.map((item, index) => (
-          <View key={index} style={styles.ingredientCard}>
-            <Text style={styles.ingredientName}>{item.name}</Text>
-            <Text style={styles.ingredientDetail}>Hoeveelheid: {item.quantity}</Text>
-            <Text style={styles.ingredientDetail}>Categorie: {item.category}</Text>
+        recipes.map((recipe) => (
+          <View key={recipe.id} style={styles.recipeCard}>
+            <Text style={styles.recipeTitle}>{recipe.title}</Text>
+            {recipe.description && <Text style={styles.recipeText}>{recipe.description}</Text>}
+            {recipe.estimated_time && (
+              <Text style={styles.recipeTime}>⏱️ {recipe.estimated_time} min</Text>
+            )}
           </View>
         ))
       )}
@@ -190,26 +211,34 @@ const styles = StyleSheet.create({
     fontFamily: 'ABeeZee',
     color: '#333',
   },
-  ingredientCard: {
-    backgroundColor: '#f1f8e9',
-    padding: 14,
+  recipeCard: {
+    backgroundColor: '#e8f5e9',
+    padding: 16,
     borderRadius: 12,
     marginBottom: 12,
   },
-  ingredientName: {
-    fontSize: 16,
+  recipeTitle: {
+    fontSize: 18,
     fontWeight: 'bold',
     fontFamily: 'ABeeZee',
-    color: '#33691e',
+    color: '#1b5e20',
   },
-  ingredientDetail: {
+  recipeText: {
     fontSize: 14,
     fontFamily: 'ABeeZee',
     color: '#555',
+    marginTop: 4,
+  },
+  recipeTime: {
+    marginTop: 4,
+    fontSize: 13,
+    fontFamily: 'ABeeZee',
+    color: '#888',
   },
   noData: {
     fontSize: 16,
     fontFamily: 'ABeeZee',
     color: '#777',
+    textAlign: 'center',
   },
 });
