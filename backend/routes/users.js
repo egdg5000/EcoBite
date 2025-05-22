@@ -88,4 +88,52 @@ router.get('/profile', async (req, res) => {
   res.json(rows[0]);
 });
 
+// PUT /users/preferences
+router.put('/preferences', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Niet ingelogd' });
+  }
+
+  const userId = req.session.user.id;
+  const { allergies } = req.body;
+
+  try {
+    // Check of profiel al bestaat
+    const [existing] = await db.query('SELECT * FROM user_profiles WHERE user_id = ?', [userId]);
+
+    if (existing.length > 0) {
+      await db.query('UPDATE user_profiles SET allergies = ? WHERE user_id = ?', [JSON.stringify(allergies), userId]);
+    } else {
+      await db.query('INSERT INTO user_profiles (user_id, allergies) VALUES (?, ?)', [userId, JSON.stringify(allergies)]);
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Fout bij opslaan voorkeuren:', err);
+    res.status(500).json({ message: 'Serverfout bij opslaan voorkeuren' });
+  }
+});
+
+router.get('/preferences', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Niet ingelogd' });
+  }
+
+  const userId = req.session.user.id;
+
+  try {
+    const [rows] = await db.query('SELECT allergies FROM user_profiles WHERE user_id = ?', [userId]);
+
+    if (rows.length === 0) {
+      return res.json({ allergies: [] });
+    }
+
+    const allergies = JSON.parse(rows[0].allergies || '[]');
+    res.json({ allergies });
+  } catch (error) {
+    console.error('Fout bij ophalen voorkeuren:', error);
+    res.status(500).json({ message: 'Serverfout' });
+  }
+});
+
 module.exports = router;

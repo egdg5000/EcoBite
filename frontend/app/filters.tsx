@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, SafeAreaView, Alert } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
 export default function FiltersPage() {
@@ -12,25 +11,65 @@ export default function FiltersPage() {
     lactose: false,
   });
 
-  // Filters laden bij openen van de pagina
+  // 🔁 Ophalen van bestaande filters vanuit back-end
   useEffect(() => {
     const loadFilters = async () => {
-      const storedFilters = await AsyncStorage.getItem('recipeFilters');
-      if (storedFilters) {
-        setFilters(JSON.parse(storedFilters));
+      try {
+        const res = await fetch('https://edg5000.com/users/preferences', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await res.json();
+
+        if (res.ok && Array.isArray(data.allergies)) {
+          const newFilters = {
+            gluten: false,
+            noten: false,
+            pinda: false,
+            lactose: false,
+          };
+          data.allergies.forEach((key: keyof typeof newFilters) => {
+            if (newFilters.hasOwnProperty(key)) {
+              newFilters[key] = true;
+            }
+          });
+          setFilters(newFilters);
+        }
+      } catch (error) {
+        console.error('Fout bij ophalen filters:', error);
       }
     };
+
     loadFilters();
   }, []);
 
-  // Filters opslaan in AsyncStorage
+  // ✅ Opslaan in de back-end
   const saveFilters = async () => {
+    const selectedFilters = Object.entries(filters)
+      .filter(([_, value]) => value)
+      .map(([key]) => key);
+
     try {
-      await AsyncStorage.setItem('recipeFilters', JSON.stringify(filters));
-      Alert.alert('Opgeslagen', 'Je filterinstellingen zijn opgeslagen.');
-      router.replace('/account?filtersSaved=true');
+      const res = await fetch('https://edg5000.com/users/preferences', {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ allergies: selectedFilters }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        Alert.alert('Opgeslagen', 'Je filterinstellingen zijn opgeslagen.');
+        router.replace('/account?filtersSaved=true');
+      } else {
+        console.error('Fout bij opslaan filters:', data);
+        Alert.alert('Fout', 'Kon filters niet opslaan.');
+      }
     } catch (error) {
-      console.log('Error saving filters:', error);
+      console.log('Netwerkfout:', error);
+      Alert.alert('Netwerkfout', 'Kon geen verbinding maken met de server.');
     }
   };
 
@@ -41,7 +80,10 @@ export default function FiltersPage() {
   return (
     <SafeAreaView style={styles.container}>
       <Text style={styles.header}>Receptfilters</Text>
-      <Text style={styles.subheader}>Selecteer de allergieën of voorkeuren waarop je wilt filteren: (deze recepten komen dan bovenaan te staan bij de suggesties voor uw recepten.)</Text>
+      <Text style={styles.subheader}>
+        Selecteer de allergieën of voorkeuren waarop je wilt filteren:
+        (deze recepten komen dan bovenaan te staan bij de suggesties voor uw recepten.)
+      </Text>
 
       <View style={styles.filterRow}>
         <Text style={styles.label}>Glutenallergie</Text>

@@ -16,12 +16,12 @@ export default function AccountDetailsPage({ }) {
 
     const handleSaveChanges = () => {
         Alert.alert('Opgeslagen', 'Je accountgegevens zijn bijgewerkt.');
-        router.push('/account'); // Terug naar de accountpagina
+        router.push('/account'); 
     };
 
     return (
-        <SafeAreaView style={styles.container}> {/* SafeAreaView gewikkeld om de View */}
-            <View style={styles.innerContainer}> {/* Binnen de SafeAreaView */}
+        <SafeAreaView style={styles.container}> 
+            <View style={styles.innerContainer}> 
                 <Text style={styles.title}>Accountgegevens</Text>
                 
                 <Text style={styles.label}>Gebruikersnaam</Text>
