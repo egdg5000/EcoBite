@@ -1,3 +1,5 @@
+const express = require('express');
+const router = express.Router();
 const db = require('../database');
 
 // Vind recepten die overeenkomen met opgegeven ingrediënten
@@ -12,6 +14,5 @@ async function findRecipesByIngredients(ingredients) {
   return rows;
 }
 
-module.exports = {
-  findRecipesByIngredients,
-};
+
+module.exports = router;

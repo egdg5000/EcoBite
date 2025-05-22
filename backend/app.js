@@ -6,9 +6,6 @@ const port = 3000;
 const dotenv = require('dotenv').config();
 const MySQLStore = require('express-mysql-session')(session);
 const helmet = require('helmet');
-const recipeRoutes = require('./routes/recipes');
-const aiRoutes = require('./routes/ai');
-const gamificationRoutes = require('./routes/gamification'); // ✅ TOEGEVOEGD
 const sendPushNotification = require('./utils/push');
 const axios = require("axios");
 
@@ -59,14 +56,14 @@ sessionStore.onReady().then(() => {
 
 app.use(express.static(__dirname + '/public'));
 
-// ✅ ROUTES
+// Routes
 app.use("/users", require('./routes/users.js'));
 app.use("/", require('./routes/index.js'));
 app.use("/products", require('./routes/products.js'));
 app.use("/scan", require('./routes/scan.js'));
-app.use('/recipes', recipeRoutes);
-app.use('/ai', aiRoutes);
-app.use('/gamification', gamificationRoutes); // ✅ HIER TOEGEVOEGD
+app.use('/recipes', require('./routes/recipes'));
+app.use('/ai', require('./routes/ai'));
+app.use('/gamification', require('./routes/gamification'));
 
 // CRON - automatische opschoning en notificaties
 const cron = require("node-cron");
