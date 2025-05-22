@@ -35,18 +35,26 @@ export default function DiscoverScreen() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
+  const [userAllergies, setUserAllergies] = useState<string[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
-      const storedFilters = await AsyncStorage.getItem('recipeFilters');
-      if (storedFilters) setFilters(JSON.parse(storedFilters));
+      try {
+        // Allergieën ophalen van backend
+        const allergyRes = await fetch('https://edg5000.com/users/preferences', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const allergyData = await allergyRes.json();
+        if (allergyRes.ok && Array.isArray(allergyData.allergies)) {
+          setUserAllergies(allergyData.allergies);
+        }
 
-      const storedIngredients = await AsyncStorage.getItem('selectedIngredients');
-      if (storedIngredients) {
-        const parsed = JSON.parse(storedIngredients);
-        setIngredients(parsed);
+        const storedIngredients = await AsyncStorage.getItem('selectedIngredients');
+        if (storedIngredients) {
+          const parsed = JSON.parse(storedIngredients);
+          setIngredients(parsed);
 
-        try {
           const response = await fetch('https://edg5000.com/recipes/from-ingredients', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -55,14 +63,25 @@ export default function DiscoverScreen() {
 
           const data = await response.json();
           if (data.recipes) setRecipes(data.recipes);
-        } catch (err) {
-          console.error('Fout bij ophalen recepten:', err);
         }
+      } catch (err) {
+        console.error('Fout bij ophalen recepten of allergieën:', err);
       }
     };
 
     loadData();
   }, []);
+
+  const filterRecipesByAllergies = (recipeList: Recipe[]): Recipe[] => {
+    if (!userAllergies.length) return recipeList;
+
+    return recipeList.filter(recipe => {
+      const description = recipe.description?.toLowerCase() || '';
+      return !userAllergies.some(allergen =>
+        description.includes(allergen.toLowerCase())
+      );
+    });
+  };
 
   const handleAISuggestions = async () => {
     setLoadingAi(true);
@@ -154,10 +173,10 @@ export default function DiscoverScreen() {
       />
 
       <Text style={styles.subheader}>Op basis van je voorraad</Text>
-      {recipes.length === 0 ? (
-        <Text style={styles.noData}>Geen recepten gevonden.</Text>
+      {filterRecipesByAllergies(recipes).length === 0 ? (
+        <Text style={styles.noData}>Geen recepten gevonden die passen bij je allergieën.</Text>
       ) : (
-        recipes.map((recipe) => (
+        filterRecipesByAllergies(recipes).map((recipe) => (
           <TouchableOpacity
             key={recipe.id}
             style={styles.recipeCard}
