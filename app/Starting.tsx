@@ -7,6 +7,8 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
@@ -56,36 +58,25 @@ const EcoBiteScreen = () => {
           </Text>
         </View>
 
-        <TextInput
-          style={[styles.input, emailError ? styles.inputError : null]}
-          placeholder="Voer uw e-mailadres in"
-          placeholderTextColor="#777"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-
-        <TouchableOpacity style={styles.startButton} onPress={handleContinue}>
-          <Text style={styles.startButtonText}>Doorgaan</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.googleButton}>
-          <Image
-            source={require('../assets/images/icons8-google-50.png')}
-            style={styles.socialLogo}
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+          style={styles.formContainer}
+        >
+          <TextInput
+            style={[styles.input, emailError ? styles.inputError : null]}
+            placeholder="Voer uw e-mailadres in"
+            placeholderTextColor="#777"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
           />
-          <Text style={styles.googleButtonText}>Registreren met Google</Text>
-        </TouchableOpacity>
+          {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-        <TouchableOpacity style={styles.facebookButton}>
-          <Image
-            source={require('../assets/images/icons8-facebook-50.png')}
-            style={styles.socialLogo}
-          />
-          <Text style={styles.facebookButtonText}>Registreren met Facebook</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.startButton} onPress={handleContinue}>
+            <Text style={styles.startButtonText}>Doorgaan</Text>
+          </TouchableOpacity>
+        </KeyboardAvoidingView>
 
         <View style={styles.footer}>
           <Text style={styles.footerText}>Heeft u al een account? </Text>
@@ -110,46 +101,42 @@ const styles = StyleSheet.create({
   backgroundImage: {
     position: 'absolute',
     width: '100%',
-    height: '80%',
-    top: '-9%',
-  },
-  textContainer: {
-    backgroundColor: '#FFF',
-    borderRadius: 8,
-    marginBottom: 10,
-    width: '95%',
-    alignSelf: 'center',
-    padding: 20,
+    height: '65%',
+    top: 0,
   },
   overlay: {
     flex: 1,
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingBottom: 30,
+    marginTop: '65%',
+  },
+  textContainer: {
+    alignItems: 'center',
+    marginBottom: 10,
+    marginTop: 90,
   },
   subtitle: {
     fontSize: 18,
     fontWeight: '600',
-    textAlign: 'center',
     fontFamily: 'ABeeZee-Regular',
-    marginBottom: 5,
+    marginBottom: 0,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: '600',
-    textAlign: 'center',
     fontFamily: 'ABeeZee-Regular',
-    marginBottom: 20,
   },
   ecoText: {
     color: '#137D3B',
     fontWeight: 'bold',
-    fontFamily: 'ABeeZee-Regular',
   },
   biteText: {
     color: '#2DBE60',
     fontWeight: 'bold',
-    fontFamily: 'ABeeZee-Regular',
+  },
+  formContainer: {
+    marginTop: 20,
   },
   input: {
     backgroundColor: '#F5F5F5',
@@ -157,9 +144,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 8,
     fontSize: 16,
-    marginBottom: 10,
     borderWidth: 1,
     borderColor: '#ccc',
+    marginBottom: 10,
   },
   inputError: {
     borderColor: 'red',
@@ -175,7 +162,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     borderRadius: 8,
     alignItems: 'center',
-    marginBottom: 50,
   },
   startButtonText: {
     color: '#FFF',
@@ -183,46 +169,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: 'ABeeZee-Regular',
   },
-  googleButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    paddingVertical: 15,
-    borderRadius: 8,
-    justifyContent: 'center',
-    marginBottom: 15,
-  },
-  googleButtonText: {
-    color: '#000',
-    fontSize: 16,
-    marginLeft: 10,
-    fontFamily: 'ABeeZee-Regular',
-  },
-  facebookButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#4267B2',
-    paddingVertical: 15,
-    borderRadius: 8,
-    justifyContent: 'center',
-  },
-  facebookButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    marginLeft: 10,
-    fontFamily: 'ABeeZee-Regular',
-  },
-  socialLogo: {
-    width: 20,
-    height: 20,
-    resizeMode: 'contain',
-  },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20,
+    marginTop: 25,
   },
   footerText: {
     fontSize: 14,
