@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, SafeAreaView, Image, Alert } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Button, ListItem } from '@rneui/themed';
@@ -22,8 +22,39 @@ const SetupScreen = () => {
     setAllergies(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // 🟡 Ophalen bestaande allergieën bij laden
+  useEffect(() => {
+    const loadAllergies = async () => {
+      try {
+        const res = await fetch('https://edg5000.com/users/preferences', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await res.json();
+        if (res.ok && Array.isArray(data.allergies)) {
+          const newAllergies = {
+            gluten: false,
+            noten: false,
+            pinda: false,
+            lactose: false,
+          };
+          data.allergies.forEach((key: keyof typeof newAllergies) => {
+            if (newAllergies.hasOwnProperty(key)) {
+              newAllergies[key] = true;
+            }
+          });
+          setAllergies(newAllergies);
+        }
+      } catch (error) {
+        console.error('Fout bij ophalen allergieën:', error);
+      }
+    };
+
+    loadAllergies();
+  }, []);
+
+  // ✅ Versturen naar back-end
   const savePreferencesToBackend = async () => {
-    // Zet om naar array van geselecteerde allergieën
     const selectedAllergies = Object.entries(allergies)
       .filter(([_, value]) => value)
       .map(([key]) => key);

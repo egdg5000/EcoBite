@@ -114,5 +114,26 @@ router.put('/preferences', async (req, res) => {
   }
 });
 
+router.get('/preferences', async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: 'Niet ingelogd' });
+  }
+
+  const userId = req.session.user.id;
+
+  try {
+    const [rows] = await db.query('SELECT allergies FROM user_profiles WHERE user_id = ?', [userId]);
+
+    if (rows.length === 0) {
+      return res.json({ allergies: [] });
+    }
+
+    const allergies = JSON.parse(rows[0].allergies || '[]');
+    res.json({ allergies });
+  } catch (error) {
+    console.error('Fout bij ophalen voorkeuren:', error);
+    res.status(500).json({ message: 'Serverfout' });
+  }
+});
 
 module.exports = router;
