@@ -1,11 +1,10 @@
 require('dotenv').config(); // Zorg dat je dit hebt als eerste regel
 
-const { Configuration, OpenAIApi } = require('openai');
+const OpenAI = require('openai');
 
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 async function getAISuggestions(ingredients) {
   const ingredientNames = ingredients.map(i => i.name).join(', ');
