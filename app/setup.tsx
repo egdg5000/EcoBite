@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, SafeAreaView, Image } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, Image, Alert } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Button, ListItem } from '@rneui/themed';
 import { useRouter } from "expo-router";
@@ -20,6 +20,34 @@ const SetupScreen = () => {
 
   const toggleAllergy = (key: keyof typeof allergies) => {
     setAllergies(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const savePreferencesToBackend = async () => {
+    // Zet om naar array van geselecteerde allergieën
+    const selectedAllergies = Object.entries(allergies)
+      .filter(([_, value]) => value)
+      .map(([key]) => key);
+
+    try {
+      const res = await fetch('https://edg5000.com/users/preferences', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ allergies: selectedAllergies }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error('Fout bij opslaan voorkeuren:', data);
+        Alert.alert('Fout', 'Er is iets misgegaan bij het opslaan van je voorkeuren.');
+      } else {
+        router.push('/home');
+      }
+    } catch (error) {
+      console.error('Netwerkfout:', error);
+      Alert.alert('Netwerkfout', 'Kon geen verbinding maken met de server.');
+    }
   };
 
   return (
@@ -77,7 +105,7 @@ const SetupScreen = () => {
           <Button
             buttonStyle={styles.button}
             title="Verder"
-            onPress={() => router.push('/home')}
+            onPress={savePreferencesToBackend}
           />
           <Button
             buttonStyle={[styles.button, styles.skipButton]}
