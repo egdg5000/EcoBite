@@ -79,4 +79,13 @@ router.post("/preferences", async (req, res) => {
   }
 });
 
+router.get('/profile', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ message: 'Niet ingelogd' });
+
+  const [rows] = await db.query('SELECT username, email FROM users WHERE id = ?', [req.session.user.id]);
+  if (rows.length === 0) return res.status(404).json({ message: 'Gebruiker niet gevonden' });
+
+  res.json(rows[0]);
+});
+
 module.exports = router;

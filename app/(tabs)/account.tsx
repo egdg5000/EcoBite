@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Modal } from 'react-native';
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -9,38 +9,41 @@ export default function AccountPage() {
     'ABeeZee': require('../../assets/fonts/ABeeZee.ttf'),
   });
 
-  const [userData] = useState({
-    username: 'Placeholder',
-    email: 'placeholder@example.com',
-  });
-
+  const [userData, setUserData] = useState<{ username: string; email: string } | null>(null);
   const [logoutModalVisible, setLogoutModalVisible] = useState(false);
 
   const router = useRouter();
 
-  const handleFiltersPress = () => {
-    router.push('/filters');
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await fetch('https://edg5000.com/users/profile', {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        const data = await res.json();
+        if (res.ok) {
+          setUserData(data);
+        } else {
+          console.error('Fout bij ophalen gebruiker:', data);
+        }
+      } catch (error) {
+        console.error('Fout bij ophalen gebruiker:', error);
+      }
+    };
 
-  const handleDetailsPress = () => {
-    router.push('/details');
-  };
+    fetchUserData();
+  }, []);
 
-  const handleNotificationsPress = () => {
-    router.push('/notifications');
-  };
-
-  const handleHelpPress = () => {
-    router.push('/help');
-  };
-
-  const handleAboutPress = () => {
-    router.push('/about_app');
-  };
-
-  const handleLogout = () => {
-    setLogoutModalVisible(true);
-  };
+  const handleFiltersPress = () => router.push('/filters');
+  const handleDetailsPress = () => router.push('/details');
+  const handleNotificationsPress = () => router.push('/notifications');
+  const handleHelpPress = () => router.push('/help');
+  const handleAboutPress = () => router.push('/about_app');
+  const handleLogout = () => setLogoutModalVisible(true);
 
   const confirmLogout = () => {
     fetch('https://edg5000.com/users/logout', {
@@ -52,7 +55,7 @@ export default function AccountPage() {
     }).then(() => {
       setLogoutModalVisible(false);
       router.push('/');
-    })
+    });
   };
 
   return (
@@ -61,8 +64,8 @@ export default function AccountPage() {
         <ScrollView style={styles.container}>
           <View style={styles.userInfo}>
             <View style={styles.userText}>
-              <Text style={styles.userInfoText}>Gebruikersnaam: {userData.username}</Text>
-              <Text style={styles.userInfoText}>Email: {userData.email}</Text>
+              <Text style={styles.userInfoText}>Gebruikersnaam: {userData?.username || '...'}</Text>
+              <Text style={styles.userInfoText}>Email: {userData?.email || '...'}</Text>
             </View>
           </View>
 
@@ -121,7 +124,6 @@ export default function AccountPage() {
             <Text style={styles.categoryTitle}>Juridische Informatie</Text>
           </View>
 
-
           <View style={styles.buttonContainer}>
             <TouchableOpacity style={styles.button} onPress={() => router.push('/privacy_policy')}>
               <Text style={styles.buttonText}>Privacybeleid</Text>
@@ -139,10 +141,8 @@ export default function AccountPage() {
             <Ionicons name="log-out" size={24} color="#D32F2F" />
             <Text style={styles.logoutText}>Uitloggen</Text>
           </TouchableOpacity>
-          
         </ScrollView>
       </SafeAreaView>
-      
 
       <Modal
         transparent={true}
@@ -180,7 +180,6 @@ const styles = StyleSheet.create({
   separator: { height: 1, backgroundColor: '#ddd', marginVertical: 10 },
   logoutButton: { flexDirection: 'row', alignItems: 'center', padding: 15, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#D32F2F', marginTop: 30 },
   logoutText: { fontSize: 16, color: '#D32F2F', marginLeft: 10, fontFamily: 'ABeeZee' },
-
   categoryContainer: { marginTop: 30 },
   categoryTitle: {
     fontSize: 20,
@@ -188,7 +187,6 @@ const styles = StyleSheet.create({
     color: '#28a745',
     fontFamily: 'ABeeZee'
   },
-
   donateContainer: {
     marginTop: 30,
     marginBottom: 30,
@@ -214,7 +212,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'ABeeZee',
   },
-
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -280,5 +277,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-  },  
+  },
 });
