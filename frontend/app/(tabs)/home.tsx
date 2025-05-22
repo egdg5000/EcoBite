@@ -68,7 +68,7 @@ const HomeScreen = () => {
       //   const data = await res.json();
       //   setLeaderboard(data);
       // } catch (err) {
-        console.error('Fout bij leaderboard ophalen:', err);
+        console.error('Fout bij leaderboard ophalen:');
       //}
     };
 
