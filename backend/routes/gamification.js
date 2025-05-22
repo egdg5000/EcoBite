@@ -4,7 +4,7 @@ const { getProgress, addXpForRecipe } = require('../functions/gamificationdb');
 const db = require('../database');
 
 // Haal gamification-gegevens van gebruiker op
-router.get('/:userId', async (req, res) => {
+router.get('/profile', async (req, res) => {
   const { userId } = req.params;
   try {
     const progress = await getProgress(userId);
@@ -28,6 +28,7 @@ router.post('/add-xp', async (req, res) => {
 });
 
 router.get('/leaderboard', async (req, res) => {
+  res.status(200).json({success: true, data: []});
   try {
     const [rows] = await db.query(`
       SELECT users.username, g.xp
