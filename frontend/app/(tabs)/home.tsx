@@ -63,13 +63,13 @@ const HomeScreen = () => {
     };
 
     const fetchLeaderboard = async () => {
-      try {
-        const res = await fetch('https://edg5000.com/gamification/leaderboard');
-        const data = await res.json();
-        setLeaderboard(data);
-      } catch (err) {
+      // try {
+      //   const res = await fetch('https://edg5000.com/gamification/leaderboard');
+      //   const data = await res.json();
+      //   setLeaderboard(data);
+      // } catch (err) {
         console.error('Fout bij leaderboard ophalen:', err);
-      }
+      //}
     };
 
     fetchProgress();
