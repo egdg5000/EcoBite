@@ -82,10 +82,26 @@ router.post("/preferences", async (req, res) => {
 router.get('/profile', async (req, res) => {
   if (!req.session.user) return res.status(401).json({ message: 'Niet ingelogd' });
 
-  const [rows] = await db.query('SELECT username, email FROM users WHERE id = ?', [req.session.user.id]);
+  const [rows] = await db.query('SELECT username, email, phone FROM users WHERE id = ?', [req.session.user.id]);
   if (rows.length === 0) return res.status(404).json({ message: 'Gebruiker niet gevonden' });
 
   res.json(rows[0]);
+});
+
+router.put('/profile', async (req, res) => {
+  if (!req.session.user) return res.status(401).json({ message: 'Niet ingelogd' });
+
+  const { username, email, phone } = req.body;
+  try {
+    await db.query(
+      'UPDATE users SET username = ?, email = ?, phone = ? WHERE id = ?',
+      [username, email, phone, req.session.user.id]
+    );
+    res.json({ message: 'Account bijgewerkt' });
+  } catch (err) {
+    console.error('Fout bij updaten profiel:', err);
+    res.status(500).json({ message: 'Serverfout' });
+  }
 });
 
 // PUT /users/preferences
