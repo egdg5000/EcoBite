@@ -21,7 +21,7 @@ const DonateScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             {/* Sluitknop */}
-            <TouchableOpacity style={styles.closeButton} onPress={() => router.push("/home")}>
+            <TouchableOpacity style={styles.closeButton} onPress={() => router.back()}>
                 <Text style={styles.closeText}>×</Text>
             </TouchableOpacity>
 
