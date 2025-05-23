@@ -89,18 +89,36 @@ router.get('/profile', async (req, res) => {
 });
 
 router.put('/profile', async (req, res) => {
-  if (!req.session.user) return res.status(401).json({ message: 'Niet ingelogd' });
+  const userId = req.session?.userId;
+  if (!userId) {
+    return res.status(401).json({ message: 'Niet ingelogd' });
+  }
 
   const { username, email, phone } = req.body;
+
+  if (!username || !email) {
+    return res.status(400).json({ message: 'Gebruikersnaam en e-mailadres zijn verplicht.' });
+  }
+
   try {
+    const [existing] = await db.query(
+      'SELECT id FROM users WHERE email = ? AND id != ?',
+      [email, userId]
+    );
+
+    if (existing.length > 0) {
+      return res.status(409).json({ message: 'Email bestaat al' });
+    }
+
     await db.query(
       'UPDATE users SET username = ?, email = ?, phone = ? WHERE id = ?',
-      [username, email, phone, req.session.user.id]
+      [username, email, phone || null, userId]
     );
-    res.json({ message: 'Account bijgewerkt' });
+
+    return res.json({ message: 'Account bijgewerkt' });
   } catch (err) {
-    console.error('Fout bij updaten profiel:', err);
-    res.status(500).json({ message: 'Serverfout' });
+    console.error('Fout bij bijwerken profiel:', err);
+    return res.status(500).json({ message: 'Serverfout' });
   }
 });
 

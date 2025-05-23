@@ -15,7 +15,13 @@ export default function AccountDetailsPage() {
     phone: '',
   });
 
-  // 📥 Ophalen gebruikersdata bij laden
+  // ✅ Valideer e-mailformaat
+  const isValidEmail = (email: string) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  // 📥 Ophalen gebruikersgegevens
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -41,8 +47,13 @@ export default function AccountDetailsPage() {
     fetchUserData();
   }, []);
 
-  // 💾 Opslaan in back-end
+  // 💾 Opslaan gebruikersgegevens
   const handleSaveChanges = async () => {
+    if (!isValidEmail(userData.email)) {
+      Alert.alert('Ongeldig e-mailadres', 'Voer een geldig e-mailadres in.');
+      return;
+    }
+
     try {
       const res = await fetch('https://edg5000.com/users/profile', {
         method: 'PUT',
@@ -55,6 +66,8 @@ export default function AccountDetailsPage() {
       if (res.ok) {
         Alert.alert('Opgeslagen', 'Je accountgegevens zijn bijgewerkt.');
         router.push('/account');
+      } else if (res.status === 409) {
+        Alert.alert('Email bestaat al', 'Dit e-mailadres is al in gebruik.');
       } else {
         Alert.alert('Fout', 'Kon gegevens niet opslaan.');
         console.error(data);
