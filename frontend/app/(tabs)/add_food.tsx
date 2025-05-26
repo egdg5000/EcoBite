@@ -14,6 +14,12 @@ import { useFonts } from "expo-font";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import { useRouter } from "expo-router";
+import Toast from "react-native-toast-message";
+
+
+const router = useRouter();
+
 
 const AddFoodPage = () => {
   const [name, setName] = useState("");
@@ -87,12 +93,13 @@ const AddFoodPage = () => {
 
       const result = await response.json();
       if (result.success) {
-        Alert.alert("Succes!", "Product is toegevoegd.");
-        setName("");
-        setQuantity("");
-        setUnit("");
-        setExpiry("");
-        setCategory("");
+        Toast.show({
+          type: 'success',
+          text1: 'Toegevoegd!',
+          text2: `${name} is toegevoegd aan je voorraad.`,
+        });
+
+        router.replace("/fridge");
       } else {
         Alert.alert("Fout", "Toevoegen mislukt.");
       }
