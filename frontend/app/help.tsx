@@ -27,7 +27,7 @@ export default function HelpPage() {
                     
                     <TouchableOpacity style={styles.question}>
                         <Text style={styles.questionText}>🔍 Hoe scan ik een barcode?</Text>
-                        <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan Barcode' wanneer u op de groene + knop drukt. Geef wanneer nodig toestemming voor het gebruiken van de camera en richt uw camera op de barcode of het product. Zorg ervoor dat de barcode of product duidelijk in beeld is. Als het product successvol is gescand wordt het automatisch toegevoegd aan uw voorraad.</Text>
+                        <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan Producten' wanneer u op de groene + knop drukt. Geef wanneer nodig toestemming voor het gebruiken van de camera en richt uw camera op de barcode of het product. Zorg ervoor dat de barcode of product duidelijk in beeld is. Als het product successvol is gescand wordt het automatisch toegevoegd aan uw voorraad.</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.question}>
