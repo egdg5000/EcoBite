@@ -46,7 +46,6 @@ router.post("/save-push-token", async (req, res) => {
   }
 });
 
-// 🔁 Haal meldingsvoorkeuren op
 router.get("/preferences/:userId", async (req, res) => {
   const userId = req.params.userId;
 
