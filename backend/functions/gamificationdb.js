@@ -1,7 +1,7 @@
 const db = require('../database');
 
 function getXpForNextLevel(level) {
-  return 100 + (level - 1) * 50; // Lineaire groei
+  return 100 + (level - 1) * 50; 
 }
 
 async function getProgress(userId) {
@@ -49,11 +49,11 @@ async function addXpForRecipe(userId, earnedXp) {
   if (!lastActivity) {
     streak = 1;
   } else if (lastActivity.toISOString().split('T')[0] === yesterdayStr) {
-    streak += 1; // ✅ doorgaan met streak
+    streak += 1; 
   } else if (lastActivity.toISOString().split('T')[0] === todayStr) {
-    // niets doen, al bijgewerkt vandaag
+
   } else {
-    streak = 1; // 🔁 reset streak
+    streak = 1; 
   }
 
   xp += earnedXp;
