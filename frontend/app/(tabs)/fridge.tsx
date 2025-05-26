@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
   Text,
@@ -7,7 +7,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  RefreshControl,
 } from "react-native";
+import { useFocusEffect } from '@react-navigation/native';
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
@@ -22,40 +24,56 @@ interface Product {
   category: string;
 }
 
+const fetchProducts = async (): Promise<{ products: Product[], expiringSoon: Product[] }> => {
+  try {
+    const response = await fetch("https://edg5000.com/products/inventory", {
+      credentials: "include",
+    });
+    const data = await response.json();
+    // Filter products that expire in 1 or 7 days
+    const today = new Date();
+    const expiringSoon = data.products.filter((product: Product) => {
+      const expiry = new Date(product.expiration_date);
+      const diffDays = Math.ceil(
+        (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      return diffDays === 7 || diffDays === 1;
+    });
+
+    return {
+      products: data.products,
+      expiringSoon
+    };
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    return { products: [], expiringSoon: [] };
+  }
+};
+
 export default function FridgePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [favorites, setFavorites] = useState<number[]>([]);
   const [activeTab, setActiveTab] = useState<"all" | "favorites">("all");
   const [expiringSoon, setExpiringSoon] = useState<Product[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
 
+  
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
   });
 
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch("https://edg5000.com/products/inventory", {
-          credentials: "include",
-        });
-        const data = await response.json();
-        setProducts(data.products);
-
-      // 🔔 Filter producten die over 1 of 7 dagen verlopen
-      const today = new Date();
-      const soon = data.products.filter((product: Product) => {
-        const expiry = new Date(product.expiration_date);
-        const diffDays = Math.ceil(
-          (expiry.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
-        );
-        return diffDays === 7 || diffDays === 1;
-      });
-
-      setExpiringSoon(soon);
-    } catch (error) {
-      console.error("Fout bij ophalen producten:", error);
-    }
+  const fetchAll = async () => {
+    const { products, expiringSoon } = await fetchProducts();
+    setProducts(products);
+    setExpiringSoon(expiringSoon)
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchAll();
+    }, [])
+  );
 
   useEffect(() => {
     const fetchDeleted = async () => {
@@ -76,9 +94,7 @@ export default function FridgePage() {
         console.error("Fout bij ophalen verwijderde producten:", err);
       }
     };
-
-    fetchProducts();
-    fetchDeleted();
+    
   }, []);
 
   const toggleFavorite = (id: number) => {
@@ -98,6 +114,14 @@ export default function FridgePage() {
     } catch (err) {
       console.error("Verwijderen mislukt:", err);
     }
+  };
+  
+  const onRefresh = async () => {
+    setRefreshing(true);
+    const { products, expiringSoon } = await fetchProducts();
+    setProducts(products);
+    setExpiringSoon(expiringSoon);
+    setRefreshing(false);
   };
 
   const filteredProducts =
@@ -176,6 +200,7 @@ export default function FridgePage() {
         <Text style={styles.empty}>Geen producten gevonden</Text>
       ) : (
         <FlatList
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           data={filteredProducts}
           keyExtractor={(item) => item.id.toString()}
           contentContainerStyle={{ paddingBottom: 30 }}

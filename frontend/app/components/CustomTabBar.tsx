@@ -89,6 +89,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
     if (route.name === 'fridge') iconName = 'fast-food';
 
     const onPress = () => {
+      setMenuOpen(false);
       const event = navigation.emit({
         type: 'tabPress',
         target: route.key,
