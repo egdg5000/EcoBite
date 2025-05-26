@@ -82,10 +82,44 @@ router.post("/preferences", async (req, res) => {
 router.get('/profile', async (req, res) => {
   if (!req.session.user) return res.status(401).json({ message: 'Niet ingelogd' });
 
-  const [rows] = await db.query('SELECT username, email FROM users WHERE id = ?', [req.session.user.id]);
+  const [rows] = await db.query('SELECT username, email, phone FROM users WHERE id = ?', [req.session.user.id]);
   if (rows.length === 0) return res.status(404).json({ message: 'Gebruiker niet gevonden' });
 
   res.json(rows[0]);
+});
+
+router.put('/profile', async (req, res) => {
+  const userId = req.session?.userId;
+  if (!userId) {
+    return res.status(401).json({ message: 'Niet ingelogd' });
+  }
+
+  const { username, email, phone } = req.body;
+
+  if (!username || !email) {
+    return res.status(400).json({ message: 'Gebruikersnaam en e-mailadres zijn verplicht.' });
+  }
+
+  try {
+    const [existing] = await db.query(
+      'SELECT id FROM users WHERE email = ? AND id != ?',
+      [email, userId]
+    );
+
+    if (existing.length > 0) {
+      return res.status(409).json({ message: 'Email bestaat al' });
+    }
+
+    await db.query(
+      'UPDATE users SET username = ?, email = ?, phone = ? WHERE id = ?',
+      [username, email, phone || null, userId]
+    );
+
+    return res.json({ message: 'Account bijgewerkt' });
+  } catch (err) {
+    console.error('Fout bij bijwerken profiel:', err);
+    return res.status(500).json({ message: 'Serverfout' });
+  }
 });
 
 // PUT /users/preferences
