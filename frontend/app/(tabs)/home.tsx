@@ -11,6 +11,7 @@ import { useFonts } from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import weetjesData from '../../assets/data/weetjes.json';
+import { Alert } from 'react-native';
 
 interface LeaderboardEntry {
   username: string;
@@ -54,7 +55,19 @@ const HomeScreen = () => {
         const data = await response.json();
         setXp(data.xp || 0);
         setLevel(data.level || 1);
-        setCo2Reduction(parseFloat(data.co2_saved) || 0);
+        const currentCO2 = parseFloat(data.co2_saved) || 0;
+        setCo2Reduction(currentCO2);
+
+        const previousCO2 = parseFloat(await AsyncStorage.getItem('previousCo2') || '0');
+
+        if (previousCO2 && currentCO2 < previousCO2) {
+          Alert.alert(
+            "🌳 Je boom is verzwakt",
+            `Je CO₂-reductie is gedaald van ${previousCO2}% naar ${currentCO2}%. Kom vandaag in actie om het te herstellen!`
+          );
+        }
+
+        await AsyncStorage.setItem('previousCo2', currentCO2.toString());
         setXpForNextLevel(data.xp_for_next_level || 100);
         setStreakDays(data.streak_days || 0);
       } catch (err) {
