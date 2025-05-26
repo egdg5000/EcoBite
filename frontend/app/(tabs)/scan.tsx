@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, TouchableOpacity, SafeAreaView } from "react-na
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
 import { useFonts } from "expo-font";
+import Toast from "react-native-toast-message";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ScanScreen = () => {
   const [scanned, setScanned] = useState(false);
@@ -57,27 +59,59 @@ const ScanScreen = () => {
 
   const takePicture = async () => {
     if (!camera.current) return;
+
     try {
-        const options = { quality: 0.5, base64: true };
-        const data = await camera.current.takePictureAsync(options);
-        console.log(data.uri);
-        const body = JSON.stringify({
-          image: data
-        })
-        const response = await fetch('http://localhost:3000/scan/detect', {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body
+      const options = { quality: 0.5, base64: true };
+      const data = await camera.current.takePictureAsync(options);
+
+      const response = await fetch("https://edg5000.com/scan/detect", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ image: data }),
+      });
+
+      const responseData = await response.json();
+      console.log(responseData, "<<<<<< BACKEND RESPONSE");
+
+      if (responseData.success && responseData.productName) {
+        const userId = await AsyncStorage.getItem("userId");
+
+        const product = {
+          item_name: responseData.productName,
+          quantity: 1,
+          unit: "stuk(s)",
+          expiration_date: null,
+          category: "onbekend",
+          user_id: userId,
+        };
+
+        await fetch("https://edg5000.com/products/add", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(product),
         });
-        const responseData = await response.json();
-        console.log(responseData, '<<<<<<<<<<<<<<<<<<<<<');
+
+        Toast.show({
+          type: "success",
+          text1: "Product toegevoegd!",
+          text2: `${responseData.productName} staat nu in je voorraad.`,
+        });
+
+        router.replace("/fridge");
+      } else {
+        setScanError(true);
+        setScannedData("Geen product herkend");
+      }
     } catch (error) {
-        console.log(error, "ERROR <<<<<<<<<<<<<")
+      console.error("Scanfout:", error);
+      setScanError(true);
+      setScannedData("Fout bij verwerken.");
     }
-};
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -94,12 +128,11 @@ const ScanScreen = () => {
           }}
           onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
           style={StyleSheet.absoluteFillObject}
-        >
-        </CameraView>
+        />
       </View>
       
       <TouchableOpacity style={styles.cameraButton} onPress={takePicture}>
-          <Text style={styles.text}>Maak een foto</Text>
+        <Text style={styles.text}>Maak een foto</Text>
       </TouchableOpacity>
 
       <View style={styles.infoContainer}>
