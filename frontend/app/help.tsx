@@ -42,7 +42,7 @@ export default function HelpPage() {
 
                     <TouchableOpacity style={styles.question}>
                         <Text style={styles.questionText}>🌳 Hoe krijg ik XP en zorg ik voor een mooiere boom?</Text>
-                        <Text style={styles.answerText}>Wanneer u met behulp van de toegevoegde producten recepten gaat maken krijgt u XP en reduceert u een bepaalde hoeveelheid CO2. U gaat immers producten die u nog over heeft niet verspillen, wat ons doel van deze app is. Hoe de boom eruit ziet hangt af van de hoeveelheid CO2 u heeft bespaard. Hoe meer dit is, hoe beter de boom eruit ziet.</Text>
+                        <Text style={styles.answerText}>Wanneer u met behulp van de toegevoegde producten recepten gaat maken krijgt u XP en reduceert u een bepaalde hoeveelheid CO₂. U gaat immers producten die u nog over heeft niet verspillen, wat ons doel van deze app is. Hoe de boom eruit ziet hangt af van de hoeveelheid CO₂ u heeft bespaard. Hoe meer dit is, hoe beter de boom eruit ziet.</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.question}>
@@ -56,7 +56,6 @@ export default function HelpPage() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Extra ondersteuning */}
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Extra ondersteuning</Text>
                     <Text style={styles.text}>Heeft u nog vragen? Neem contact met ons op via:</Text>
