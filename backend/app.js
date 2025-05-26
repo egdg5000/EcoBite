@@ -9,7 +9,6 @@ const helmet = require('helmet');
 const sendPushNotification = require('./utils/push');
 const axios = require("axios");
 
-// Middleware
 app.use(express.json({ limit: "50mb" }));
 
 app.use(cors({
@@ -27,7 +26,6 @@ app.use(
   })
 );
 
-// Sessions
 const sessionStore = new MySQLStore({
   host: 'localhost',
   port: 3306,
@@ -65,7 +63,6 @@ app.use('/recipes', require('./routes/recipes'));
 app.use('/ai', require('./routes/ai'));
 app.use('/gamification', require('./routes/gamification'));
 
-// CRON - automatische opschoning en notificaties
 const cron = require("node-cron");
 const db = require("./database");
 
@@ -112,7 +109,6 @@ cron.schedule("0 3 * * *", async () => {
   }
 });
 
-// Start server
 app.listen(port, () => {
   console.log(`server listening on port ${port}`);
 });
