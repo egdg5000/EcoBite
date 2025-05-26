@@ -61,7 +61,6 @@ router.get("/preferences/:userId", async (req, res) => {
   }
 });
 
-// ✅ Opslaan van meldingsvoorkeuren
 router.post("/preferences", async (req, res) => {
   const { user_id, notify_expiry, notify_deletion } = req.body;
 
@@ -122,7 +121,6 @@ router.put('/profile', async (req, res) => {
   }
 });
 
-// PUT /users/preferences
 router.put('/preferences', async (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ message: 'Niet ingelogd' });
@@ -132,7 +130,6 @@ router.put('/preferences', async (req, res) => {
   const { allergies } = req.body;
 
   try {
-    // Check of profiel al bestaat
     const [existing] = await db.query('SELECT * FROM user_profiles WHERE user_id = ?', [userId]);
 
     if (existing.length > 0) {

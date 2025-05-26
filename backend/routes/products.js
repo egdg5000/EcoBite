@@ -3,7 +3,6 @@ const router = express.Router();
 const {db} = require("../database");
 const { loginStatus } = require("../functions/userdb");
 
-// ➕ Voeg nieuw product toe
 router.post("/add", loginStatus, async (req, res) => {
   const {item_name, quantity, unit, expiration_date, category } = req.body;
   if (!item_name || !quantity || !unit || !category) {
@@ -31,7 +30,6 @@ router.post("/add", loginStatus, async (req, res) => {
   }
 });
 
-// 📥 Haal alle niet-verlopen producten van gebruiker op
 router.get("/inventory", loginStatus, async (req, res) => {
   const userId = req.session.userId;
   const today = new Date().toISOString().split("T")[0];
@@ -50,12 +48,10 @@ router.get("/inventory", loginStatus, async (req, res) => {
   }
 });
 
-// 🧹 Verwijder verlopen producten & log ze in user_products_deleted
 router.delete("/expired/cleanup", loginStatus, async (_req, res) => {
   const today = new Date().toISOString().split("T")[0];
 
   try {
-    // 1. Haal verlopen producten op
     const [expiredProducts] = await db
       .promise()
       .query("SELECT * FROM user_products WHERE expiration_date < ?", [today]);
@@ -64,7 +60,6 @@ router.delete("/expired/cleanup", loginStatus, async (_req, res) => {
       return res.status(200).json({ success: true, message: "Geen verlopen producten", removed: 0 });
     }
 
-    // 2. Sla ze op in user_products_deleted
     for (const product of expiredProducts) {
       await db.promise().query(
         `INSERT INTO user_products_deleted 
@@ -81,7 +76,6 @@ router.delete("/expired/cleanup", loginStatus, async (_req, res) => {
       );
     }
 
-    // 3. Verwijder ze uit inventory
     const [deleteResult] = await db
       .promise()
       .query("DELETE FROM user_products WHERE expiration_date < ?", [today]);
@@ -93,7 +87,6 @@ router.delete("/expired/cleanup", loginStatus, async (_req, res) => {
   }
 });
 
-// 🗑️ Verwijder handmatig een product
 router.delete("/delete/:productId", loginStatus, async (req, res) => {
   const productId = req.params.productId;
 
@@ -106,7 +99,6 @@ router.delete("/delete/:productId", loginStatus, async (req, res) => {
   }
 });
 
-// 🔍 Haal laatste verwijderde producten op
 router.get("/deleted", loginStatus, async (req, res) => {
   const userId = req.session.userId;
 
