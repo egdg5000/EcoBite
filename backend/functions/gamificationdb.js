@@ -53,9 +53,11 @@ async function addXpForRecipe(userId, earnedXp) {
 
     if (diffDays > 1) {
       streak = 1;
-      const verlies = Math.min(co2_saved, 100); 
-      co2_saved -= verlies;
-      console.log(`Gebruiker ${userId} verloor ${verlies}g CO₂ door inactiviteit.`);
+      const verliesPerDag = 50; 
+      const totaalVerlies = verliesPerDag * (diffDays - 1);
+      const effectiefVerlies = Math.min(co2_saved, totaalVerlies);
+      co2_saved = Math.max(0, co2_saved - effectiefVerlies);
+      console.log(`Gebruiker ${userId} verloor ${effectiefVerlies}g CO₂ na ${diffDays - 1} dagen inactiviteit.`);
     } else if (lastDateStr === yesterdayStr) {
       streak += 1;
     } else if (lastDateStr === todayStr) {
