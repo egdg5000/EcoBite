@@ -36,6 +36,7 @@ export default function DiscoverScreen() {
   const [aiSuggestion, setAiSuggestion] = useState<string | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
   const [userAllergies, setUserAllergies] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     const loadData = async () => {
@@ -71,6 +72,27 @@ export default function DiscoverScreen() {
 
     loadData();
   }, []);
+
+  const handleCategoryPress = async (category: string) => {
+    setSelectedCategory(category);
+
+    try {
+      const response = await fetch('https://edg5000.com/recipes/by-category', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ category }),
+      });
+
+      const data = await response.json();
+      if (data.recipes) {
+        setRecipes(data.recipes);
+      } else {
+        setRecipes([]);
+      }
+    } catch (err) {
+      console.error('Fout bij ophalen recepten per categorie:', err);
+    }
+  };
 
   const filterRecipesByAllergies = (recipeList: Recipe[]): Recipe[] => {
     if (!userAllergies.length) return recipeList;
@@ -163,8 +185,12 @@ export default function DiscoverScreen() {
         scrollEnabled={false}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={[styles.card, { backgroundColor: item.color }]}
-            onPress={() => console.log('Categorie:', item.title)}
+            style={[
+              styles.card,
+              { backgroundColor: item.color },
+              selectedCategory === item.title && styles.activeCard,
+            ]}
+            onPress={() => handleCategoryPress(item.title)}
           >
             <Image source={item.image} style={styles.cardImage} />
             <Text style={styles.cardText}>{item.title}</Text>
@@ -172,7 +198,10 @@ export default function DiscoverScreen() {
         )}
       />
 
-      <Text style={styles.subheader}>Op basis van je voorraad</Text>
+      <Text style={styles.subheader}>
+        {selectedCategory ? `Aanbevolen: ${selectedCategory}` : 'Op basis van je voorraad'}
+      </Text>
+
       {filterRecipesByAllergies(recipes).length === 0 ? (
         <Text style={styles.noData}>Geen recepten gevonden die passen bij je allergieën.</Text>
       ) : (
@@ -233,6 +262,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 160,
+  },
+  activeCard: {
+    borderColor: '#4CAF50',
+    borderWidth: 2,
   },
   cardImage: { width: 60, height: 60, marginBottom: 12, resizeMode: 'contain' },
   cardText: { fontSize: 15, fontFamily: 'ABeeZee' },
