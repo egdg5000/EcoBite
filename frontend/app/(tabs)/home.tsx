@@ -131,14 +131,14 @@ const HomeScreen = () => {
   });
 
   const getCo2BorderColor = (value: number) => {
-    if (value < 50) {
-      return { borderColor: 'red' };
-    } else if (value < 75) {
-      return { borderColor: 'orange' };
-    } else {
-      return { borderColor: 'green' };
-    }
-  };
+  if (value < 50) {
+    return { borderColor: 'rgba(253, 44, 44, 0.5)' }; 
+  } else if (value < 75) {
+    return { borderColor: 'rgba(255, 165, 0, 0.5)' }; 
+  } else {
+    return { borderColor: 'rgba(2, 151, 2, 0.5)' }; 
+  }
+};
 
   const safeXp = Number.isFinite(xp) ? xp : 0;
   const safeXpForNextLevel = xpForNextLevel || 100;
