@@ -130,6 +130,16 @@ const HomeScreen = () => {
     return { backgroundColor: `rgb(${red}, ${green}, ${blue})` };
   });
 
+  const getCo2BorderColor = (value: number) => {
+    if (value < 50) {
+      return { borderColor: 'red' };
+    } else if (value < 75) {
+      return { borderColor: 'orange' };
+    } else {
+      return { borderColor: 'green' };
+    }
+  };
+
   const safeXp = Number.isFinite(xp) ? xp : 0;
   const safeXpForNextLevel = xpForNextLevel || 100;
   const xpProgress = Math.min(safeXp / safeXpForNextLevel, 1);
@@ -169,7 +179,7 @@ const HomeScreen = () => {
           <View style={styles.treeStatContainer}>
             <Text style={styles.co2Label}>Jouw Boom:</Text>
             <Image source={getTreeImage()} style={styles.treeImage} />
-            <View style={styles.co2Box}>
+            <View style={[styles.co2Box, getCo2BorderColor(co2Reduction)]}>
               <Text style={styles.co2Value}>{co2Reduction}%</Text>
               <Text style={styles.co2Label}>CO₂-reductie</Text>
             </View>
@@ -294,38 +304,38 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   factContainer: {
-        marginTop: 10,
-        marginBottom: 20,
-        backgroundColor: 'rgba(255,255,255,0.25)',
-        padding: 16,
-        borderRadius: 15,
-        width: '90%',
-        borderLeftWidth: 5,
-        borderLeftColor: '#66FF66',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.3,
-        shadowRadius: 6,
-        elevation: 6,
-    },
-    factLabel: {
-        color: '#2E8B57',
-        fontWeight: 'bold',
-        fontSize: 18,
-        marginBottom: 10,
-        fontFamily: 'ABeeZee',
-        textTransform: 'uppercase',
-        letterSpacing: 1,
-        textShadowColor: 'rgba(0, 0, 0, 0.4)',
-        textShadowOffset: { width: 1, height: 1 },
-        textShadowRadius: 3,
-    },
-    factText: {
-        color: 'white',
-        fontSize: 16,
-        fontFamily: 'ABeeZee',
-        lineHeight: 22,
-    },
+    marginTop: 10,
+    marginBottom: 20,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    padding: 16,
+    borderRadius: 15,
+    width: '90%',
+    borderLeftWidth: 5,
+    borderLeftColor: '#66FF66',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 6,
+  },
+  factLabel: {
+    color: '#2E8B57',
+    fontWeight: 'bold',
+    fontSize: 18,
+    marginBottom: 10,
+    fontFamily: 'ABeeZee',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
+  },
+  factText: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+    lineHeight: 22,
+  },
   divider: {
     height: 1,
     backgroundColor: 'white',
@@ -344,15 +354,12 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   co2Box: {
-    marginTop: 12,
     backgroundColor: '#ffffff22',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 16,
+    padding: 16,
+    borderRadius: 12,
     alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1.5,
-    borderColor: '#66C466',
+    marginTop: 12,
+    borderWidth: 3, 
   },
   co2Value: {
     fontSize: 22,
