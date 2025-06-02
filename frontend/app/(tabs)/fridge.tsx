@@ -251,6 +251,16 @@ export default function FridgePage() {
       <TouchableOpacity style={styles.recipeButton} onPress={() => router.push('/discover')}>
         <Text style={styles.recipeButtonText}>Ontdek Recepten</Text>
       </TouchableOpacity>
+
+      {products.length > 0 && (
+        <View style={styles.tipsContainer}>
+          <Text style={styles.tipsTitle}>💡 Voedselbewaar Tips</Text>
+          <Text style={styles.tip}>• Vaak is een product nog goed na de houdbaarheidsdatum.</Text>
+          <Text style={styles.tip}>• Ruik, kijk en proef voordat je iets weggooit.</Text>
+          <Text style={styles.tip}>• Bewaar producten koel en droog.</Text>
+          <Text style={styles.tip}>• Gebruik eerst de oudste producten ("First In, First Out").</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -365,5 +375,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 16,
+  },
+    tipsContainer: {
+    backgroundColor: '#e6f4ea',
+    padding: 16,
+    borderRadius: 12,
+    marginHorizontal: 20,
+    marginBottom: 40,
+    borderColor: '#b4dfc4',
+    borderWidth: 1,
+  },
+  tipsTitle: {
+    fontFamily: 'ABeeZee',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2e7d32',
+    marginBottom: 10,
+  },
+  tip: {
+    fontFamily: 'ABeeZee',
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 6,
   },
 });
