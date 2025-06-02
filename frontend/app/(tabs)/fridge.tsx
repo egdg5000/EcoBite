@@ -362,8 +362,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   header: {
-  alignItems: 'center',
-  marginTop: 20,
-  marginBottom: 16,
-},
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 16,
+  },
 });
