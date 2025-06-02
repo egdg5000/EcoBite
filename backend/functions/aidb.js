@@ -6,12 +6,17 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-async function getAISuggestions(ingredients) {
-  const ingredientNames = ingredients.map(i => i.name).join(', ');
+async function getAISuggestions(ingredients, allergies = []) {
+  const ingredientNames = ingredients.map(i => i.name ?? i).join(', ');
+
+  const allergyText = allergies.length > 0
+    ? ` Vermijd ingrediënten die de volgende allergieën bevatten: ${allergies.join(', ')}.`
+    : '';
 
   const prompt = `
 Ik heb de volgende ingrediënten in huis: ${ingredientNames}.
 Bedenk een recept met maximaal 2 extra ingrediënten.
+${allergyText}
 Geef: 
 1. Naam van het gerecht 
 2. Korte omschrijving 

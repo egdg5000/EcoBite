@@ -111,7 +111,10 @@ export default function DiscoverScreen() {
       const response = await fetch('https://edg5000.com/ai/recipe-suggestions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ingredients }),
+         body: JSON.stringify({
+          ingredients,
+          allergies: userAllergies, 
+        }),
       });
 
       const data = await response.json();
