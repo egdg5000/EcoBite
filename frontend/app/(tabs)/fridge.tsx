@@ -138,9 +138,11 @@ export default function FridgePage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Mijn Voorraad</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Mijn Voorraad</Text>
+      </View>
 
-      {/* 🔔 Waarschuwing bijna verlopen */}
+
       {expiringSoon.length > 0 && (
         <View style={styles.alertBox}>
           <Text style={styles.alertTitle}>⏰ Let op!</Text>
@@ -256,7 +258,7 @@ export default function FridgePage() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff", padding: 20 },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontFamily: "ABeeZee",
     fontWeight: "bold",
     color: "#4CAF50",
@@ -359,4 +361,9 @@ const styles = StyleSheet.create({
     fontFamily: 'ABeeZee',
     fontWeight: 'bold',
   },
+  header: {
+  alignItems: 'center',
+  marginTop: 20,
+  marginBottom: 16,
+},
 });
