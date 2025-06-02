@@ -371,6 +371,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontFamily: 'ABeeZee',
+    fontWeight: 'bold',
   },
   xpContainer: {
     width: '100%',
