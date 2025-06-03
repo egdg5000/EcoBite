@@ -11,7 +11,6 @@ export default function FiltersPage() {
     lactose: false,
   });
 
-  // 🔁 Ophalen van bestaande filters vanuit back-end
   useEffect(() => {
     const loadFilters = async () => {
       try {
@@ -43,7 +42,6 @@ export default function FiltersPage() {
     loadFilters();
   }, []);
 
-  // ✅ Opslaan in de back-end
   const saveFilters = async () => {
     const selectedFilters = Object.entries(filters)
       .filter(([_, value]) => value)
@@ -79,30 +77,48 @@ export default function FiltersPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.header}>Receptfilters</Text>
-      <Text style={styles.subheader}>
-        Selecteer de allergieën of voorkeuren waarop je wilt filteren:
-        (deze recepten komen dan bovenaan te staan bij de suggesties voor uw recepten.)
-      </Text>
-
-      <View style={styles.filterRow}>
-        <Text style={styles.label}>Glutenallergie</Text>
-        <Switch value={filters.gluten} onValueChange={() => toggleFilter('gluten')} />
+      <View style={styles.titleContainer}>
+        <Text style={styles.header}>Receptfilters</Text>
+        <Text style={styles.subheader}>
+          Selecteer de allergieën of voorkeuren waarop je wilt filteren:
+          (deze recepten komen dan bovenaan te staan bij de suggesties voor uw recepten.)
+        </Text>
       </View>
 
       <View style={styles.filterRow}>
-        <Text style={styles.label}>Notenallergie</Text>
-        <Switch value={filters.noten} onValueChange={() => toggleFilter('noten')} />
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>Glutenallergie</Text>
+        </View>
+        <View style={styles.switchContainer}>
+          <Switch value={filters.gluten} onValueChange={() => toggleFilter('gluten')} />
+        </View>
       </View>
 
       <View style={styles.filterRow}>
-        <Text style={styles.label}>Pinda-allergie</Text>
-        <Switch value={filters.pinda} onValueChange={() => toggleFilter('pinda')} />
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>Notenallergie</Text>
+        </View>
+        <View style={styles.switchContainer}>
+          <Switch value={filters.noten} onValueChange={() => toggleFilter('noten')} />
+        </View>
       </View>
 
       <View style={styles.filterRow}>
-        <Text style={styles.label}>Lactose-intolerantie</Text>
-        <Switch value={filters.lactose} onValueChange={() => toggleFilter('lactose')} />
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>Pinda-allergie</Text>
+        </View>
+        <View style={styles.switchContainer}>
+          <Switch value={filters.pinda} onValueChange={() => toggleFilter('pinda')} />
+        </View>
+      </View>
+
+      <View style={styles.filterRow}>
+        <View style={styles.labelContainer}>
+          <Text style={styles.label}>Lactose-intolerantie</Text>
+        </View>
+        <View style={styles.switchContainer}>
+          <Switch value={filters.lactose} onValueChange={() => toggleFilter('lactose')} />
+        </View>
       </View>
 
       <TouchableOpacity style={styles.saveButton} onPress={saveFilters}>
@@ -117,26 +133,43 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#fff',
+    alignItems: 'center',
+  },
+  titleContainer: {
+    alignItems: 'center',
+    marginTop: 40,
+    marginBottom: 30,
   },
   header: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 10,
     fontFamily: 'ABeeZee',
+    textAlign: 'center',
+    color: "#4CAF50",
   },
   subheader: {
     fontSize: 16,
     color: '#555',
-    marginBottom: 20,
     fontFamily: 'ABeeZee',
+    textAlign: 'center',
   },
   filterRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
+    width: '100%',
+    maxWidth: 400,
+  },
+  labelContainer: {
+    width: 160,
+    justifyContent: 'center',
+  },
+  switchContainer: {
+    flex: 1,
+    alignItems: 'flex-end',
   },
   label: {
     fontSize: 16,
