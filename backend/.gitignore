@@ -22,4 +22,5 @@ yarn-error.*
 # API key
 apikey.json
 
-app-example
+.vscode
+.cursor
