@@ -140,8 +140,11 @@ export default function FridgePage() {
     <SafeAreaView style={styles.container}>
     <View style={{padding: 20}}>
       <Text style={styles.title}>Mijn Voorraad</Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Mijn Voorraad</Text>
+      </View>
 
-      {/* 🔔 Waarschuwing bijna verlopen */}
+
       {expiringSoon.length > 0 && (
         <View style={styles.alertBox}>
           <Text style={styles.alertTitle}>⏰ Let op!</Text>
@@ -251,6 +254,16 @@ export default function FridgePage() {
         <Text style={styles.recipeButtonText}>Ontdek Recepten</Text>
       </TouchableOpacity>
       </View>
+
+      {products.length > 0 && (
+        <View style={styles.tipsContainer}>
+          <Text style={styles.tipsTitle}>💡 Voedselbewaar Tips</Text>
+          <Text style={styles.tip}>• Vaak is een product nog goed na de houdbaarheidsdatum.</Text>
+          <Text style={styles.tip}>• Ruik, kijk en proef voordat je iets weggooit.</Text>
+          <Text style={styles.tip}>• Bewaar producten koel en droog.</Text>
+          <Text style={styles.tip}>• Gebruik eerst de oudste producten ("First In, First Out").</Text>
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -258,7 +271,7 @@ export default function FridgePage() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#fff"},
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontFamily: "ABeeZee",
     fontWeight: "bold",
     color: "#4CAF50",
@@ -360,5 +373,32 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'ABeeZee',
     fontWeight: 'bold',
+  },
+  header: {
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 16,
+  },
+    tipsContainer: {
+    backgroundColor: '#e6f4ea',
+    padding: 16,
+    borderRadius: 12,
+    marginHorizontal: 20,
+    marginBottom: 40,
+    borderColor: '#b4dfc4',
+    borderWidth: 1,
+  },
+  tipsTitle: {
+    fontFamily: 'ABeeZee',
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2e7d32',
+    marginBottom: 10,
+  },
+  tip: {
+    fontFamily: 'ABeeZee',
+    fontSize: 14,
+    color: '#333',
+    marginBottom: 6,
   },
 });

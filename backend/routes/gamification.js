@@ -3,7 +3,6 @@ const router = express.Router();
 const { getProgress, addXpForRecipe } = require('../functions/gamificationdb');
 const db = require('../database');
 
-// Haal gamification-gegevens van gebruiker op
 router.get('/profile', async (req, res) => {
   const { userId } = req.params;
   try {
@@ -15,7 +14,6 @@ router.get('/profile', async (req, res) => {
   }
 });
 
-// Voeg XP toe als gebruiker een recept maakt
 router.post('/add-xp', async (req, res) => {
   const { userId, recipeId } = req.body;
   try {

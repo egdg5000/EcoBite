@@ -1,7 +1,7 @@
 const db = require('../database');
 
 function getXpForNextLevel(level) {
-  return 100 + (level - 1) * 50; // Lineaire groei
+  return 100 + (level - 1) * 50; 
 }
 
 async function getProgress(userId) {
@@ -22,7 +22,7 @@ async function getProgress(userId) {
 
 async function addXpForRecipe(userId, earnedXp) {
   const [rows] = await db.query(
-    'SELECT level, xp, streak_days, last_activity FROM users_gamification WHERE user_id = ?',
+    'SELECT level, xp, streak_days, last_activity, co2_saved FROM users_gamification WHERE user_id = ?',
     [userId]
   );
 
@@ -30,15 +30,16 @@ async function addXpForRecipe(userId, earnedXp) {
   let xp = 0;
   let streak = 0;
   let lastActivity = null;
+  let co2_saved = 0;
 
   if (rows.length > 0) {
     level = rows[0].level;
     xp = rows[0].xp;
     streak = rows[0].streak_days || 0;
     lastActivity = rows[0].last_activity;
+    co2_saved = rows[0].co2_saved || 0;
   }
 
-   // Streakberekening
   const today = new Date();
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
@@ -46,14 +47,25 @@ async function addXpForRecipe(userId, earnedXp) {
   const todayStr = today.toISOString().split('T')[0];
   const yesterdayStr = yesterday.toISOString().split('T')[0];
 
-  if (!lastActivity) {
-    streak = 1;
-  } else if (lastActivity.toISOString().split('T')[0] === yesterdayStr) {
-    streak += 1; // ✅ doorgaan met streak
-  } else if (lastActivity.toISOString().split('T')[0] === todayStr) {
-    // niets doen, al bijgewerkt vandaag
+  if (lastActivity) {
+    const lastDateStr = lastActivity.toISOString().split('T')[0];
+    const diffDays = Math.floor((today - new Date(lastDateStr)) / (1000 * 60 * 60 * 24));
+
+    if (diffDays > 1) {
+      streak = 1;
+      const verliesPerDag = 50; 
+      const totaalVerlies = verliesPerDag * (diffDays - 1);
+      const effectiefVerlies = Math.min(co2_saved, totaalVerlies);
+      co2_saved = Math.max(0, co2_saved - effectiefVerlies);
+      console.log(`Gebruiker ${userId} verloor ${effectiefVerlies}g CO₂ na ${diffDays - 1} dagen inactiviteit.`);
+    } else if (lastDateStr === yesterdayStr) {
+      streak += 1;
+    } else if (lastDateStr === todayStr) {
+    } else {
+      streak = 1;
+    }
   } else {
-    streak = 1; // 🔁 reset streak
+    streak = 1;
   }
 
   xp += earnedXp;
@@ -65,11 +77,11 @@ async function addXpForRecipe(userId, earnedXp) {
   }
 
   await db.query(
-    'INSERT INTO users_gamification (user_id, level, xp, streak_days, last_activity) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE level = ?, xp = ?, streak_days = ?, last_activity = ?',
-    [userId, level, xp, streak, todayStr, level, xp, streak, todayStr]
+    'INSERT INTO users_gamification (user_id, level, xp, streak_days, last_activity, co2_saved) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE level = ?, xp = ?, streak_days = ?, last_activity = ?, co2_saved = ?',
+    [userId, level, xp, streak, todayStr, co2_saved, level, xp, streak, todayStr, co2_saved]
   );
 
-  return { level, xp, xp_for_next_level: nextLevelXp, streak_days: streak };
+  return { level, xp, xp_for_next_level: nextLevelXp, streak_days: streak, co2_saved };
 }
 
 async function updateCo2(userId, newValue) {

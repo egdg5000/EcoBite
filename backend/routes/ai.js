@@ -3,13 +3,14 @@ const router = express.Router();
 const { getAISuggestions } = require('../functions/aidb');
 
 router.post('/recipe-suggestions', async (req, res) => {
-  const { ingredients } = req.body;
+  const { ingredients, allergies = [] } = req.body;
+
   if (!ingredients || !Array.isArray(ingredients)) {
     return res.status(400).json({ message: 'Ongeldige ingrediënten' });
   }
 
   try {
-    const suggestions = await getAISuggestions(ingredients);
+    const suggestions = await getAISuggestions(ingredients, allergies);
     res.json({ suggestions });
   } catch (err) {
     console.error('AI fout:', err);

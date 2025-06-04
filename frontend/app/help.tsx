@@ -27,7 +27,7 @@ export default function HelpPage() {
                     
                     <TouchableOpacity style={styles.question}>
                         <Text style={styles.questionText}>🔍 Hoe scan ik een barcode?</Text>
-                        <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan Barcode' wanneer u op de groene + knop drukt. Geef wanneer nodig toestemming voor het gebruiken van de camera en richt uw camera op de barcode. Zorg ervoor dat de barcode duidelijk in beeld is.</Text>
+                        <Text style={styles.answerText}>Ga naar de Homepagina en kies 'Scan Producten' wanneer u op de groene + knop drukt. Geef wanneer nodig toestemming voor het gebruiken van de camera en richt uw camera op de barcode of het product. Zorg ervoor dat de barcode of product duidelijk in beeld is. Als het product successvol is gescand wordt het automatisch toegevoegd aan uw voorraad.</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.question}>
@@ -41,6 +41,11 @@ export default function HelpPage() {
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.question}>
+                        <Text style={styles.questionText}>🌳 Hoe krijg ik XP en zorg ik voor een mooiere boom?</Text>
+                        <Text style={styles.answerText}>Wanneer u met behulp van de toegevoegde producten recepten gaat maken krijgt u XP en reduceert u een bepaalde hoeveelheid CO₂. U gaat immers producten die u nog over heeft niet verspillen, wat ons doel van deze app is. Hoe de boom eruit ziet hangt af van de hoeveelheid CO₂ u heeft bespaard. Hoe meer dit is, hoe beter de boom eruit ziet.</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={styles.question}>
                         <Text style={styles.questionText}>❤️ Waar kan ik voedsel doneren?</Text>
                         <Text style={styles.answerText}>Ga naar uw account in de app en ga naar de informatie over het doneren. Op de doneerpagina vind u meer informatie en een lijst met lokale voedselbanken (Nederlandse Voedselbanken).</Text>
                     </TouchableOpacity>
@@ -51,11 +56,10 @@ export default function HelpPage() {
                     </TouchableOpacity>
                 </View>
 
-                {/* Extra ondersteuning */}
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Extra ondersteuning</Text>
                     <Text style={styles.text}>Heeft u nog vragen? Neem contact met ons op via:</Text>
-                    <Text style={styles.contactText}>📧 placeholder@ecobite.com</Text>
+                    <Text style={styles.contactText}>📧 ecobite@edg5000.com</Text>
                 </View>
             </ScrollView>
         </SafeAreaView>
