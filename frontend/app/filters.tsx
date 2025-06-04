@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, SafeAreaView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useTheme } from './context/ThemeContext';
 
 export default function FiltersPage() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const [filters, setFilters] = useState({
     gluten: false,
     noten: false,
@@ -76,10 +80,10 @@ export default function FiltersPage() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#121212' : '#fff' }]}> 
       <View style={styles.titleContainer}>
-        <Text style={styles.header}>Receptfilters</Text>
-        <Text style={styles.subheader}>
+        <Text style={[styles.header, { color: isDark ? '#66BB6A' : '#4CAF50' }]}>Receptfilters</Text>
+        <Text style={[styles.subheader, { color: isDark ? '#ccc' : '#555' }]}> 
           Selecteer de allergieën of voorkeuren waarop je wilt filteren:
           (deze recepten komen dan bovenaan te staan bij de suggesties voor uw recepten.)
         </Text>
@@ -87,7 +91,7 @@ export default function FiltersPage() {
 
       <View style={styles.filterRow}>
         <View style={styles.labelContainer}>
-          <Text style={styles.label}>Glutenallergie</Text>
+          <Text style={[styles.label, { color: isDark ? '#fff' : '#000' }]}>Glutenallergie</Text>
         </View>
         <View style={styles.switchContainer}>
           <Switch value={filters.gluten} onValueChange={() => toggleFilter('gluten')} />
@@ -96,7 +100,7 @@ export default function FiltersPage() {
 
       <View style={styles.filterRow}>
         <View style={styles.labelContainer}>
-          <Text style={styles.label}>Notenallergie</Text>
+          <Text style={[styles.label, { color: isDark ? '#fff' : '#000' }]}>Notenallergie</Text>
         </View>
         <View style={styles.switchContainer}>
           <Switch value={filters.noten} onValueChange={() => toggleFilter('noten')} />
@@ -105,7 +109,7 @@ export default function FiltersPage() {
 
       <View style={styles.filterRow}>
         <View style={styles.labelContainer}>
-          <Text style={styles.label}>Pinda-allergie</Text>
+          <Text style={[styles.label, { color: isDark ? '#fff' : '#000' }]}>Pinda-allergie</Text>
         </View>
         <View style={styles.switchContainer}>
           <Switch value={filters.pinda} onValueChange={() => toggleFilter('pinda')} />
@@ -114,7 +118,7 @@ export default function FiltersPage() {
 
       <View style={styles.filterRow}>
         <View style={styles.labelContainer}>
-          <Text style={styles.label}>Lactose-intolerantie</Text>
+          <Text style={[styles.label, { color: isDark ? '#fff' : '#000' }]}>Lactose-intolerantie</Text>
         </View>
         <View style={styles.switchContainer}>
           <Switch value={filters.lactose} onValueChange={() => toggleFilter('lactose')} />
@@ -132,7 +136,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
     alignItems: 'center',
   },
   titleContainer: {
@@ -146,11 +149,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontFamily: 'ABeeZee',
     textAlign: 'center',
-    color: "#4CAF50",
   },
   subheader: {
     fontSize: 16,
-    color: '#555',
     fontFamily: 'ABeeZee',
     textAlign: 'center',
   },
