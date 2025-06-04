@@ -1,0 +1,7 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+-- Use expo as a framework (For example expo router instead of react navigation)
+

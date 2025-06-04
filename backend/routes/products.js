@@ -9,9 +9,6 @@ router.post("/add", loginStatus, async (req, res) => {
   if (!item_name || !quantity || !unit || !category) {
     return res.status(400).json({ success: false, message: "Missing required fields" });
   }
-  if (expiration_date === "") {
-    expiration_date = null;
-  }
   if (expiration_date && expiration_date < new Date().toISOString().split("T")[0]) {
     return res.status(400).json({ success: false, message: "Expiration date cannot be in the past" });
   }

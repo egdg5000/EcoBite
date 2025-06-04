@@ -25,30 +25,29 @@ router.get('/loginStatus', loginStatus, (req, res) => {
     res.status(200).json({success: true, message: 'User is logged in'})
 });
 
-router.post('/logout', (req, res) => {
+router.post('/logout', loginStatus, (req, res) => {
     req.session.destroy();
     res.status(200).json({success: true, message: 'User is logged out'})
 })
 
-router.post("/save-push-token", async (req, res) => {
-  const { user_id, push_token } = req.body;
-  try {
-    await db
-      .promise()
-      .query("UPDATE users SET push_token = ? WHERE id = ?", [
-        push_token,
-        user_id,
-      ]);
-    res.json({ success: true });
-  } catch (err) {
-    console.error("Fout bij opslaan push-token:", err);
-    res.status(500).json({ success: false });
-  }
-});
+// router.post("/save-push-token", async (req, res) => {
+//   const { user_id, push_token } = req.body;
+//   try {
+//     await db
+//       .promise()
+//       .query("UPDATE users SET push_token = ? WHERE id = ?", [
+//         push_token,
+//         user_id,
+//       ]);
+//     res.json({ success: true });
+//   } catch (err) {
+//     console.error("Fout bij opslaan push-token:", err);
+//     res.status(500).json({ success: false });
+//   }
+// });
 
-// 🔁 Haal meldingsvoorkeuren op
-router.get("/preferences/:userId", async (req, res) => {
-  const userId = req.params.userId;
+router.get("/preferences", loginStatus, async (req, res) => {
+  const userId = req.session.userId;
 
   try {
     const [rows] = await db
@@ -61,8 +60,7 @@ router.get("/preferences/:userId", async (req, res) => {
   }
 });
 
-// ✅ Opslaan van meldingsvoorkeuren
-router.post("/preferences", async (req, res) => {
+router.post("/preferences/save", async (req, res) => {
   const { user_id, notify_expiry, notify_deletion } = req.body;
 
   try {

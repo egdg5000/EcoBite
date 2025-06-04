@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   plusButton: {
-    top: 5,
+    top: -5,
     backgroundColor: '#4CAF50',
     borderRadius: 28,
     height: 56,

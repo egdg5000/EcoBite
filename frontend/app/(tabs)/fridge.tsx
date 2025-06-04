@@ -138,6 +138,7 @@ export default function FridgePage() {
 
   return (
     <SafeAreaView style={styles.container}>
+    <View style={{padding: 20}}>
       <Text style={styles.title}>Mijn Voorraad</Text>
 
       {/* 🔔 Waarschuwing bijna verlopen */}
@@ -249,12 +250,13 @@ export default function FridgePage() {
       <TouchableOpacity style={styles.recipeButton} onPress={() => router.push('/discover')}>
         <Text style={styles.recipeButtonText}>Ontdek Recepten</Text>
       </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 20 },
+  container: { flex: 1, backgroundColor: "#fff"},
   title: {
     fontSize: 24,
     fontFamily: "ABeeZee",
