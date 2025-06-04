@@ -158,17 +158,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 12,
+    paddingHorizontal: 20, 
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
     width: '100%',
     maxWidth: 400,
+    alignSelf: 'center', 
   },
   labelContainer: {
-    width: 160,
+    flex: 1,
     justifyContent: 'center',
+    paddingRight: 10, 
   },
   switchContainer: {
-    flex: 1,
     alignItems: 'flex-end',
   },
   label: {
