@@ -139,7 +139,6 @@ export default function FridgePage() {
   return (
     <SafeAreaView style={styles.container}>
     <View style={{padding: 20}}>
-      <Text style={styles.title}>Mijn Voorraad</Text>
       <View style={styles.header}>
         <Text style={styles.title}>Mijn Voorraad</Text>
       </View>
