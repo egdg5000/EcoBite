@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, SafeAreaView, Mod
 import { useFonts } from 'expo-font';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import { useTheme } from '../context/ThemeContext'; // Nieuw
+import { useTheme } from '../context/ThemeContext'; 
 
 export default function AccountPage() {
   const [fontsLoaded] = useFonts({
@@ -45,6 +45,7 @@ export default function AccountPage() {
   const handleDetailsPress = () => router.push('/details');
   const handleNotificationsPress = () => router.push('/notifications');
   const handleHelpPress = () => router.push('/help');
+  const handleSettingsPress = () => router.push('/settings');
   const handleAboutPress = () => router.push('/about_app');
   const handleLogout = () => setLogoutModalVisible(true);
 
@@ -93,6 +94,12 @@ export default function AccountPage() {
 
             <TouchableOpacity style={[styles.button, { backgroundColor: isDark ? '#2a2a2a' : '#f1f1f1' }]} onPress={handleHelpPress}>
               <Text style={[styles.buttonText, { color: isDark ? '#fff' : '#333' }]}>Help</Text>
+              <Text style={styles.arrow}>→</Text>
+            </TouchableOpacity>
+            <View style={styles.separator}></View>
+
+            <TouchableOpacity style={[styles.button, { backgroundColor: isDark ? '#2a2a2a' : '#f1f1f1' }]} onPress={handleSettingsPress}>
+              <Text style={[styles.buttonText, { color: isDark ? '#fff' : '#333' }]}>Instellingen</Text>
               <Text style={styles.arrow}>→</Text>
             </TouchableOpacity>
             <View style={styles.separator}></View>
