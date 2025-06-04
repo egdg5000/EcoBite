@@ -1,19 +1,22 @@
 import { Stack } from "expo-router";
 import React from "react";
-import Toast from "react-native-toast-message"; 
+import Toast from "react-native-toast-message";
+import { ThemeProvider } from "./context/ThemeContext"; 
 
 export default function RootLayout() {
   return (
-    <>
-      <Stack
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="(tabs)" />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <Toast /> 
-    </>
+    <ThemeProvider>
+      <>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <Toast />
+      </>
+    </ThemeProvider>
   );
 }
