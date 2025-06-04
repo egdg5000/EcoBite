@@ -20,7 +20,7 @@ export default function AboutScreen() {
           <Ionicons name="arrow-back" size={24} color="#4CAF50" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Over ons</Text>
-        <View style={{ width: 24 }} /> {/* Spacer for alignment */}
+        <View style={{ width: 24 }} /> 
       </View>
 
       <ScrollView contentContainerStyle={styles.container}>
@@ -48,7 +48,7 @@ export default function AboutScreen() {
         </View>
 
         <Text style={styles.footer}>
-          Dit project is een initiatief van Björn Alderden, Bryan Keislair, Emmet de Graaf, Paul Becking, Vincent Nijboer en Leon Hermans.
+          Dit project is een initiatief van Björn Alderden, Bryan Keislair, Emmet de Graaf, Paul Becking en Vincent Nijboer.
         </Text>
       </ScrollView>
     </SafeAreaView>
