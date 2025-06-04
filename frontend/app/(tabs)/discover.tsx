@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useTheme } from '../context/ThemeContext';
 
 interface Ingredient {
   id: string;
@@ -29,6 +30,9 @@ interface Recipe {
 }
 
 export default function DiscoverScreen() {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const [filters, setFilters] = useState({});
   const [searchQuery, setSearchQuery] = useState('');
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
@@ -41,10 +45,8 @@ export default function DiscoverScreen() {
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Allergieën ophalen van backend
         const allergyRes = await fetch('https://edg5000.com/users/preferences', {
-          method: 'GET',
-          credentials: 'include',
+          method: 'GET', credentials: 'include'
         });
         const allergyData = await allergyRes.json();
         if (allergyRes.ok && Array.isArray(allergyData.allergies)) {
@@ -57,8 +59,7 @@ export default function DiscoverScreen() {
           setIngredients(parsed);
 
           const response = await fetch('https://edg5000.com/recipes/from-ingredients', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ingredients: parsed }),
           });
 
@@ -75,20 +76,13 @@ export default function DiscoverScreen() {
 
   const handleCategoryPress = async (category: string) => {
     setSelectedCategory(category);
-
     try {
       const response = await fetch('https://edg5000.com/recipes/by-category', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ category }),
       });
-
       const data = await response.json();
-      if (data.recipes) {
-        setRecipes(data.recipes);
-      } else {
-        setRecipes([]);
-      }
+      setRecipes(data.recipes || []);
     } catch (err) {
       console.error('Fout bij ophalen recepten per categorie:', err);
     }
@@ -96,7 +90,6 @@ export default function DiscoverScreen() {
 
   const filterRecipesByAllergies = (recipeList: Recipe[]): Recipe[] => {
     if (!userAllergies.length) return recipeList;
-
     return recipeList.filter(recipe => {
       const description = recipe.description?.toLowerCase() || '';
       return !userAllergies.some(allergen =>
@@ -109,14 +102,9 @@ export default function DiscoverScreen() {
     setLoadingAi(true);
     try {
       const response = await fetch('https://edg5000.com/ai/recipe-suggestions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-         body: JSON.stringify({
-          ingredients,
-          allergies: userAllergies, 
-        }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ingredients, allergies: userAllergies }),
       });
-
       const data = await response.json();
       if (data.suggestions) setAiSuggestion(data.suggestions);
     } catch (err) {
@@ -129,11 +117,9 @@ export default function DiscoverScreen() {
   const completeRecipe = async (recipeId: number) => {
     const userId = await AsyncStorage.getItem('userId');
     if (!userId) return;
-
     try {
       await fetch('https://edg5000.com/gamification/add-xp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: Number(userId), recipeId }),
       });
       Alert.alert('✅ Recept voltooid!', 'Je hebt XP en CO₂ bespaard!');
@@ -143,40 +129,24 @@ export default function DiscoverScreen() {
   };
 
   const recipeCategories = [
-    {
-      title: 'Favoriete Recepten',
-      color: '#e6f4ea',
-      image: require('../../assets/images/favorite.png'),
-    },
-    {
-      title: 'Persoonlijke Recepten',
-      color: '#fff1e6',
-      image: require('../../assets/images/personal.png'),
-    },
-    {
-      title: 'Eiwitrijke Recepten',
-      color: '#fdecea',
-      image: require('../../assets/images/protein.png'),
-    },
-    {
-      title: 'Glutenvrije Recepten',
-      color: '#f4ecf7',
-      image: require('../../assets/images/glutenfree.png'),
-    },
+    { title: 'Favoriete Recepten', color: isDark ? '#2a3b2c' : '#e6f4ea', image: require('../../assets/images/favorite.png') },
+    { title: 'Persoonlijke Recepten', color: isDark ? '#40322e' : '#fff1e6', image: require('../../assets/images/personal.png') },
+    { title: 'Eiwitrijke Recepten', color: isDark ? '#4d2b2b' : '#fdecea', image: require('../../assets/images/protein.png') },
+    { title: 'Glutenvrije Recepten', color: isDark ? '#3a2e4e' : '#f4ecf7', image: require('../../assets/images/glutenfree.png') },
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Vind recepten</Text>
+    <ScrollView style={[styles.container, { backgroundColor: isDark ? '#121212' : '#fff' }]}> 
+      <Text style={[styles.header, { color: isDark ? '#fff' : '#000' }]}>Vind recepten</Text>
 
-      <View style={styles.searchContainer}>
-        <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
+      <View style={[styles.searchContainer, { backgroundColor: isDark ? '#1f1f1f' : '#f7f7f7', borderColor: isDark ? '#444' : '#ddd' }]}>
+        <Ionicons name="search-outline" size={20} color={isDark ? '#aaa' : '#888'} style={styles.searchIcon} />
         <TextInput
-          style={styles.searchInput}
+          style={[styles.searchInput, { color: isDark ? '#fff' : '#333' }]}
           placeholder="Zoeken"
           value={searchQuery}
           onChangeText={setSearchQuery}
-          placeholderTextColor="#888"
+          placeholderTextColor={isDark ? '#666' : '#888'}
         />
       </View>
 
@@ -188,56 +158,43 @@ export default function DiscoverScreen() {
         scrollEnabled={false}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={[
-              styles.card,
-              { backgroundColor: item.color },
-              selectedCategory === item.title && styles.activeCard,
-            ]}
+            style={[styles.card, { backgroundColor: item.color }, selectedCategory === item.title && styles.activeCard]}
             onPress={() => handleCategoryPress(item.title)}
           >
             <Image source={item.image} style={styles.cardImage} />
-            <Text style={styles.cardText}>{item.title}</Text>
+            <Text style={[styles.cardText, { color: isDark ? '#fff' : '#000' }]}>{item.title}</Text>
           </TouchableOpacity>
         )}
       />
 
-      <Text style={styles.subheader}>
-        {selectedCategory ? `Aanbevolen: ${selectedCategory}` : 'Op basis van je voorraad'}
-      </Text>
+      <Text style={[styles.subheader, { color: isDark ? '#fff' : '#000' }]}> {selectedCategory ? `Aanbevolen: ${selectedCategory}` : 'Op basis van je voorraad'} </Text>
 
       {filterRecipesByAllergies(recipes).length === 0 ? (
-        <Text style={styles.noData}>Geen recepten gevonden die passen bij je allergieën.</Text>
+        <Text style={[styles.noData, { color: isDark ? '#bbb' : '#777' }]}>Geen recepten gevonden die passen bij je allergieën.</Text>
       ) : (
         filterRecipesByAllergies(recipes).map((recipe) => (
-          <TouchableOpacity
-            key={recipe.id}
-            style={styles.recipeCard}
-            onPress={() => completeRecipe(recipe.id)}
-          >
-            <Text style={styles.recipeTitle}>{recipe.title}</Text>
-            {recipe.description && <Text style={styles.recipeText}>{recipe.description}</Text>}
-            {recipe.estimated_time && (
-              <Text style={styles.recipeTime}>⏱️ {recipe.estimated_time} min</Text>
-            )}
+          <TouchableOpacity key={recipe.id} style={[styles.recipeCard, { backgroundColor: isDark ? '#1f3a25' : '#e8f5e9' }]} onPress={() => completeRecipe(recipe.id)}>
+            <Text style={[styles.recipeTitle, { color: isDark ? '#a5d6a7' : '#1b5e20' }]}>{recipe.title}</Text>
+            {recipe.description && <Text style={[styles.recipeText, { color: isDark ? '#ddd' : '#555' }]}>{recipe.description}</Text>}
+            {recipe.estimated_time && <Text style={[styles.recipeTime, { color: isDark ? '#ccc' : '#888' }]}>⏱️ {recipe.estimated_time} min</Text>}
           </TouchableOpacity>
         ))
       )}
 
-      <TouchableOpacity style={styles.aiButton} onPress={handleAISuggestions} disabled={loadingAi}>
-        <Text style={styles.aiButtonText}>
-          {loadingAi ? 'AI denkt na...' : '🔮 Vraag AI om suggestie'}
-        </Text>
+      <TouchableOpacity style={[styles.aiButton, { backgroundColor: isDark ? '#2e1a47' : '#EDE9FE', borderColor: isDark ? '#9D7DFF' : '#7D5FFF' }]} onPress={handleAISuggestions} disabled={loadingAi}>
+        <Text style={[styles.aiButtonText, { color: isDark ? '#E0BBFF' : '#4B0082' }]}> {loadingAi ? 'AI denkt na...' : '🔮 Vraag AI om suggestie'} </Text>
       </TouchableOpacity>
 
       {aiSuggestion && (
-        <View style={styles.aiCard}>
-          <Text style={styles.aiTitle}>AI Suggestie</Text>
-          <Text style={styles.aiText}>{aiSuggestion}</Text>
+        <View style={[styles.aiCard, { backgroundColor: isDark ? '#2a3b2c' : '#f1f8e9' }]}>
+          <Text style={[styles.aiTitle, { color: isDark ? '#c8e6c9' : '#000' }]}>AI Suggestie</Text>
+          <Text style={[styles.aiText, { color: isDark ? '#eee' : '#444' }]}>{aiSuggestion}</Text>
         </View>
       )}
     </ScrollView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, paddingTop: 60, paddingHorizontal: 20, backgroundColor: '#fff' },
