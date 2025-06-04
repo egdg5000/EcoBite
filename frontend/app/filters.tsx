@@ -84,7 +84,7 @@ export default function FiltersPage() {
       <View style={styles.titleContainer}>
         <Text style={[styles.header, { color: isDark ? '#66BB6A' : '#4CAF50' }]}>Receptfilters</Text>
         <Text style={[styles.subheader, { color: isDark ? '#ccc' : '#555' }]}> 
-          Selecteer de allergieën of voorkeuren waarop je wilt filteren:
+          Selecteer de allergieën waarop je wilt filteren:
           (deze recepten komen dan bovenaan te staan bij de suggesties voor uw recepten.)
         </Text>
       </View>
