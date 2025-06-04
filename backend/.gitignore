@@ -21,6 +21,3 @@ yarn-error.*
 
 # API key
 apikey.json
-
-.vscode
-.cursor
