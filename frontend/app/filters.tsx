@@ -80,7 +80,7 @@ export default function FiltersPage() {
       <View style={styles.titleContainer}>
         <Text style={styles.header}>Receptfilters</Text>
         <Text style={styles.subheader}>
-          Selecteer de allergieën of voorkeuren waarop je wilt filteren:
+          Selecteer de allergieën waarop je wilt filteren:
           (deze recepten komen dan bovenaan te staan bij de suggesties voor uw recepten.)
         </Text>
       </View>
