@@ -114,20 +114,27 @@ const AddFoodPage = () => {
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#121212' : '#fff' }]}> 
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         <Text style={[styles.title, { color: isDark ? '#66BB6A' : '#4CAF50' }]}>Voeg nieuw product toe</Text>
 
         <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Productnaam</Text>
-        <TextInput style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', color: isDark ? '#fff' : '#000' }]} placeholder="Bijv. Appel" placeholderTextColor={isDark ? '#777' : '#888'} value={name} onChangeText={setName} />
+        <TextInput style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', color: isDark ? '#fff' : '#000' }]} placeholder="Bijv. Appel" placeholderTextColor={isDark ? '#aaa' : '#888'} value={name} onChangeText={setName} />
         {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
 
         <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Hoeveelheid</Text>
-        <TextInput style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', color: isDark ? '#fff' : '#000' }]} placeholder="Bijv. 3 stuks / 1L" placeholderTextColor={isDark ? '#777' : '#888'} value={quantity} onChangeText={setQuantity} />
+        <TextInput style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', color: isDark ? '#fff' : '#000' }]} placeholder="Bijv. 3 stuks / 1L" placeholderTextColor={isDark ? '#aaa' : '#888'} value={quantity} onChangeText={setQuantity} />
         {errors.quantity && <Text style={styles.errorText}>{errors.quantity}</Text>}
 
         <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Eenheid</Text>
-        <View style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5' }]}> 
-          <Picker selectedValue={unit} onValueChange={(itemValue) => setUnit(itemValue)} style={{ color: isDark ? '#fff' : '#000' }}> 
+        <View style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', borderColor: isDark ? '#444' : '#ccc' }]}> 
+          <Picker
+            selectedValue={unit}
+            onValueChange={(itemValue) => setUnit(itemValue)}
+            dropdownIconColor="#4CAF50"
+            mode="dropdown"
+            style={{ color: isDark ? '#fff' : '#000', fontFamily: 'ABeeZee', backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5' }}
+            itemStyle={{ color: isDark ? '#fff' : '#000', fontFamily: 'ABeeZee' }}
+          >
             <Picker.Item label="stuk(s)" value="stuk(s)" />
             <Picker.Item label="Liter" value="L" />
             <Picker.Item label="Gram" value="g" />
@@ -154,8 +161,15 @@ const AddFoodPage = () => {
         {errors.expiry && <Text style={styles.errorText}>{errors.expiry}</Text>}
 
         <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Categorie</Text>
-        <View style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5' }]}> 
-          <Picker selectedValue={category} onValueChange={(itemValue) => setCategory(itemValue)} dropdownIconColor="#4CAF50" style={{ color: isDark ? '#fff' : '#000' }}> 
+        <View style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', borderColor: isDark ? '#444' : '#ccc' }]}> 
+          <Picker
+            selectedValue={category}
+            onValueChange={(itemValue) => setCategory(itemValue)}
+            dropdownIconColor="#4CAF50"
+            mode="dropdown"
+            style={{ color: isDark ? '#fff' : '#000', fontFamily: 'ABeeZee', backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5' }}
+            itemStyle={{ color: isDark ? '#fff' : '#000', fontFamily: 'ABeeZee' }}
+          >
             <Picker.Item label="Selecteer een categorie" value="" />
             <Picker.Item label="Fruit" value="fruit" />
             <Picker.Item label="Groente" value="groente" />
@@ -179,7 +193,7 @@ const styles = StyleSheet.create({
   content: { padding: 20 },
   title: { fontSize: 24, fontFamily: "ABeeZee", fontWeight: "bold", marginBottom: 20 },
   label: { fontSize: 16, marginBottom: 4, fontFamily: "ABeeZee" },
-  input: { borderWidth: 1, borderColor: "#ccc", borderRadius: 8, padding: 12, marginBottom: 16, fontFamily: "ABeeZee" },
+  input: { borderWidth: 1, borderRadius: 8, padding: 12, marginBottom: 16, fontFamily: "ABeeZee" },
   dateInput: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderWidth: 1, borderRadius: 8, padding: 12, marginBottom: 16 },
   dateText: { fontFamily: "ABeeZee", fontSize: 14 },
   errorText: { fontSize: 12, color: "red", marginBottom: 8, fontFamily: "ABeeZee" },
