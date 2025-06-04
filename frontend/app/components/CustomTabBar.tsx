@@ -249,6 +249,7 @@ const styles = StyleSheet.create({
   fabMenu: {
     position: 'absolute',
     bottom: '100%', 
+    marginBottom: 20,
     backgroundColor: '#4CAF50',
     borderRadius: 16,
     padding: 10,
