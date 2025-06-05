@@ -22,7 +22,6 @@ const SetupScreen = () => {
     setAllergies(prev => ({ ...prev, [key]: !prev[key] }));
   };
 
-  // 🟡 Ophalen bestaande allergieën bij laden
   useEffect(() => {
     const loadAllergies = async () => {
       try {
@@ -53,7 +52,7 @@ const SetupScreen = () => {
     loadAllergies();
   }, []);
 
-  // ✅ Versturen naar back-end
+  // Versturen naar back-end
   const savePreferencesToBackend = async () => {
     const selectedAllergies = Object.entries(allergies)
       .filter(([_, value]) => value)
