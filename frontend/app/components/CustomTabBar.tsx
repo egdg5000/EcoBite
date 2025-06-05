@@ -114,14 +114,14 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
           <Ionicons
             name={iconName}
             size={24}
-            color={isFocused ? '#4CAF50' : isDark ? '#fff' : '#888'}
+            color={isFocused ? '#66BB6A' : isDark ? '#ccc' : '#888'}
           />
         </Animated.View>
         <Text
           style={{
             fontFamily: 'ABeeZee',
             fontSize: 12,
-            color: isFocused ? '#4CAF50' : isDark ? '#fff' : '#888',
+            color: isFocused ? '#66BB6A' : isDark ? '#ccc' : '#888',
           }}
         >
           {options.title}
@@ -144,9 +144,9 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
         </TouchableWithoutFeedback>
       )}
 
-      <SafeAreaView edges={['bottom']} style={[styles.safeArea, { backgroundColor: isDark ? '#121212' : '#fff' }]}>
+      <SafeAreaView edges={['bottom']} style={[styles.safeArea, { backgroundColor: isDark ? '#1e1e1e' : '#fff' }]}>
         <View style={[styles.tabBar, {
-          backgroundColor: isDark ? '#121212' : '#fff',
+          backgroundColor: isDark ? '#1e1e1e' : '#fff',
           shadowColor: isDark ? '#000' : '#000',
         }]}>
           <View style={styles.sideContainer}>
@@ -157,7 +157,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 
           <View style={styles.centerWrapper}>
             <TouchableOpacity
-              style={styles.plusButton}
+              style={[styles.plusButton, { backgroundColor: isDark ? '#66BB6A' : '#4CAF50' }]}
               onPress={() => setMenuOpen((prev) => !prev)}
               activeOpacity={0.8}
             >
@@ -169,7 +169,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
               style={[
                 styles.fabMenu,
                 {
-                  backgroundColor: '#4CAF50',
+                  backgroundColor: isDark ? '#388E3C' : '#4CAF50',
                   opacity: fadeAnim,
                   transform: [{ translateY: slideAnim }],
                 }
@@ -245,7 +245,6 @@ const styles = StyleSheet.create({
   },
   plusButton: {
     top: -5,
-    backgroundColor: '#4CAF50',
     borderRadius: 28,
     height: 56,
     width: 56,
