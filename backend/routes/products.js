@@ -3,7 +3,7 @@ const router = express.Router();
 const {db} = require("../database");
 const { loginStatus } = require("../functions/userdb");
 
-router.get("/suggestions", loginStatus, async (req, res) => {
+router.post("/suggestions", loginStatus, async (req, res) => {
   const { item_name } = req.body;
   if (!item_name) {
     return res.status(400).json({ success: false, message: "Missing required fields" });
