@@ -56,6 +56,7 @@ export default function FridgePage() {
   const [activeTab, setActiveTab] = useState<"all" | "favorites">("all");
   const [expiringSoon, setExpiringSoon] = useState<Product[]>([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const router = useRouter();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -125,10 +126,13 @@ export default function FridgePage() {
     setRefreshing(false);
   };
 
-  const filteredProducts =
-    activeTab === "favorites"
-      ? products.filter((p) => favorites.includes(p.id))
-      : products;
+  const uniqueCategories = Array.from(new Set(products.map(p => p.category).filter(Boolean)));
+
+  const filteredProducts = products.filter((p) => {
+    const matchesTab = activeTab === "favorites" ? favorites.includes(p.id) : true;
+    const matchesCategory = selectedCategory ? p.category === selectedCategory : true;
+    return matchesTab && matchesCategory;
+  });
 
   if (!fontsLoaded) return null;
 
@@ -187,11 +191,49 @@ export default function FridgePage() {
           ))}
         </View>
 
-        {/* Productlijst */}
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 10 }}>
+          <TouchableOpacity
+            onPress={() => setSelectedCategory(null)}
+            style={{
+              backgroundColor: selectedCategory === null ? '#4CAF50' : (isDark ? '#333' : '#E0E0E0'),
+              paddingHorizontal: 10,
+              paddingVertical: 6,
+              margin: 4,
+              borderRadius: 20,
+            }}
+          >
+            <Text style={{ color: selectedCategory === null ? 'white' : (isDark ? '#ccc' : '#000'), fontFamily: 'ABeeZee', }}>
+              Toon alles
+            </Text>
+          </TouchableOpacity>
+
+          {uniqueCategories.length === 0 ? (
+            <Text style={{ color: isDark ? '#888' : '#999', alignSelf: 'center', margin: 6, fontFamily: 'ABeeZee', }}>
+              Geen categorieën beschikbaar
+            </Text>
+          ) : (
+            uniqueCategories.map((cat) => (
+              <TouchableOpacity
+                key={cat}
+                onPress={() => setSelectedCategory(cat)}
+                style={{
+                  backgroundColor: selectedCategory === cat ? '#4CAF50' : (isDark ? '#333' : '#E0E0E0'),
+                  paddingHorizontal: 10,
+                  paddingVertical: 6,
+                  margin: 4,
+                  borderRadius: 20,
+                }}
+              >
+                <Text style={{ color: selectedCategory === cat ? 'white' : (isDark ? '#ccc' : '#000') }}>
+                  {cat}
+                </Text>
+              </TouchableOpacity>
+            ))
+          )}
+        </View>
+
         {filteredProducts.length === 0 ? (
-          <Text style={[styles.empty, { color: isDark ? '#aaa' : '#777' }]}>
-            Geen producten gevonden
-          </Text>
+          <Text style={[styles.empty, { color: isDark ? '#aaa' : '#777' }]}>Geen producten gevonden</Text>
         ) : (
           <FlatList
             refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -203,21 +245,15 @@ export default function FridgePage() {
                 <Text style={[styles.name, { color: isDark ? "#fff" : "#333" }]}>{item.item_name}</Text>
                 <View style={styles.row}>
                   <Icon name="scale" size={16} color="#4CAF50" />
-                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}>
-                    {" "}{item.quantity} {item.unit}
-                  </Text>
+                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}> {item.quantity} {item.unit}</Text>
                 </View>
                 <View style={styles.row}>
                   <Icon name="calendar-today" size={16} color="#4CAF50" />
-                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}>
-                    {" "}{item.expiration_date}
-                  </Text>
+                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}> {item.expiration_date}</Text>
                 </View>
                 <View style={styles.row}>
                   <Icon name="category" size={16} color="#4CAF50" />
-                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}>
-                    {" "}{item.category}
-                  </Text>
+                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}> {item.category}</Text>
                 </View>
 
                 <View style={styles.actionRow}>
