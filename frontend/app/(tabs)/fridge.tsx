@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   RefreshControl,
+  Modal,
 } from "react-native";
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -57,6 +58,7 @@ export default function FridgePage() {
   const [expiringSoon, setExpiringSoon] = useState<Product[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
   const router = useRouter();
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -191,46 +193,12 @@ export default function FridgePage() {
           ))}
         </View>
 
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginBottom: 10 }}>
-          <TouchableOpacity
-            onPress={() => setSelectedCategory(null)}
-            style={{
-              backgroundColor: selectedCategory === null ? '#4CAF50' : (isDark ? '#333' : '#E0E0E0'),
-              paddingHorizontal: 10,
-              paddingVertical: 6,
-              margin: 4,
-              borderRadius: 20,
-            }}
-          >
-            <Text style={{ color: selectedCategory === null ? 'white' : (isDark ? '#ccc' : '#000'), fontFamily: 'ABeeZee', }}>
-              Toon alles
-            </Text>
-          </TouchableOpacity>
-
-          {uniqueCategories.length === 0 ? (
-            <Text style={{ color: isDark ? '#888' : '#999', alignSelf: 'center', margin: 6, fontFamily: 'ABeeZee', }}>
-              Geen categorieën beschikbaar
-            </Text>
-          ) : (
-            uniqueCategories.map((cat) => (
-              <TouchableOpacity
-                key={cat}
-                onPress={() => setSelectedCategory(cat)}
-                style={{
-                  backgroundColor: selectedCategory === cat ? '#4CAF50' : (isDark ? '#333' : '#E0E0E0'),
-                  paddingHorizontal: 10,
-                  paddingVertical: 6,
-                  margin: 4,
-                  borderRadius: 20,
-                }}
-              >
-                <Text style={{ color: selectedCategory === cat ? 'white' : (isDark ? '#ccc' : '#000') }}>
-                  {cat}
-                </Text>
-              </TouchableOpacity>
-            ))
-          )}
-        </View>
+        <TouchableOpacity
+          onPress={() => setCategoryModalVisible(true)}
+          style={{ alignSelf: 'flex-end', marginBottom: 10 }}
+        >
+          <Icon name="filter-list" size={28} color={isDark ? '#ccc' : '#4CAF50'} />
+        </TouchableOpacity>
 
         {filteredProducts.length === 0 ? (
           <Text style={[styles.empty, { color: isDark ? '#aaa' : '#777' }]}>Geen producten gevonden</Text>
@@ -280,6 +248,43 @@ export default function FridgePage() {
           <Text style={styles.recipeButtonText}>Ontdek Recepten</Text>
         </TouchableOpacity>
       </View>
+
+      <Modal
+        visible={categoryModalVisible}
+        animationType="slide"
+        transparent
+        onRequestClose={() => setCategoryModalVisible(false)}
+      >
+        <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' }}>
+          <View style={{ backgroundColor: isDark ? '#2c2c2c' : '#fff', padding: 20, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
+            <Text style={{ fontFamily: 'ABeeZee', fontSize: 16, fontWeight: 'bold', marginBottom: 12, color: isDark ? '#fff' : '#333' }}>
+              Filter op categorie
+            </Text>
+
+            <TouchableOpacity onPress={() => { setSelectedCategory(null); setCategoryModalVisible(false); }}>
+              <Text style={{ paddingVertical: 10, color: isDark ? '#A5D6A7' : '#4CAF50' }}>Toon alles</Text>
+            </TouchableOpacity>
+
+            {uniqueCategories.length === 0 ? (
+              <Text style={{ color: isDark ? '#888' : '#999', fontStyle: 'italic' }}>Geen categorieën beschikbaar</Text>
+            ) : (
+              uniqueCategories.map(cat => (
+                <TouchableOpacity
+                  key={cat}
+                  onPress={() => {
+                    setSelectedCategory(cat);
+                    setCategoryModalVisible(false);
+                  }}
+                >
+                  <Text style={{ paddingVertical: 10, color: selectedCategory === cat ? (isDark ? '#A5D6A7' : '#4CAF50') : (isDark ? '#ccc' : '#333') }}>
+                    {cat}
+                  </Text>
+                </TouchableOpacity>
+              ))
+            )}
+          </View>
+        </View>
+      </Modal>
 
       {products.length > 0 && (
         <View style={[styles.tipsContainer, { backgroundColor: isDark ? '#2e7d32' : '#e6f4ea' }]}>
