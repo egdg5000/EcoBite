@@ -3,6 +3,29 @@ const router = express.Router();
 const {db} = require("../database");
 const { loginStatus } = require("../functions/userdb");
 
+router.post("/suggestions", loginStatus, async (req, res) => {
+  const { item_name } = req.body;
+  if (!item_name) {
+    return res.status(400).json({ success: false, message: "Missing required fields" });
+  }
+  const [rows] = await db.promise().query(
+    `SELECT *, 
+     CASE 
+       WHEN \`name.singular\` = ? THEN 1
+       WHEN \`name.singular\` LIKE ? THEN 2
+       ELSE 3
+     END as relevance
+     FROM ingredients 
+     WHERE \`name.singular\` LIKE ? 
+     ORDER BY relevance ASC, \`name.singular\` ASC`,
+    [item_name, `${item_name}%`, `%${item_name}%`]
+  );
+  if (rows.length === 0) {
+    return res.status(400).json({ success: false, message: "No products found" });
+  }
+  res.status(200).json({ success: true, message: "Producten opgehaald", products: rows });
+});
+
 router.post("/add", loginStatus, async (req, res) => {
   const {item_name, quantity, unit, expiration_date, category } = req.body;
   if (!item_name || !quantity || !unit || !category) {
