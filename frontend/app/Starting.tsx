@@ -13,9 +13,13 @@ import {
 import { useFonts } from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { Link, useRouter } from 'expo-router';
+import { useTheme } from "./context/ThemeContext";
+
 
 const EcoBiteScreen = () => {
   const router = useRouter();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
 
@@ -41,12 +45,15 @@ const EcoBiteScreen = () => {
     }
   };
 
+  const styles = getStyles(isDark);
+
   return (
     <SafeAreaView style={styles.container}>
       <Image
         source={require('../assets/images/ingredients.jpg')}
         style={styles.backgroundImage}
         resizeMode="cover"
+        blurRadius={isDark ? 6 : 2} // subtiele blur in dark mode voor contrast
       />
 
       <View style={styles.overlay}>
@@ -65,15 +72,17 @@ const EcoBiteScreen = () => {
           <TextInput
             style={[styles.input, emailError ? styles.inputError : null]}
             placeholder="Voer uw e-mailadres in"
-            placeholderTextColor="#777"
+            placeholderTextColor={isDark ? '#bbb' : '#777'}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
+            autoCorrect={false}
+            textContentType="emailAddress"
           />
           {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
 
-          <TouchableOpacity style={styles.startButton} onPress={handleContinue}>
+          <TouchableOpacity style={styles.startButton} onPress={handleContinue} activeOpacity={0.8}>
             <Text style={styles.startButtonText}>Doorgaan</Text>
           </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -93,96 +102,118 @@ const EcoBiteScreen = () => {
 
 export default EcoBiteScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-  backgroundImage: {
-    position: 'absolute',
-    width: '100%',
-    height: '65%',
-    top: 0,
-  },
-  overlay: {
-    flex: 1,
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingBottom: 30,
-    marginTop: '65%',
-  },
-  textContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
-    marginTop: 90,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    fontFamily: 'ABeeZee-Regular',
-    marginBottom: 0,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '600',
-    fontFamily: 'ABeeZee-Regular',
-  },
-  ecoText: {
-    color: '#137D3B',
-    fontWeight: 'bold',
-  },
-  biteText: {
-    color: '#2DBE60',
-    fontWeight: 'bold',
-  },
-  formContainer: {
-    marginTop: 20,
-  },
-  input: {
-    backgroundColor: '#F5F5F5',
-    paddingVertical: 15,
-    paddingHorizontal: 15,
-    borderRadius: 8,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    marginBottom: 10,
-  },
-  inputError: {
-    borderColor: 'red',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 14,
-    marginBottom: 10,
-    fontFamily: 'ABeeZee-Regular',
-  },
-  startButton: {
-    backgroundColor: '#2DBE60',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-  },
-  startButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-    fontWeight: '600',
-    fontFamily: 'ABeeZee-Regular',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 25,
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#000',
-    fontFamily: 'ABeeZee-Regular',
-  },
-  footerLink: {
-    fontSize: 14,
-    color: '#2DBE60',
-    fontWeight: '600',
-    fontFamily: 'ABeeZee-Regular',
-  },
-});
+const getStyles = (isDark: boolean) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: isDark ? '#121212' : '#FFF',
+    },
+    backgroundImage: {
+      position: 'absolute',
+      width: '100%',
+      height: '65%',
+      top: 0,
+      opacity: isDark ? 0.4 : 0.7,
+    },
+    overlay: {
+      flex: 1,
+      justifyContent: 'space-between',
+      paddingHorizontal: 25,
+      paddingBottom: 40,
+      marginTop: '65%',
+      backgroundColor: isDark ? 'rgba(18,18,18,0.85)' : 'rgba(255,255,255,0.85)',
+      borderTopLeftRadius: 30,
+      borderTopRightRadius: 30,
+      shadowColor: isDark ? '#000' : '#000',
+      shadowOffset: { width: 0, height: -3 },
+      shadowOpacity: 0.15,
+      shadowRadius: 6,
+      elevation: 10,
+    },
+    textContainer: {
+      alignItems: 'center',
+      marginBottom: 10,
+      marginTop: 80,
+    },
+    subtitle: {
+      fontSize: 18,
+      fontWeight: '600',
+      fontFamily: 'ABeeZee-Regular',
+      color: isDark ? '#B3B3B3' : '#444',
+      marginBottom: 4,
+    },
+    title: {
+      fontSize: 34,
+      fontWeight: '700',
+      fontFamily: 'ABeeZee-Regular',
+    },
+    ecoText: {
+      color: '#137D3B',
+      fontWeight: 'bold',
+    },
+    biteText: {
+      color: '#2DBE60',
+      fontWeight: 'bold',
+    },
+    formContainer: {
+      marginTop: 25,
+    },
+    input: {
+      backgroundColor: isDark ? '#222' : '#F5F5F5',
+      color: isDark ? '#eee' : '#222',
+      paddingVertical: 16,
+      paddingHorizontal: 18,
+      borderRadius: 12,
+      fontSize: 16,
+      borderWidth: 1,
+      borderColor: isDark ? '#444' : '#ccc',
+      marginBottom: 12,
+      fontFamily: 'ABeeZee-Regular',
+      shadowColor: isDark ? '#000' : '#aaa',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+    },
+    inputError: {
+      borderColor: '#FF5A5F',
+    },
+    errorText: {
+      color: '#FF5A5F',
+      fontSize: 14,
+      marginBottom: 10,
+      fontFamily: 'ABeeZee-Regular',
+    },
+    startButton: {
+      backgroundColor: '#2DBE60',
+      paddingVertical: 16,
+      borderRadius: 14,
+      alignItems: 'center',
+      shadowColor: '#2DBE60',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 5,
+    },
+    startButtonText: {
+      color: '#FFF',
+      fontSize: 18,
+      fontWeight: '700',
+      fontFamily: 'ABeeZee-Regular',
+    },
+    footer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: 30,
+    },
+    footerText: {
+      fontSize: 14,
+      color: isDark ? '#aaa' : '#444',
+      fontFamily: 'ABeeZee-Regular',
+    },
+    footerLink: {
+      fontSize: 14,
+      color: '#2DBE60',
+      fontWeight: '700',
+      fontFamily: 'ABeeZee-Regular',
+    },
+  });
