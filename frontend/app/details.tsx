@@ -2,9 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert, SafeAreaView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useFonts } from 'expo-font';
+import { useTheme } from './context/ThemeContext';
 
 export default function AccountDetailsPage() {
   const router = useRouter();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const [fontsLoaded] = useFonts({
     'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
   });
@@ -15,13 +19,11 @@ export default function AccountDetailsPage() {
     phone: '',
   });
 
-  // ✅ Valideer e-mailformaat
   const isValidEmail = (email: string) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
   };
 
-  // 📥 Ophalen gebruikersgegevens
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -47,7 +49,6 @@ export default function AccountDetailsPage() {
     fetchUserData();
   }, []);
 
-  // 💾 Opslaan gebruikersgegevens
   const handleSaveChanges = async () => {
     if (!isValidEmail(userData.email)) {
       Alert.alert('Ongeldig e-mailadres', 'Voer een geldig e-mailadres in.');
@@ -78,40 +79,45 @@ export default function AccountDetailsPage() {
     }
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Text style={styles.title}>Accountgegevens</Text>
+  if (!fontsLoaded) return null;
 
-        <Text style={styles.label}>Gebruikersnaam</Text>
+  return (
+    <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#121212' : '#fff' }]}>
+      <View style={styles.innerContainer}>
+        <Text style={[styles.title, { color: isDark ? '#66BB6A' : '#4CAF50' }]}>Accountgegevens</Text>
+
+        <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Gebruikersnaam</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', color: isDark ? '#fff' : '#000' }]}
           value={userData.username}
           onChangeText={(text) => setUserData({ ...userData, username: text })}
+          placeholderTextColor={isDark ? '#777' : '#888'}
         />
 
-        <Text style={styles.label}>Email</Text>
+        <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Email</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', color: isDark ? '#fff' : '#000' }]}
           value={userData.email}
           onChangeText={(text) => setUserData({ ...userData, email: text })}
           keyboardType="email-address"
+          placeholderTextColor={isDark ? '#777' : '#888'}
         />
 
-        <Text style={styles.label}>Telefoonnummer (optioneel)</Text>
+        <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Telefoonnummer (optioneel)</Text>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', color: isDark ? '#fff' : '#000' }]}
           value={userData.phone}
           onChangeText={(text) => setUserData({ ...userData, phone: text })}
           keyboardType="phone-pad"
+          placeholderTextColor={isDark ? '#777' : '#888'}
         />
 
         <TouchableOpacity style={styles.saveButton} onPress={handleSaveChanges}>
           <Text style={styles.saveButtonText}>Opslaan</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.backButton} onPress={() => router.push('/account')}>
-          <Text style={styles.backButtonText}>Terug naar account</Text>
+        <TouchableOpacity style={[styles.backButton, { backgroundColor: isDark ? '#333' : '#ddd' }]} onPress={() => router.push('/account')}>
+          <Text style={[styles.backButtonText, { color: isDark ? '#fff' : '#333' }]}>Terug naar account</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -121,7 +127,6 @@ export default function AccountDetailsPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   innerContainer: {
     flex: 1,
@@ -130,14 +135,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#4CAF50',
     marginBottom: 20,
     textAlign: 'center',
     fontFamily: 'ABeeZee',
   },
   label: {
     fontSize: 16,
-    color: '#333',
     marginBottom: 5,
     fontFamily: 'ABeeZee',
   },
@@ -164,14 +167,12 @@ const styles = StyleSheet.create({
     fontFamily: 'ABeeZee',
   },
   backButton: {
-    backgroundColor: '#ddd',
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
   },
   backButtonText: {
     fontSize: 16,
-    color: '#333',
     fontFamily: 'ABeeZee',
   },
 });

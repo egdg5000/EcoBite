@@ -13,15 +13,17 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { BlurView } from 'expo-blur';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
+import { useTheme } from '../context/ThemeContext'; 
 
 const CustomTabBar = ({ state, descriptors, navigation }: any) => {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { theme } = useTheme(); 
+  const isDark = theme === 'dark'; 
 
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(10)).current;
-  const scaleAnim = useRef(new Animated.Value(1)).current;  // Animatie voor schaling
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const leftTabs = state.routes.filter(
     (r: any) => r.name === 'home' || r.name === 'discover'
@@ -29,7 +31,6 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
   const rightTabs = state.routes.filter(
     (r: any) => r.name === 'fridge' || r.name === 'account'
   );
-  
 
   useEffect(() => {
     if (menuOpen) {
@@ -67,14 +68,14 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 
   const handlePressIn = () => {
     Animated.spring(scaleAnim, {
-      toValue: 0.9,  // Schaal naar 0.9 voor het indrukken
+      toValue: 0.9,
       useNativeDriver: true,
     }).start();
   };
 
   const handlePressOut = () => {
     Animated.spring(scaleAnim, {
-      toValue: 1,  // Schaal terug naar 1 wanneer losgelaten
+      toValue: 1,
       useNativeDriver: true,
     }).start();
   };
@@ -106,21 +107,21 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
         key={route.key}
         onPress={onPress}
         style={styles.tabButton}
-        onPressIn={handlePressIn}  // Aanraking ingedrukt
-        onPressOut={handlePressOut}  // Aanraking losgelaten
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
       >
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
           <Ionicons
             name={iconName}
             size={24}
-            color={isFocused ? '#4CAF50' : '#888'}
+            color={isFocused ? '#66BB6A' : isDark ? '#ccc' : '#888'}
           />
         </Animated.View>
         <Text
           style={{
             fontFamily: 'ABeeZee',
             fontSize: 12,
-            color: isFocused ? '#4CAF50' : '#888',
+            color: isFocused ? '#66BB6A' : isDark ? '#ccc' : '#888',
           }}
         >
           {options.title}
@@ -135,7 +136,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
         <TouchableWithoutFeedback onPress={() => setMenuOpen(false)}>
           <View style={StyleSheet.absoluteFill}>
             {Platform.OS === 'ios' ? (
-              <BlurView intensity={30} tint="light" style={StyleSheet.absoluteFill} />
+              <BlurView intensity={30} tint={isDark ? 'dark' : 'light'} style={StyleSheet.absoluteFill} />
             ) : (
               <View style={styles.menuOverlay} />
             )}
@@ -143,8 +144,11 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
         </TouchableWithoutFeedback>
       )}
 
-      <SafeAreaView edges={['bottom']} style={styles.safeArea}>
-        <View style={styles.tabBar}>
+      <SafeAreaView edges={['bottom']} style={[styles.safeArea, { backgroundColor: isDark ? '#1e1e1e' : '#fff' }]}>
+        <View style={[styles.tabBar, {
+          backgroundColor: isDark ? '#1e1e1e' : '#fff',
+          shadowColor: isDark ? '#000' : '#000',
+        }]}>
           <View style={styles.sideContainer}>
             {leftTabs.map(renderTabButton)}
           </View>
@@ -153,7 +157,7 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 
           <View style={styles.centerWrapper}>
             <TouchableOpacity
-              style={styles.plusButton}
+              style={[styles.plusButton, { backgroundColor: isDark ? '#66BB6A' : '#4CAF50' }]}
               onPress={() => setMenuOpen((prev) => !prev)}
               activeOpacity={0.8}
             >
@@ -162,7 +166,14 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
 
             <Animated.View
               pointerEvents={menuOpen ? 'auto' : 'none'}
-              style={[styles.fabMenu, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}
+              style={[
+                styles.fabMenu,
+                {
+                  backgroundColor: isDark ? '#388E3C' : '#4CAF50',
+                  opacity: fadeAnim,
+                  transform: [{ translateY: slideAnim }],
+                }
+              ]}
             >
               <TouchableOpacity
                 style={styles.fabItem}
@@ -174,7 +185,6 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
                 <Ionicons name="barcode" size={20} color="#fff" />
                 <Text style={styles.fabText}>Scan Producten</Text>
               </TouchableOpacity>
-              
 
               <TouchableOpacity
                 style={styles.fabItem}
@@ -188,13 +198,12 @@ const CustomTabBar = ({ state, descriptors, navigation }: any) => {
               </TouchableOpacity>
             </Animated.View>
           </View>
-          
+
           <View style={styles.centerSpacer} />
-          
+
           <View style={styles.sideContainer}>
             {rightTabs.map(renderTabButton)}
           </View>
-
         </View>
       </SafeAreaView>
     </>
@@ -207,13 +216,11 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     flexDirection: 'row',
-    alignItems: 'center', 
-    height: 90, 
-    backgroundColor: '#fff',
+    alignItems: 'center',
+    height: 90,
     borderTopWidth: 0,
     borderRadius: 15,
     elevation: 10,
-    shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.15,
     shadowRadius: 10,
@@ -225,7 +232,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   centerSpacer: {
-    width: 10, // iets breder voor meer ademruimte rond de +
+    width: 10,
   },
   tabButton: {
     alignItems: 'center',
@@ -238,7 +245,6 @@ const styles = StyleSheet.create({
   },
   plusButton: {
     top: -5,
-    backgroundColor: '#4CAF50',
     borderRadius: 28,
     height: 56,
     width: 56,
@@ -248,9 +254,8 @@ const styles = StyleSheet.create({
   },
   fabMenu: {
     position: 'absolute',
-    bottom: '100%', 
+    bottom: '100%',
     marginBottom: 20,
-    backgroundColor: '#4CAF50',
     borderRadius: 16,
     padding: 10,
     elevation: 10,

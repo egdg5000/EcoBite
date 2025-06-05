@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'; // Voeg SafeAreaView toe
-import { useRouter } from 'expo-router'; // Navigatie hook
-import { checkForUpdateAsync } from 'expo-updates'; // Directe import van checkForUpdateAsync
-import * as Application from 'expo-application'; // Om de versie op te halen
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'; 
+import { useRouter } from 'expo-router'; 
+import { checkForUpdateAsync } from 'expo-updates'; 
+import * as Application from 'expo-application'; 
+import { useTheme } from './context/ThemeContext';
 
 export default function AboutPage() {
-  const [appVersion, setAppVersion] = useState(Application.nativeApplicationVersion); // Dynamische versie
+  const [appVersion, setAppVersion] = useState(Application.nativeApplicationVersion); 
   const [updateStatus, setUpdateStatus] = useState('');
-  const router = useRouter(); // Router voor navigatie
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  const router = useRouter(); 
 
-  // Checken of er updates zijn
   useEffect(() => {
     const checkForAppUpdates = async () => {
       try {
-        const update = await checkForUpdateAsync(); // Gebruik de direct geïmporteerde functie
+        const update = await checkForUpdateAsync(); 
         if (update.isAvailable) {
           setUpdateStatus('Er is een update beschikbaar! Update de app voor nieuwe functies.');
         } else {
@@ -26,19 +28,19 @@ export default function AboutPage() {
     };
 
     checkForAppUpdates();
-  }, []); // Lege afhankelijkheden, zodat dit alleen één keer gebeurt bij het laden van de pagina
+  }, []); 
 
   const handleGoBack = () => {
     router.push('/account'); 
   };
 
   return (
-    <SafeAreaView style={styles.container}> 
+    <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#121212' : '#fff' }]}> 
       <View style={styles.container}>
-        <Text style={styles.header}>Over de App</Text>
+        <Text style={[styles.header, { color: isDark ? '#66BB6A' : '#4CAF50' }]}>Over de App</Text>
         <View style={styles.infoContainer}>
-          <Text style={styles.infoText}>Versie: {appVersion}</Text>
-          <Text style={styles.infoText}>{updateStatus}</Text>
+          <Text style={[styles.infoText, { color: isDark ? '#ddd' : '#333' }]}>Versie: {appVersion}</Text>
+          <Text style={[styles.infoText, { color: isDark ? '#aaa' : '#333' }]}>{updateStatus}</Text>
         </View>
         <TouchableOpacity style={styles.backButton} onPress={handleGoBack}>
           <Text style={styles.backButtonText}>Terug</Text>
@@ -51,7 +53,6 @@ export default function AboutPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
     padding: 20,
   },
   header: {
@@ -66,7 +67,6 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 18,
-    color: '#333',
     fontFamily: 'ABeeZee',
     marginBottom: 10,
   },
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,
-    alignSelf: 'center', // centreren op het scherm
+    alignSelf: 'center', 
     marginTop: 10,
   },
   backButtonText: {

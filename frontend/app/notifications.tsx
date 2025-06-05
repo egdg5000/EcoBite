@@ -9,12 +9,15 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { useRouter } from "expo-router"; // Gebruik dit als je expo-router gebruikt
+import { useRouter } from "expo-router";
+import { useTheme } from "./context/ThemeContext";
 
 export default function NotificationsPage() {
-  const router = useRouter(); // ← Terugknop functionaliteit
+  const router = useRouter();
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
-  const userId = 1; // 🔁 Vervang later met ingelogde gebruiker uit context
+  const userId = 1;
 
   const [notifyExpiry, setNotifyExpiry] = useState(true);
   const [notifyDeletion, setNotifyDeletion] = useState(true);
@@ -23,10 +26,8 @@ export default function NotificationsPage() {
     const fetchPreferences = async () => {
       try {
         const response = await fetch(
-          `https://jouw-server.com/users/preferences/${userId}`,
-          {
-            credentials: "include",
-          }
+          `https://edg5000.com/users/preferences/${userId}`,
+          { credentials: "include" }
         );
         const data = await response.json();
         setNotifyExpiry(data.notify_expiry);
@@ -62,17 +63,18 @@ export default function NotificationsPage() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: isDark ? "#121212" : "#fff" }]}>
       <ScrollView contentContainerStyle={styles.content}>
-        {/* 🔙 Terugknop */}
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Text style={styles.backText}>← Terug</Text>
+          <Text style={[styles.backText, { color: isDark ? "#66BB6A" : "#4CAF50" }]}>← Terug</Text>
         </TouchableOpacity>
 
-        <Text style={styles.title}>Meldingsvoorkeuren</Text>
+        <Text style={[styles.title, { color: isDark ? "#66BB6A" : "#4CAF50" }]}>Meldingsvoorkeuren</Text>
 
         <View style={styles.row}>
-          <Text style={styles.label}>Melding bij bijna verlopen product</Text>
+          <Text style={[styles.label, { color: isDark ? "#ccc" : "#333" }]}>
+            Melding bij bijna verlopen product
+          </Text>
           <Switch
             value={notifyExpiry}
             onValueChange={(value) => {
@@ -83,7 +85,9 @@ export default function NotificationsPage() {
         </View>
 
         <View style={styles.row}>
-          <Text style={styles.label}>Melding bij automatisch verwijderen</Text>
+          <Text style={[styles.label, { color: isDark ? "#ccc" : "#333" }]}>
+            Melding bij automatisch verwijderen
+          </Text>
           <Switch
             value={notifyDeletion}
             onValueChange={(value) => {
@@ -100,7 +104,6 @@ export default function NotificationsPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
   },
   content: {
     padding: 20,
@@ -109,17 +112,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   backText: {
-    color: "#4CAF50",
     fontSize: 16,
     fontWeight: "600",
-    fontFamily: 'ABeeZee',
+    fontFamily: "ABeeZee",
   },
   title: {
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 20,
-    color: "#4CAF50",
-    fontFamily: 'ABeeZee',
+    fontFamily: "ABeeZee",
   },
   row: {
     flexDirection: "row",
@@ -129,9 +130,8 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: "#333",
     flex: 1,
     paddingRight: 12,
-    fontFamily: 'ABeeZee',
+    fontFamily: "ABeeZee",
   },
 });

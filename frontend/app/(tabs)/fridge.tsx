@@ -14,6 +14,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useFonts } from "expo-font";
 import { useRouter } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTheme } from "../context/ThemeContext";
 
 interface Product {
   id: number;
@@ -30,7 +31,6 @@ const fetchProducts = async (): Promise<{ products: Product[], expiringSoon: Pro
       credentials: "include",
     });
     const data = await response.json();
-    // Filter products that expire in 1 or 7 days
     const today = new Date();
     const expiringSoon = data.products.filter((product: Product) => {
       const expiry = new Date(product.expiration_date);
@@ -57,8 +57,9 @@ export default function FridgePage() {
   const [expiringSoon, setExpiringSoon] = useState<Product[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const router = useRouter();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
-  
   const [fontsLoaded] = useFonts({
     ABeeZee: require("../../assets/fonts/ABeeZee.ttf"),
   });
@@ -94,7 +95,7 @@ export default function FridgePage() {
         console.error("Fout bij ophalen verwijderde producten:", err);
       }
     };
-    
+    fetchDeleted();
   }, []);
 
   const toggleFavorite = (id: number) => {
@@ -115,7 +116,7 @@ export default function FridgePage() {
       console.error("Verwijderen mislukt:", err);
     }
   };
-  
+
   const onRefresh = async () => {
     setRefreshing(true);
     const { products, expiringSoon } = await fetchProducts();
@@ -131,136 +132,126 @@ export default function FridgePage() {
 
   if (!fontsLoaded) return null;
 
-  const handleDiscoverRecipes = async () => {
-    await AsyncStorage.setItem('selectedIngredients', JSON.stringify(products));
-    router.push('/discover');
-  };
-
   return (
-    <SafeAreaView style={styles.container}>
-    <View style={{padding: 20}}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Mijn Voorraad</Text>
-      </View>
-
-
-      {expiringSoon.length > 0 && (
-        <View style={styles.alertBox}>
-          <Text style={styles.alertTitle}>⏰ Let op!</Text>
-          {expiringSoon.map((item) => {
-            const daysLeft = Math.ceil(
-              (new Date(item.expiration_date).getTime() - new Date().getTime()) /
-                (1000 * 60 * 60 * 24)
-            );
-            return (
-              <Text key={item.id} style={styles.alertItem}>
-                {item.item_name} verloopt over {daysLeft} dag
-                {daysLeft > 1 ? "en" : ""}
-              </Text>
-            );
-          })}
+    <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#121212' : '#fff' }]}>
+      <View style={{ padding: 20 }}>
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: isDark ? '#A5D6A7' : '#4CAF50' }]}>Mijn Voorraad</Text>
         </View>
-      )}
 
-      {/* Tabs */}
-      <View style={styles.tabs}>
-        <TouchableOpacity
-          onPress={() => setActiveTab("all")}
-          style={[
-            styles.tab,
-            activeTab === "all" && styles.activeTab,
-          ]}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === "all" && styles.activeTabText,
-            ]}
-          >
-            Alles
+        {expiringSoon.length > 0 && (
+          <View style={[styles.alertBox, { backgroundColor: isDark ? '#332b00' : '#FFF8E1', borderLeftColor: '#FFB300' }]}>
+            <Text style={[styles.alertTitle, { color: isDark ? '#FFB74D' : '#FF6F00' }]}>⏰ Let op!</Text>
+            {expiringSoon.map((item) => {
+              const daysLeft = Math.ceil(
+                (new Date(item.expiration_date).getTime() - new Date().getTime()) /
+                (1000 * 60 * 60 * 24)
+              );
+              return (
+                <Text key={item.id} style={[styles.alertItem, { color: isDark ? '#eee' : '#444' }]}>
+                  {item.item_name} verloopt over {daysLeft} dag{daysLeft > 1 ? "en" : ""}
+                </Text>
+              );
+            })}
+          </View>
+        )}
+
+        <View style={styles.tabs}>
+          {["all", "favorites"].map((tab) => (
+            <TouchableOpacity
+              key={tab}
+              onPress={() => setActiveTab(tab as any)}
+              style={[
+                styles.tab,
+                {
+                  backgroundColor: activeTab === tab
+                    ? "#4CAF50"
+                    : isDark ? "#333" : "#e0e0e0",
+                },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  {
+                    color: activeTab === tab
+                      ? "#fff"
+                      : isDark ? "#ccc" : "#555",
+                    fontWeight: activeTab === tab ? "bold" : "normal",
+                  },
+                ]}
+              >
+                {tab === "all" ? "Alles" : "Favorieten"}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Productlijst */}
+        {filteredProducts.length === 0 ? (
+          <Text style={[styles.empty, { color: isDark ? '#aaa' : '#777' }]}>
+            Geen producten gevonden
           </Text>
-        </TouchableOpacity>
+        ) : (
+          <FlatList
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            data={filteredProducts}
+            keyExtractor={(item) => item.id.toString()}
+            contentContainerStyle={{ paddingBottom: 30 }}
+            renderItem={({ item }) => (
+              <View style={[styles.card, { backgroundColor: isDark ? "#1e1e1e" : "#f1f1f1" }]}>
+                <Text style={[styles.name, { color: isDark ? "#fff" : "#333" }]}>{item.item_name}</Text>
+                <View style={styles.row}>
+                  <Icon name="scale" size={16} color="#4CAF50" />
+                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}>
+                    {" "}{item.quantity} {item.unit}
+                  </Text>
+                </View>
+                <View style={styles.row}>
+                  <Icon name="calendar-today" size={16} color="#4CAF50" />
+                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}>
+                    {" "}{item.expiration_date}
+                  </Text>
+                </View>
+                <View style={styles.row}>
+                  <Icon name="category" size={16} color="#4CAF50" />
+                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}>
+                    {" "}{item.category}
+                  </Text>
+                </View>
+
+                <View style={styles.actionRow}>
+                  <TouchableOpacity onPress={() => toggleFavorite(item.id)} style={styles.iconButton}>
+                    <Icon
+                      name={favorites.includes(item.id) ? "favorite" : "favorite-border"}
+                      size={22}
+                      color="#e91e63"
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => deleteProduct(item.id)} style={styles.iconButton}>
+                    <Icon name="delete" size={22} color="#f44336" />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+          />
+        )}
+
         <TouchableOpacity
-          onPress={() => setActiveTab("favorites")}
-          style={[
-            styles.tab,
-            activeTab === "favorites" && styles.activeTab,
-          ]}
+          style={[styles.recipeButton, { backgroundColor: isDark ? '#66BB6A' : '#4CAF50' }]}
+          onPress={() => router.push('/discover')}
         >
-          <Text
-            style={[
-              styles.tabText,
-              activeTab === "favorites" && styles.activeTabText,
-            ]}
-          >
-            Favorieten
-          </Text>
+          <Text style={styles.recipeButtonText}>Ontdek Recepten</Text>
         </TouchableOpacity>
-      </View>
-
-      {/* Productlijst */}
-      {filteredProducts.length === 0 ? (
-        <Text style={styles.empty}>Geen producten gevonden</Text>
-      ) : (
-        <FlatList
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          data={filteredProducts}
-          keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ paddingBottom: 30 }}
-          renderItem={({ item }) => (
-            <View style={styles.card}>
-              <Text style={styles.name}>{item.item_name}</Text>
-              <View style={styles.row}>
-                <Icon name="scale" size={16} color="#4CAF50" />
-                <Text style={styles.details}> {item.quantity} {item.unit}</Text>
-              </View>
-              <View style={styles.row}>
-                <Icon name="calendar-today" size={16} color="#4CAF50" />
-                <Text style={styles.details}> {item.expiration_date}</Text>
-              </View>
-              <View style={styles.row}>
-                <Icon name="category" size={16} color="#4CAF50" />
-                <Text style={styles.details}> {item.category}</Text>
-              </View>
-
-              <View style={styles.actionRow}>
-                <TouchableOpacity
-                  onPress={() => toggleFavorite(item.id)}
-                  style={styles.iconButton}
-                >
-                  <Icon
-                    name={
-                      favorites.includes(item.id)
-                        ? "favorite"
-                        : "favorite-border"
-                    }
-                    size={22}
-                    color="#e91e63"
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => deleteProduct(item.id)}
-                  style={styles.iconButton}
-                >
-                  <Icon name="delete" size={22} color="#f44336" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
-      )}
-      <TouchableOpacity style={styles.recipeButton} onPress={() => router.push('/discover')}>
-        <Text style={styles.recipeButtonText}>Ontdek Recepten</Text>
-      </TouchableOpacity>
       </View>
 
       {products.length > 0 && (
-        <View style={styles.tipsContainer}>
-          <Text style={styles.tipsTitle}>💡 Voedselbewaar Tips</Text>
-          <Text style={styles.tip}>• Vaak is een product nog goed na de houdbaarheidsdatum.</Text>
-          <Text style={styles.tip}>• Ruik, kijk en proef voordat je iets weggooit.</Text>
-          <Text style={styles.tip}>• Bewaar producten koel en droog.</Text>
-          <Text style={styles.tip}>• Gebruik eerst de oudste producten ("First In, First Out").</Text>
+        <View style={[styles.tipsContainer, { backgroundColor: isDark ? '#2e7d32' : '#e6f4ea' }]}>
+          <Text style={[styles.tipsTitle, { color: isDark ? '#fff' : '#2e7d32' }]}>💡 Voedselbewaar Tips</Text>
+          <Text style={[styles.tip, { color: isDark ? '#ddd' : '#333' }]}>• Vaak is een product nog goed na de houdbaarheidsdatum.</Text>
+          <Text style={[styles.tip, { color: isDark ? '#ddd' : '#333' }]}>• Ruik, kijk en proef voordat je iets weggooit.</Text>
+          <Text style={[styles.tip, { color: isDark ? '#ddd' : '#333' }]}>• Bewaar producten koel en droog.</Text>
+          <Text style={[styles.tip, { color: isDark ? '#ddd' : '#333' }]}>• Gebruik eerst de oudste producten ("First In, First Out").</Text>
         </View>
       )}
     </SafeAreaView>
@@ -268,12 +259,11 @@ export default function FridgePage() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff"},
+  container: { flex: 1 },
   title: {
     fontSize: 26,
     fontFamily: "ABeeZee",
     fontWeight: "bold",
-    color: "#4CAF50",
     marginBottom: 16,
   },
   empty: {
@@ -281,7 +271,6 @@ const styles = StyleSheet.create({
     fontFamily: "ABeeZee",
     textAlign: "center",
     marginTop: 50,
-    color: "#777",
   },
   tabs: {
     flexDirection: "row",
@@ -293,22 +282,12 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 20,
-    backgroundColor: "#e0e0e0",
-  },
-  activeTab: {
-    backgroundColor: "#4CAF50",
   },
   tabText: {
     fontFamily: "ABeeZee",
     fontSize: 14,
-    color: "#555",
-  },
-  activeTabText: {
-    color: "#fff",
-    fontWeight: "bold",
   },
   card: {
-    backgroundColor: "#f1f1f1",
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -317,7 +296,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: "ABeeZee",
     fontWeight: "bold",
-    color: "#333",
     marginBottom: 6,
   },
   row: {
@@ -328,7 +306,6 @@ const styles = StyleSheet.create({
   details: {
     fontFamily: "ABeeZee",
     fontSize: 14,
-    color: "#444",
   },
   actionRow: {
     flexDirection: "row",
@@ -340,9 +317,7 @@ const styles = StyleSheet.create({
     padding: 4,
   },
   alertBox: {
-    backgroundColor: "#FFF8E1",
     borderLeftWidth: 4,
-    borderLeftColor: "#FFB300",
     padding: 12,
     marginBottom: 16,
     borderRadius: 6,
@@ -351,15 +326,12 @@ const styles = StyleSheet.create({
     fontFamily: "ABeeZee",
     fontWeight: "bold",
     marginBottom: 6,
-    color: "#FF6F00",
   },
   alertItem: {
     fontFamily: "ABeeZee",
     fontSize: 14,
-    color: "#444",
   },
-   recipeButton: {
-    backgroundColor: '#4CAF50',
+  recipeButton: {
     paddingVertical: 15,
     paddingHorizontal: 25,
     borderRadius: 10,
@@ -378,26 +350,23 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 16,
   },
-    tipsContainer: {
-    backgroundColor: '#e6f4ea',
+  tipsContainer: {
     padding: 16,
     borderRadius: 12,
     marginHorizontal: 20,
     marginBottom: 40,
-    borderColor: '#b4dfc4',
     borderWidth: 1,
+    borderColor: '#b4dfc4',
   },
   tipsTitle: {
     fontFamily: 'ABeeZee',
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#2e7d32',
     marginBottom: 10,
   },
   tip: {
     fontFamily: 'ABeeZee',
     fontSize: 14,
-    color: '#333',
     marginBottom: 6,
   },
 });
