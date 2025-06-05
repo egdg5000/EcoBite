@@ -2,6 +2,7 @@ import { Stack } from "expo-router";
 import React from "react";
 import Toast from "react-native-toast-message";
 import { ThemeProvider } from "./context/ThemeContext"; 
+import './context/i18n';
 
 export default function RootLayout() {
   return (
