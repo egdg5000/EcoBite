@@ -100,6 +100,9 @@ const LoginScreen = () => {
       >
         <View style={styles.innerContainer}>
           <Image source={require('../assets/images/EcoBite2.png')} style={styles.logo} />
+          <View style={styles.welcomeContainer}>
+            <Text style={styles.welcomeText}>👋 Welkom Terug!</Text>
+          </View>
           <Text style={styles.title}>Inloggen</Text>
           <Text style={styles.subtitle}>Vul uw gegevens in om door te gaan</Text>
 
@@ -162,8 +165,7 @@ const getStyles = (isDark: boolean) =>
       justifyContent: 'center',
       padding: 20,
       paddingBottom: 40, 
-  },
-
+    },
     logo: {
       width: 100,
       height: 100,
@@ -227,6 +229,15 @@ const getStyles = (isDark: boolean) =>
       color: '#2DBE60',
       fontWeight: 'bold',
       fontFamily: 'ABeeZee',
+    },
+    welcomeContainer: {
+      marginBottom: 8,
+    },
+    welcomeText: {
+      fontSize: 18,
+      color: isDark ? '#ccc' : '#444',
+      fontFamily: 'ABeeZee',
+      textAlign: 'center',
     },
   });
 
