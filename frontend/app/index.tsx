@@ -76,7 +76,6 @@ async function checkLogin() {
     console.log(response);
   }
   if (data.success) {
-    console.log('Logged in!');
     router.push('/home');
   } else console.log(response);
 }

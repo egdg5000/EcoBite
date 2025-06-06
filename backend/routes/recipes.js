@@ -48,7 +48,6 @@ router.get('/by-ingredients', async (req, res) => {
 
 router.post('/by-recipe-id', async (req, res) => {
   const { recipe_id } = req.body;
-  console.log(recipe_id);
   const [rows] = await db.promise().query(
     `SELECT * FROM recipes WHERE id = ?`,
     [recipe_id]

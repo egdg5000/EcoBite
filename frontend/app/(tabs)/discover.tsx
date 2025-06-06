@@ -63,7 +63,6 @@ export default function DiscoverScreen() {
           const recipeData = await recipeResponse.json();
           recipe.recipe = recipeData.recipe;
         }
-        console.log("log:",data.recipes[0].recipe.title);	
         if (data.recipes) setRecipes(data.recipes);
       };
       fetchAllRecipes();
