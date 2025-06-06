@@ -34,6 +34,13 @@ router.post("/add", loginStatus, async (req, res) => {
   if (!item_name || !quantity || !unit || !category) {
     return res.status(400).json({ success: false, message: "Missing required fields" });
   }
+  const [rows] = await db.promise().query(
+    `SELECT * FROM ingredients WHERE \`name.singular\` = ?`,
+    [item_name]
+  );
+  if (rows.length === 0) {
+    return res.status(400).json({ success: false, message: "Product not found" });
+  }
   if (expiration_date && expiration_date < new Date().toISOString().split("T")[0]) {
     return res.status(400).json({ success: false, message: "Expiration date cannot be in the past" });
   }
