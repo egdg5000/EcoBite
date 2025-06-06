@@ -262,11 +262,11 @@ export default function FridgePage() {
             </Text>
 
             <TouchableOpacity onPress={() => { setSelectedCategory(null); setCategoryModalVisible(false); }}>
-              <Text style={{ paddingVertical: 10, color: isDark ? '#A5D6A7' : '#4CAF50' }}>Toon alles</Text>
+              <Text style={{ paddingVertical: 10, fontFamily: "ABeeZee", color: isDark ? '#A5D6A7' : '#4CAF50' }}>Toon alles</Text>
             </TouchableOpacity>
 
             {uniqueCategories.length === 0 ? (
-              <Text style={{ color: isDark ? '#888' : '#999', fontStyle: 'italic' }}>Geen categorieën beschikbaar</Text>
+              <Text style={{ color: isDark ? '#888' : '#999', fontStyle: 'italic', fontFamily: "ABeeZee", }}>Geen categorieën beschikbaar</Text>
             ) : (
               uniqueCategories.map(cat => (
                 <TouchableOpacity
@@ -276,7 +276,7 @@ export default function FridgePage() {
                     setCategoryModalVisible(false);
                   }}
                 >
-                  <Text style={{ paddingVertical: 10, color: selectedCategory === cat ? (isDark ? '#A5D6A7' : '#4CAF50') : (isDark ? '#ccc' : '#333') }}>
+                  <Text style={{ paddingVertical: 10, fontFamily: "ABeeZee", color: selectedCategory === cat ? (isDark ? '#A5D6A7' : '#4CAF50') : (isDark ? '#ccc' : '#333') }}>
                     {cat}
                   </Text>
                 </TouchableOpacity>
