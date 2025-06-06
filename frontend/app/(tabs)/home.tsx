@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, ScrollView, StyleSheet, Image, SafeAreaView, Modal, Pressable,
+  View, Text, ScrollView, StyleSheet, Image, SafeAreaView, Modal, Pressable, Alert,
 } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
@@ -11,7 +11,7 @@ import { useFonts } from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import weetjesData from '../../assets/data/weetjes.json';
-import { Alert } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 
 interface LeaderboardEntry {
   username: string;
@@ -24,6 +24,9 @@ const HomeScreen = () => {
   const [fontsLoaded] = useFonts({
     ABeeZee: require('../../assets/fonts/ABeeZee.ttf'),
   });
+
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const animatedRef = useAnimatedRef<Animated.ScrollView>();
   const scrollY = useScrollViewOffset(animatedRef);
@@ -76,11 +79,11 @@ const HomeScreen = () => {
     };
 
     const fetchLeaderboard = async () => {
-      // try {
-      //   const res = await fetch('https://edg5000.com/gamification/leaderboard');
-      //   const data = await res.json();
-      //   setLeaderboard(data);
-      // } catch (err) {
+      //try {
+        //const res = await fetch('https://edg5000.com/gamification/leaderboard');
+        //const data = await res.json();
+        //setLeaderboard(data);
+      //} catch (err) {
         console.error('Fout bij leaderboard ophalen:');
       //}
     };
@@ -122,6 +125,10 @@ const HomeScreen = () => {
   }));
 
   const backgroundColor = useAnimatedStyle(() => {
+    if (isDark) {
+      return { backgroundColor: '#121212' };
+    }
+
     let red1 = 135, green1 = 206, blue1 = 235;
     let red2 = 107, green2 = 62, blue2 = 38;
     let red = red1 - ((red1 - red2) / maxScroll) * scrollY.value;
@@ -131,14 +138,14 @@ const HomeScreen = () => {
   });
 
   const getCo2BorderColor = (value: number) => {
-  if (value < 50) {
-    return { borderColor: 'rgba(253, 44, 44, 0.5)' }; 
-  } else if (value < 75) {
-    return { borderColor: 'rgba(255, 165, 0, 0.5)' }; 
-  } else {
-    return { borderColor: 'rgba(2, 151, 2, 0.5)' }; 
-  }
-};
+    if (value < 50) {
+      return { borderColor: 'rgba(253, 44, 44, 0.5)' };
+    } else if (value < 75) {
+      return { borderColor: 'rgba(255, 165, 0, 0.5)' };
+    } else {
+      return { borderColor: 'rgba(2, 151, 2, 0.5)' };
+    }
+  };
 
   const safeXp = Number.isFinite(xp) ? xp : 0;
   const safeXpForNextLevel = xpForNextLevel || 100;
@@ -159,41 +166,91 @@ const HomeScreen = () => {
           <View style={styles.header}>
             <View style={styles.logoContainer}>
               <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
-              <Text style={styles.title}>
+              <Text style={[styles.title, { color: isDark ? '#fff' : '#000' }]}>
                 <Text style={styles.darkGreen}>Eco</Text>
                 <Text style={styles.lightGreen}>Bite</Text>
               </Text>
             </View>
 
-            <Animated.Text style={[styles.greetingText, greetingStyle]}>{greeting}</Animated.Text>
-            <Animated.Text style={[styles.dateText, greetingStyle]}>{currentDate}</Animated.Text>
-
-            <View style={styles.factContainer}>
-              <Text style={styles.factLabel}>💡 Wist je dat?</Text>
-              <Text style={styles.factText}>{weetje}</Text>
+            <Animated.Text style={[styles.greetingText, greetingStyle, { color: isDark ? '#fff' : '#000' }]}>
+              {greeting}
+            </Animated.Text>
+            <Animated.Text style={[styles.dateText, greetingStyle, { color: isDark ? '#aaa' : '#444' }]}>
+              {currentDate}
+            </Animated.Text>
+            <View style={[
+              styles.factContainer,
+              {
+                backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
+                borderLeftColor: isDark ? '#66FF66' : '#2E8B57',
+              }
+            ]}>
+              <Text style={[
+                styles.factLabel,
+                { color: isDark ? '#66FF66' : '#2E8B57' }
+              ]}>
+                💡 Wist je dat?
+              </Text>
+              <Text style={[
+                styles.factText,
+                { color: isDark ? '#fff' : '#333' }
+              ]}>
+                {weetje}
+              </Text>
             </View>
 
-            <View style={styles.divider} />
+            <View style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#fff' : '#000', opacity: 0.2 }
+            ]} />
           </View>
 
           <View style={styles.treeStatContainer}>
-            <Text style={styles.co2Label}>Jouw Boom:</Text>
+            <Text style={[
+              styles.co2Label,
+              { color: isDark ? '#fff' : '#222' }
+            ]}>
+              Jouw Boom:
+            </Text>
             <Image source={getTreeImage()} style={styles.treeImage} />
-            <View style={[styles.co2Box, getCo2BorderColor(co2Reduction)]}>
-              <Text style={styles.co2Value}>{co2Reduction}%</Text>
-              <Text style={styles.co2Label}>CO₂-reductie</Text>
+            <View style={[
+              styles.co2Box,
+              getCo2BorderColor(co2Reduction),
+              { backgroundColor: isDark ? '#ffffff22' : '#00000011' }
+            ]}>
+              <Text style={[styles.co2Value, { color: isDark ? '#fff' : '#000' }]}>
+                {co2Reduction}%
+              </Text>
+              <Text style={[styles.co2Label, { color: isDark ? '#ccc' : '#333' }]}>
+                CO₂-reductie
+              </Text>
             </View>
           </View>
 
-          <View style={styles.xpContainer}>
-            <Text style={styles.xpTitle}>Level {level}</Text>
+          <View style={[
+            styles.xpContainer,
+            { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }
+          ]}>
+            <Text style={[styles.xpTitle, { color: isDark ? '#fff' : '#000' }]}>
+              Level {level}
+            </Text>
             <View style={styles.xpBarBackground}>
-              <View style={[styles.xpBarFill, { width: `${xpProgress * 100}%` }]} />
+              <View style={[
+                styles.xpBarFill,
+                {
+                  width: `${xpProgress * 100}%`,
+                  backgroundColor: isDark ? '#66FF66' : '#3cb371',
+                }
+              ]} />
             </View>
-            <Text style={styles.xpText}>{xp} / {xpForNextLevel} XP</Text>
+            <Text style={[styles.xpText, { color: isDark ? '#fff' : '#000' }]}>
+              {xp} / {xpForNextLevel} XP
+            </Text>
             <Pressable onPress={() => setShowStreakPopup(true)} style={styles.streakContainer}>
               <Ionicons name="flame-outline" size={24} color="#FFA500" />
-              <Text style={styles.streakText}>{streakDays} dagen streak</Text>
+              <Text style={[styles.streakText, { color: '#FFA500' }]}>
+                {streakDays} dagen streak
+              </Text>
             </Pressable>
           </View>
 
@@ -204,9 +261,20 @@ const HomeScreen = () => {
             onRequestClose={() => setShowStreakPopup(false)}
           >
             <View style={styles.modalBackdrop}>
-              <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>🔥 Streak behouden</Text>
-                <Text style={styles.modalText}>
+              <View style={[
+                styles.modalContent,
+                { backgroundColor: isDark ? '#1e1e1e' : '#fff' }
+              ]}>
+                <Text style={[
+                  styles.modalTitle,
+                  { color: isDark ? '#fff' : '#000' }
+                ]}>
+                  🔥 Streak behouden
+                </Text>
+                <Text style={[
+                  styles.modalText,
+                  { color: isDark ? '#ddd' : '#000' }
+                ]}>
                   Behoud je streak door dagelijks een product te scannen en recepten te maken.
                 </Text>
                 <Pressable
@@ -218,34 +286,80 @@ const HomeScreen = () => {
               </View>
             </View>
           </Modal>
-
-          <View style={styles.leaderboardContainer}>
-            <Text style={styles.leaderboardTitle}>🏆 Leaderboard</Text>
+          <View style={[
+            styles.leaderboardContainer,
+            { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' }
+          ]}>
+            <Text style={[
+              styles.leaderboardTitle,
+              { color: isDark ? '#fff' : '#000' }
+            ]}>
+              🏆 Leaderboard
+            </Text>
 
             <View style={styles.podiumContainer}>
               <View style={[styles.second]}>
                 <Text style={styles.podiumRank}>2</Text>
-                <Text style={styles.podiumName}>{leaderboard[1]?.username || '...'}</Text>
-                <Text style={styles.podiumXP}>{leaderboard[1]?.xp || 0} XP</Text>
+                <Text style={[
+                  styles.podiumName,
+                  { color: isDark ? '#fff' : '#000' }
+                ]}>
+                  {leaderboard[1]?.username || '...'}
+                </Text>
+                <Text style={[
+                  styles.podiumXP,
+                  { color: isDark ? '#ddd' : '#333' }
+                ]}>
+                  {leaderboard[1]?.xp || 0} XP
+                </Text>
               </View>
 
               <View style={[styles.first]}>
                 <Text style={styles.podiumRank}>1</Text>
-                <Text style={styles.podiumName}>{leaderboard[0]?.username || '...'}</Text>
-                <Text style={styles.podiumXP}>{leaderboard[0]?.xp || 0} XP</Text>
+                <Text style={[
+                  styles.podiumName,
+                  { color: isDark ? '#fff' : '#000' }
+                ]}>
+                  {leaderboard[0]?.username || '...'}
+                </Text>
+                <Text style={[
+                  styles.podiumXP,
+                  { color: isDark ? '#ddd' : '#333' }
+                ]}>
+                  {leaderboard[0]?.xp || 0} XP
+                </Text>
               </View>
 
               <View style={[styles.third]}>
                 <Text style={styles.podiumRank}>3</Text>
-                <Text style={styles.podiumName}>{leaderboard[2]?.username || '...'}</Text>
-                <Text style={styles.podiumXP}>{leaderboard[2]?.xp || 0} XP</Text>
+                <Text style={[
+                  styles.podiumName,
+                  { color: isDark ? '#fff' : '#000' }
+                ]}>
+                  {leaderboard[2]?.username || '...'}
+                </Text>
+                <Text style={[
+                  styles.podiumXP,
+                  { color: isDark ? '#ddd' : '#333' }
+                ]}>
+                  {leaderboard[2]?.xp || 0} XP
+                </Text>
               </View>
             </View>
 
-            <View style={styles.divider} />
+            <View style={[
+              styles.divider,
+              { backgroundColor: isDark ? '#fff' : '#000', opacity: 0.2 }
+            ]} />
 
             {leaderboard.slice(3).map((entry, index) => (
-              <Text key={index} style={styles.leaderboardText}>
+              <Text
+                key={index}
+                style={[
+                  styles.leaderboardText,
+                  { color: isDark ? '#eee' : '#000' }
+                ]}
+              >
                 {index + 4}. {entry.username} - {entry.xp} XP
               </Text>
             ))}
@@ -255,6 +369,7 @@ const HomeScreen = () => {
     </Animated.View>
   );
 };
+
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollContainer: {
