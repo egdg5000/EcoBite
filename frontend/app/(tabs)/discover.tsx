@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface Ingredient {
   id: string;
@@ -37,6 +38,20 @@ export default function DiscoverScreen() {
   const [loadingAi, setLoadingAi] = useState(false);
   const [userAllergies, setUserAllergies] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAllRecipes = async () => {
+        const response = await fetch('https://edg5000.com/recipes/by-ingredients', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await response.json();
+        if (data.recipes) setRecipes(data.recipes);
+      };
+      fetchAllRecipes();
+    }, [])
+  );
 
   useEffect(() => {
     const loadData = async () => {
