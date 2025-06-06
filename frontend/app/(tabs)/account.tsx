@@ -166,7 +166,7 @@ export default function AccountPage() {
             <Text style={[styles.modalTitle, { color: text }]}>Weet u zeker dat u wilt uitloggen?</Text>
             <View style={styles.modalButtons}>
               <TouchableOpacity onPress={() => setLogoutModalVisible(false)} style={styles.cancelButton}>
-                <Text style={[styles.cancelButtonText, { color: isDark ? '#fff' : '#333' }]}>Annuleer</Text>
+                <Text style={styles.cancelButtonText}>Annuleer</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={confirmLogout} style={styles.confirmButton}>
                 <Text style={styles.confirmButtonText}>Uitloggen</Text>
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   modalTitle: { fontSize: 18, marginBottom: 20, fontFamily: 'ABeeZee', textAlign: 'center' },
   modalButtons: { flexDirection: 'row', justifyContent: 'space-between', width: '100%' },
   cancelButton: { flex: 1, marginRight: 10, padding: 10, backgroundColor: '#777', borderRadius: 5, alignItems: 'center' },
-  cancelButtonText: { fontFamily: 'ABeeZee' },
+  cancelButtonText: { fontFamily: 'ABeeZee', color: '#fff' },
   confirmButton: { flex: 1, marginLeft: 10, padding: 10, backgroundColor: '#D32F2F', borderRadius: 5, alignItems: 'center' },
   confirmButtonText: { color: '#fff', fontFamily: 'ABeeZee' },
   donateHeader: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
