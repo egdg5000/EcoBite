@@ -29,6 +29,7 @@ async function findRecipesByIngredients(ingredients) {
   return recipeIds;
 }
 
+
 router.get('/by-ingredients', async (req, res) => {
   try {
     const userId = req.session.userId;
@@ -43,6 +44,16 @@ router.get('/by-ingredients', async (req, res) => {
     console.error('Fout bij ophalen recepten:', err);
     res.status(500).json({ success: false, message: 'Server error' });
   }
+});
+
+router.post('/by-recipe-id', async (req, res) => {
+  const { recipe_id } = req.body;
+  console.log(recipe_id);
+  const [rows] = await db.promise().query(
+    `SELECT * FROM recipes WHERE id = ?`,
+    [recipe_id]
+  );
+  res.status(200).json({ success: true, recipe: rows[0] });
 });
 
 router.post('/by-category', async (req, res) => {
