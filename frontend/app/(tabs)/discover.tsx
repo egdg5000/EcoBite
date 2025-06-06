@@ -23,10 +23,15 @@ interface Ingredient {
 }
 
 interface Recipe {
-  id: number;
-  title: string;
-  description?: string;
-  estimated_time?: number;
+  recipe_id: number;
+  contains: string[];
+  count: number;
+  recipe: {
+    id: number;
+    title: string;
+    description?: string;
+    cookTime?: number;
+  }
 }
 
 export default function DiscoverScreen() {
@@ -47,6 +52,18 @@ export default function DiscoverScreen() {
           credentials: 'include',
         });
         const data = await response.json();
+        data.recipes.sort((a: any, b: any) => b.count - a.count);
+        data.recipes = data.recipes.slice(0, 10);
+        for (const recipe of data.recipes) {
+          const recipeResponse = await fetch('https://edg5000.com/recipes/by-recipe-id', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recipe_id: recipe.recipe_id }),
+          });
+          const recipeData = await recipeResponse.json();
+          recipe.recipe = recipeData.recipe;
+        }
+        console.log("log:",data.recipes[0].recipe.title);	
         if (data.recipes) setRecipes(data.recipes);
       };
       fetchAllRecipes();
@@ -113,7 +130,7 @@ export default function DiscoverScreen() {
     if (!userAllergies.length) return recipeList;
 
     return recipeList.filter(recipe => {
-      const description = recipe.description?.toLowerCase() || '';
+      const description = recipe.recipe.description?.toLowerCase() || '';
       return !userAllergies.some(allergen =>
         description.includes(allergen.toLowerCase())
       );
@@ -225,14 +242,15 @@ export default function DiscoverScreen() {
       ) : (
         filterRecipesByAllergies(recipes).map((recipe) => (
           <TouchableOpacity
-            key={recipe.id}
+            key={recipe.recipe.id}
             style={styles.recipeCard}
-            onPress={() => completeRecipe(recipe.id)}
+            onPress={() => completeRecipe(recipe.recipe.id)}
           >
-            <Text style={styles.recipeTitle}>{recipe.title}</Text>
-            {recipe.description && <Text style={styles.recipeText}>{recipe.description}</Text>}
-            {recipe.estimated_time && (
-              <Text style={styles.recipeTime}>⏱️ {recipe.estimated_time} min</Text>
+            <Text style={styles.recipeTitle}>{recipe.recipe.title}</Text>
+            {recipe.recipe.description && <Text style={styles.recipeText}>{recipe.recipe.description}{'\n'}</Text>}
+            {recipe.contains && <Text style={styles.recipeText}>Bevat: {[...new Set(recipe.contains)].join(', ')}</Text>}
+            {recipe.recipe.cookTime && (
+              <Text style={styles.recipeTime}>⏱️ {recipe.recipe.cookTime} min</Text>
             )}
           </TouchableOpacity>
         ))
