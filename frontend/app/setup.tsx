@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, Image, Alert } from 'react-native
 import { useFonts } from 'expo-font';
 import { Button, ListItem } from '@rneui/themed';
 import { useRouter } from "expo-router";
+import { useTheme } from './context/ThemeContext';
 
 const SetupScreen = () => {
   const [fontsLoaded] = useFonts({
@@ -10,6 +11,9 @@ const SetupScreen = () => {
   });
 
   const router = useRouter();
+
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const [allergies, setAllergies] = useState({
     gluten: false,
@@ -81,52 +85,116 @@ const SetupScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#FFF' }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: isDark ? '#121212' : '#FFF' }}>
       <View style={styles.container}>
         <Image source={require('../assets/images/EcoBite2.png')} style={styles.logo} />
-        <Text style={styles.title}>Allergieën</Text>
-        <Text style={styles.subtitle}>
+        <Text style={[styles.title, isDark && { color: '#fff' }]}>
+          Allergieën
+        </Text>
+        <Text style={[styles.subtitle, isDark && { color: '#ccc' }]}>
           Geef hier uw allergieën aan. U kunt dit altijd wijzigen in uw instellingen.
         </Text>
 
         <View style={styles.list}>
-          <ListItem bottomDivider>
+          <ListItem
+            bottomDivider
+            containerStyle={{
+              backgroundColor: isDark ? '#1e1e1e' : '#fff',
+              borderBottomColor: isDark ? '#333' : '#ccc',
+            }}
+          >
             <ListItem.CheckBox
               checked={allergies.gluten}
               onPress={() => toggleAllergy('gluten')}
+              checkedColor="#2DBE60"
+              uncheckedColor={isDark ? '#bbb' : undefined}
+              containerStyle={{
+                backgroundColor: 'transparent',
+                padding: 0,
+                margin: 0,
+              }}
             />
             <ListItem.Content>
-              <ListItem.Title style={styles.itemText}>Glutenallergie</ListItem.Title>
+              <ListItem.Title style={[styles.itemText, isDark && { color: '#fff' }]}>
+                Glutenallergie
+              </ListItem.Title>
             </ListItem.Content>
           </ListItem>
 
-          <ListItem bottomDivider>
+
+          <ListItem
+            bottomDivider
+            containerStyle={{
+              backgroundColor: isDark ? '#1e1e1e' : '#fff',
+              borderBottomColor: isDark ? '#333' : '#ccc',
+            }}
+          >
             <ListItem.CheckBox
               checked={allergies.noten}
               onPress={() => toggleAllergy('noten')}
+              checkedColor="#2DBE60"
+              uncheckedColor={isDark ? '#bbb' : undefined}
+              containerStyle={{
+                backgroundColor: 'transparent',
+                padding: 0,
+                margin: 0,
+              }}
             />
             <ListItem.Content>
-              <ListItem.Title style={styles.itemText}>Notenallergie</ListItem.Title>
+              <ListItem.Title style={[styles.itemText, isDark && { color: '#fff' }]}>
+                Notenallergie
+              </ListItem.Title>
             </ListItem.Content>
           </ListItem>
 
-          <ListItem bottomDivider>
+
+          <ListItem
+            bottomDivider
+            containerStyle={{
+              backgroundColor: isDark ? '#1e1e1e' : '#fff',
+              borderBottomColor: isDark ? '#333' : '#ccc',
+            }}
+          >
             <ListItem.CheckBox
               checked={allergies.pinda}
               onPress={() => toggleAllergy('pinda')}
+              checkedColor="#2DBE60"
+              uncheckedColor={isDark ? '#bbb' : undefined}
+              containerStyle={{
+                backgroundColor: 'transparent',
+                padding: 0,
+                margin: 0,
+              }}
             />
             <ListItem.Content>
-              <ListItem.Title style={styles.itemText}>Pinda-allergie</ListItem.Title>
+              <ListItem.Title style={[styles.itemText, isDark && { color: '#fff' }]}>
+                Pinda-allergie
+              </ListItem.Title>
             </ListItem.Content>
           </ListItem>
 
-          <ListItem bottomDivider>
+        <ListItem
+            bottomDivider
+            containerStyle={{
+              backgroundColor: isDark ? '#1e1e1e' : '#fff',
+              borderBottomColor: isDark ? '#333' : '#ccc',
+            }}
+          >
             <ListItem.CheckBox
               checked={allergies.lactose}
               onPress={() => toggleAllergy('lactose')}
+              checkedColor="#2DBE60"
+              uncheckedColor={isDark ? '#bbb' : undefined}
+              containerStyle={{
+                backgroundColor: 'transparent',
+                padding: 0,
+                margin: 0,
+              }}
             />
             <ListItem.Content>
-              <ListItem.Title style={styles.itemText}>Lactose-intolerantie</ListItem.Title>
+              <ListItem.Title style={[styles.itemText, isDark && { color: '#fff' }]}>
+                Lactose-intolerantie
+              </ListItem.Title>
             </ListItem.Content>
           </ListItem>
         </View>
@@ -138,7 +206,10 @@ const SetupScreen = () => {
             onPress={savePreferencesToBackend}
           />
           <Button
-            buttonStyle={[styles.button, styles.skipButton]}
+            buttonStyle={[styles.button, styles.skipButton, isDark && {
+              backgroundColor: '#1e1e1e',
+              borderColor: '#2DBE60',
+            }]}
             title="Overslaan"
             titleStyle={{ color: '#2DBE60' }}
             onPress={() => router.push('/home')}
