@@ -62,14 +62,12 @@ router.post("/add", loginStatus, async (req, res) => {
 
 router.get("/inventory", loginStatus, async (req, res) => {
   const userId = req.session.userId;
-  const today = new Date().toISOString().split("T")[0];
-
   try {
     const [rows] = await db
       .promise()
       .query(
-        "SELECT * FROM user_products WHERE user_id = ? AND expiration_date >= ? ORDER BY expiration_date ASC",
-        [userId, today]
+        "SELECT * FROM user_products WHERE user_id = ? ORDER BY expiration_date ASC",
+        [userId]
       );
     res.status(200).json({ success: true, message: "Producten opgehaald", products: rows });
   } catch (err) {
