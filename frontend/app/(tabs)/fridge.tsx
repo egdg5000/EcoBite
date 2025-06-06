@@ -138,7 +138,7 @@ export default function FridgePage() {
 
   return (
     <SafeAreaView style={styles.container}>
-    <View style={{padding: 20}}>
+    <View style={{paddingHorizontal: 20, paddingBottom: 20}}>
       <View style={styles.header}>
         <Text style={styles.title}>Mijn Voorraad</Text>
       </View>
@@ -206,7 +206,7 @@ export default function FridgePage() {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
           data={filteredProducts}
           keyExtractor={(item) => item.id.toString()}
-          contentContainerStyle={{ paddingBottom: 30 }}
+          contentContainerStyle={{ flexGrow: 1, paddingBottom: 130 }}
           renderItem={({ item }) => (
             <View style={styles.card}>
               <Text style={styles.name}>{item.item_name}</Text>
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
     fontFamily: "ABeeZee",
     fontWeight: "bold",
     color: "#4CAF50",
-    marginBottom: 16,
+    marginBottom: 0,
   },
   empty: {
     fontSize: 16,
