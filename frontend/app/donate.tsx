@@ -12,11 +12,12 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useFonts } from 'expo-font';
+import { useTheme } from "./context/ThemeContext";
 
 const DonateScreen = () => {
   const router = useRouter();
-  const colorScheme = useColorScheme();
-  const isDark = colorScheme === "dark";
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
 
   const [fontsLoaded] = useFonts({
     'ABeeZee': require('../assets/fonts/ABeeZee.ttf'),
