@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import Animated, {
-  useSharedValue, withTiming, useAnimatedProps, useAnimatedStyle,
+  useSharedValue, withTiming, useAnimatedStyle,
   useAnimatedRef, useScrollViewOffset,
 } from 'react-native-reanimated';
 import { useFonts } from 'expo-font';
@@ -62,7 +62,6 @@ const HomeScreen = () => {
         setCo2Reduction(currentCO2);
 
         const previousCO2 = parseFloat(await AsyncStorage.getItem('previousCo2') || '0');
-
         if (previousCO2 && currentCO2 < previousCO2) {
           Alert.alert(
             "🌳 Je boom is verzwakt",
@@ -166,34 +165,43 @@ const HomeScreen = () => {
           <View style={styles.header}>
             <View style={styles.logoContainer}>
               <Image source={require('../../assets/images/EcoBite2.png')} style={styles.logo} />
-              <Text style={[styles.title, { color: isDark ? '#fff' : '#000' }]}>
+              <Text style={[styles.title, isDark && { color: '#fff' }]}>
                 <Text style={styles.darkGreen}>Eco</Text>
                 <Text style={styles.lightGreen}>Bite</Text>
               </Text>
             </View>
 
-            <Animated.Text style={[styles.greetingText, greetingStyle, { color: isDark ? '#fff' : '#000' }]}>
+            <Animated.Text style={[
+              styles.greetingText,
+              greetingStyle,
+              isDark && { color: '#fff' }
+            ]}>
               {greeting}
             </Animated.Text>
-            <Animated.Text style={[styles.dateText, greetingStyle, { color: isDark ? '#aaa' : '#444' }]}>
+
+            <Animated.Text style={[
+              styles.dateText,
+              greetingStyle,
+              isDark && { color: '#ccc' }
+            ]}>
               {currentDate}
             </Animated.Text>
             <View style={[
               styles.factContainer,
-              {
-                backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-                borderLeftColor: isDark ? '#66FF66' : '#2E8B57',
+              isDark && {
+                backgroundColor: 'rgba(255,255,255,0.1)',
+                borderLeftColor: '#66FF66',
               }
             ]}>
               <Text style={[
                 styles.factLabel,
-                { color: isDark ? '#66FF66' : '#2E8B57' }
+                isDark && { color: '#66FF66' }
               ]}>
                 💡 Wist je dat?
               </Text>
               <Text style={[
                 styles.factText,
-                { color: isDark ? '#fff' : '#333' }
+                isDark && { color: '#fff' }
               ]}>
                 {weetje}
               </Text>
@@ -201,27 +209,24 @@ const HomeScreen = () => {
 
             <View style={[
               styles.divider,
-              { backgroundColor: isDark ? '#fff' : '#000', opacity: 0.2 }
+              isDark && { backgroundColor: '#fff', opacity: 0.2 }
             ]} />
           </View>
 
           <View style={styles.treeStatContainer}>
-            <Text style={[
-              styles.co2Label,
-              { color: isDark ? '#fff' : '#222' }
-            ]}>
+            <Text style={[styles.co2Label, isDark && { color: '#fff' }]}>
               Jouw Boom:
             </Text>
             <Image source={getTreeImage()} style={styles.treeImage} />
             <View style={[
               styles.co2Box,
               getCo2BorderColor(co2Reduction),
-              { backgroundColor: isDark ? '#ffffff22' : '#00000011' }
+              isDark && { backgroundColor: '#ffffff22' }
             ]}>
-              <Text style={[styles.co2Value, { color: isDark ? '#fff' : '#000' }]}>
+              <Text style={[styles.co2Value, isDark && { color: '#fff' }]}>
                 {co2Reduction}%
               </Text>
-              <Text style={[styles.co2Label, { color: isDark ? '#ccc' : '#333' }]}>
+              <Text style={[styles.co2Label, isDark && { color: '#ccc' }]}>
                 CO₂-reductie
               </Text>
             </View>
@@ -229,9 +234,9 @@ const HomeScreen = () => {
 
           <View style={[
             styles.xpContainer,
-            { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)' }
+            isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
           ]}>
-            <Text style={[styles.xpTitle, { color: isDark ? '#fff' : '#000' }]}>
+            <Text style={[styles.xpTitle, isDark && { color: '#fff' }]}>
               Level {level}
             </Text>
             <View style={styles.xpBarBackground}>
@@ -239,18 +244,16 @@ const HomeScreen = () => {
                 styles.xpBarFill,
                 {
                   width: `${xpProgress * 100}%`,
-                  backgroundColor: isDark ? '#66FF66' : '#3cb371',
+                  backgroundColor: isDark ? '#66FF66' : styles.xpBarFill.backgroundColor,
                 }
               ]} />
             </View>
-            <Text style={[styles.xpText, { color: isDark ? '#fff' : '#000' }]}>
+            <Text style={[styles.xpText, isDark && { color: '#fff' }]}>
               {xp} / {xpForNextLevel} XP
             </Text>
             <Pressable onPress={() => setShowStreakPopup(true)} style={styles.streakContainer}>
               <Ionicons name="flame-outline" size={24} color="#FFA500" />
-              <Text style={[styles.streakText, { color: '#FFA500' }]}>
-                {streakDays} dagen streak
-              </Text>
+              <Text style={styles.streakText}>{streakDays} dagen streak</Text>
             </Pressable>
           </View>
 
@@ -263,18 +266,12 @@ const HomeScreen = () => {
             <View style={styles.modalBackdrop}>
               <View style={[
                 styles.modalContent,
-                { backgroundColor: isDark ? '#1e1e1e' : '#fff' }
+                isDark && { backgroundColor: '#1e1e1e' }
               ]}>
-                <Text style={[
-                  styles.modalTitle,
-                  { color: isDark ? '#fff' : '#000' }
-                ]}>
+                <Text style={[styles.modalTitle, isDark && { color: '#fff' }]}>
                   🔥 Streak behouden
                 </Text>
-                <Text style={[
-                  styles.modalText,
-                  { color: isDark ? '#ddd' : '#000' }
-                ]}>
+                <Text style={[styles.modalText, isDark && { color: '#ddd' }]}>
                   Behoud je streak door dagelijks een product te scannen en recepten te maken.
                 </Text>
                 <Pressable
@@ -288,60 +285,39 @@ const HomeScreen = () => {
           </Modal>
           <View style={[
             styles.leaderboardContainer,
-            { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.04)' }
+            isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
           ]}>
-            <Text style={[
-              styles.leaderboardTitle,
-              { color: isDark ? '#fff' : '#000' }
-            ]}>
+            <Text style={[styles.leaderboardTitle, isDark && { color: '#fff' }]}>
               🏆 Leaderboard
             </Text>
 
             <View style={styles.podiumContainer}>
-              <View style={[styles.second]}>
+              <View style={styles.second}>
                 <Text style={styles.podiumRank}>2</Text>
-                <Text style={[
-                  styles.podiumName,
-                  { color: isDark ? '#fff' : '#000' }
-                ]}>
+                <Text style={[styles.podiumName, isDark && { color: '#fff' }]}>
                   {leaderboard[1]?.username || '...'}
                 </Text>
-                <Text style={[
-                  styles.podiumXP,
-                  { color: isDark ? '#ddd' : '#333' }
-                ]}>
+                <Text style={[styles.podiumXP, isDark && { color: '#ddd' }]}>
                   {leaderboard[1]?.xp || 0} XP
                 </Text>
               </View>
 
-              <View style={[styles.first]}>
+              <View style={styles.first}>
                 <Text style={styles.podiumRank}>1</Text>
-                <Text style={[
-                  styles.podiumName,
-                  { color: isDark ? '#fff' : '#000' }
-                ]}>
+                <Text style={[styles.podiumName, isDark && { color: '#fff' }]}>
                   {leaderboard[0]?.username || '...'}
                 </Text>
-                <Text style={[
-                  styles.podiumXP,
-                  { color: isDark ? '#ddd' : '#333' }
-                ]}>
+                <Text style={[styles.podiumXP, isDark && { color: '#ddd' }]}>
                   {leaderboard[0]?.xp || 0} XP
                 </Text>
               </View>
 
-              <View style={[styles.third]}>
+              <View style={styles.third}>
                 <Text style={styles.podiumRank}>3</Text>
-                <Text style={[
-                  styles.podiumName,
-                  { color: isDark ? '#fff' : '#000' }
-                ]}>
+                <Text style={[styles.podiumName, isDark && { color: '#fff' }]}>
                   {leaderboard[2]?.username || '...'}
                 </Text>
-                <Text style={[
-                  styles.podiumXP,
-                  { color: isDark ? '#ddd' : '#333' }
-                ]}>
+                <Text style={[styles.podiumXP, isDark && { color: '#ddd' }]}>
                   {leaderboard[2]?.xp || 0} XP
                 </Text>
               </View>
@@ -349,16 +325,13 @@ const HomeScreen = () => {
 
             <View style={[
               styles.divider,
-              { backgroundColor: isDark ? '#fff' : '#000', opacity: 0.2 }
+              isDark && { backgroundColor: '#fff', opacity: 0.2 }
             ]} />
 
             {leaderboard.slice(3).map((entry, index) => (
               <Text
                 key={index}
-                style={[
-                  styles.leaderboardText,
-                  { color: isDark ? '#eee' : '#000' }
-                ]}
+                style={[styles.leaderboardText, isDark && { color: '#eee' }]}
               >
                 {index + 4}. {entry.username} - {entry.xp} XP
               </Text>
