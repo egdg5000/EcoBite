@@ -9,7 +9,8 @@ router.post("/suggestions", loginStatus, async (req, res) => {
     return res.status(400).json({ success: false, message: "Missing required fields" });
   }
   const [rows] = await db.promise().query(
-    `SELECT *, 
+    `SELECT MIN(id) as id, 
+     \`name.singular\`,
      CASE 
        WHEN \`name.singular\` = ? THEN 1
        WHEN \`name.singular\` LIKE ? THEN 2
@@ -17,7 +18,9 @@ router.post("/suggestions", loginStatus, async (req, res) => {
      END as relevance
      FROM ingredients 
      WHERE \`name.singular\` LIKE ? 
-     ORDER BY relevance ASC, \`name.singular\` ASC`,
+     GROUP BY \`name.singular\`
+     ORDER BY relevance ASC, \`name.singular\` ASC
+     LIMIT 10`,
     [item_name, `${item_name}%`, `%${item_name}%`]
   );
   if (rows.length === 0) {
