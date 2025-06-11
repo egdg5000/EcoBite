@@ -127,7 +127,10 @@ const AddFoodPage = () => {
         });
 
         router.replace("/fridge");
-      } else {
+      } else if (result.message === "Product not found") {
+        Alert.alert("Fout", "Product niet gevonden.");
+      }
+      else {
         Alert.alert("Fout", "Toevoegen mislukt.");
       }
     } catch (error) {
