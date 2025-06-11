@@ -19,7 +19,6 @@ import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { useTheme } from "../context/ThemeContext";
 
-
 const router = useRouter();
 
 interface Suggestion {
@@ -84,7 +83,7 @@ const AddFoodPage = () => {
   };
 
   const router = useRouter();
-  const suggest = async (text: string) => {
+   const suggest = async (text: string) => {
     setName(text);
     const response = await fetch("https://edg5000.com/products/suggestions", {
       method: "POST",
@@ -128,10 +127,7 @@ const AddFoodPage = () => {
         });
 
         router.replace("/fridge");
-      } else if (result.message === "Product not found") {
-        Alert.alert("Fout", "Product niet gevonden.");
-      }
-      else {
+      } else {
         Alert.alert("Fout", "Toevoegen mislukt.");
       }
     } catch (error) {
@@ -154,44 +150,6 @@ const AddFoodPage = () => {
         <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Hoeveelheid</Text>
         <TextInput style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', color: isDark ? '#fff' : '#000' }]} placeholder="Bijv. 3 stuks / 1L" placeholderTextColor={isDark ? '#aaa' : '#888'} value={quantity} onChangeText={setQuantity} />
         {errors.quantity && <Text style={styles.errorText}>{errors.quantity}</Text>}
-        <Text style={styles.label}>Productnaam</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Bijv. Appel"
-          value={name}
-          onChangeText={suggest}
-        />
-        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
-        {suggestions.length > 0 && (
-          <View style={styles.suggestionsContainer}>
-            <FlatList
-              data={suggestions}
-              keyExtractor={(item) => item.id.toString()}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={styles.suggestionItem}
-                  onPress={() => {
-                    setName(item["name.singular"]);
-                    setSuggestions([]);
-                  }}
-                >
-                  <Text style={styles.suggestionText}>{item["name.singular"]}</Text>
-                </TouchableOpacity>
-              )}
-              style={styles.suggestionsList}
-            />
-          </View>
-        )}
-        <Text style={styles.label}>Hoeveelheid</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Bijv. 3 stuks / 1L"
-          value={quantity}
-          onChangeText={setQuantity}
-        />
-        {errors.quantity && (
-          <Text style={styles.errorText}>{errors.quantity}</Text>
-        )}
 
         <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Eenheid</Text>
         <View style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', borderColor: isDark ? '#444' : '#ccc' }]}> 
@@ -363,6 +321,6 @@ const styles = StyleSheet.create({
     fontFamily: 'ABeeZee',
     color: '#333',
   },
-});
+  });
 
 export default AddFoodPage;
