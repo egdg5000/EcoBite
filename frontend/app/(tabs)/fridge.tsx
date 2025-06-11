@@ -305,7 +305,8 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontFamily: "ABeeZee",
     fontWeight: "bold",
-    marginBottom: 16,
+    color: "#4CAF50",
+    marginBottom: 0,
   },
   empty: {
     fontSize: 16,

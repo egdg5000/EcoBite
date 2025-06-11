@@ -9,7 +9,8 @@ router.post("/suggestions", loginStatus, async (req, res) => {
     return res.status(400).json({ success: false, message: "Missing required fields" });
   }
   const [rows] = await db.promise().query(
-    `SELECT *, 
+    `SELECT MIN(id) as id, 
+     \`name.singular\`,
      CASE 
        WHEN \`name.singular\` = ? THEN 1
        WHEN \`name.singular\` LIKE ? THEN 2
@@ -17,7 +18,9 @@ router.post("/suggestions", loginStatus, async (req, res) => {
      END as relevance
      FROM ingredients 
      WHERE \`name.singular\` LIKE ? 
-     ORDER BY relevance ASC, \`name.singular\` ASC`,
+     GROUP BY \`name.singular\`
+     ORDER BY relevance ASC, \`name.singular\` ASC
+     LIMIT 10`,
     [item_name, `${item_name}%`, `%${item_name}%`]
   );
   if (rows.length === 0) {
@@ -30,6 +33,13 @@ router.post("/add", loginStatus, async (req, res) => {
   const {item_name, quantity, unit, expiration_date, category } = req.body;
   if (!item_name || !quantity || !unit || !category) {
     return res.status(400).json({ success: false, message: "Missing required fields" });
+  }
+  const [rows] = await db.promise().query(
+    `SELECT * FROM ingredients WHERE \`name.singular\` = ?`,
+    [item_name]
+  );
+  if (rows.length === 0) {
+    return res.status(400).json({ success: false, message: "Product not found" });
   }
   if (expiration_date && expiration_date < new Date().toISOString().split("T")[0]) {
     return res.status(400).json({ success: false, message: "Expiration date cannot be in the past" });
@@ -52,14 +62,12 @@ router.post("/add", loginStatus, async (req, res) => {
 
 router.get("/inventory", loginStatus, async (req, res) => {
   const userId = req.session.userId;
-  const today = new Date().toISOString().split("T")[0];
-
   try {
     const [rows] = await db
       .promise()
       .query(
-        "SELECT * FROM user_products WHERE user_id = ? AND expiration_date >= ? ORDER BY expiration_date ASC",
-        [userId, today]
+        "SELECT * FROM user_products WHERE user_id = ? ORDER BY expiration_date ASC",
+        [userId]
       );
     res.status(200).json({ success: true, message: "Producten opgehaald", products: rows });
   } catch (err) {

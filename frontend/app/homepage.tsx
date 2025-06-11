@@ -17,7 +17,6 @@ export default function Home() {
         
         const data = await response.json();
         if (!response.ok) {
-            console.log(data);
             router.push('/');
         }
 
@@ -39,7 +38,7 @@ export default function Home() {
         
         const data = await response.json();
         if (!response.ok) {
-            console.log(data);
+            router.push('/');
         }
         } catch (error) {
         console.error('Network error:', error);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../context/ThemeContext';
+import { useFocusEffect } from '@react-navigation/native';
 
 interface Ingredient {
   id: string;
@@ -23,10 +24,15 @@ interface Ingredient {
 }
 
 interface Recipe {
-  id: number;
-  title: string;
-  description?: string;
-  estimated_time?: number;
+  recipe_id: number;
+  contains: string[];
+  count: number;
+  recipe: {
+    id: number;
+    title: string;
+    description?: string;
+    cookTime?: number;
+  }
 }
 
 export default function DiscoverScreen() {
@@ -41,6 +47,31 @@ export default function DiscoverScreen() {
   const [loadingAi, setLoadingAi] = useState(false);
   const [userAllergies, setUserAllergies] = useState<string[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAllRecipes = async () => {
+        const response = await fetch('https://edg5000.com/recipes/by-ingredients', {
+          method: 'GET',
+          credentials: 'include',
+        });
+        const data = await response.json();
+        data.recipes.sort((a: any, b: any) => b.count - a.count);
+        data.recipes = data.recipes.slice(0, 10);
+        for (const recipe of data.recipes) {
+          const recipeResponse = await fetch('https://edg5000.com/recipes/by-recipe-id', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ recipe_id: recipe.recipe_id }),
+          });
+          const recipeData = await recipeResponse.json();
+          recipe.recipe = recipeData.recipe;
+        }
+        if (data.recipes) setRecipes(data.recipes);
+      };
+      fetchAllRecipes();
+    }, [])
+  );
 
   useEffect(() => {
     const loadData = async () => {
@@ -91,7 +122,7 @@ export default function DiscoverScreen() {
   const filterRecipesByAllergies = (recipeList: Recipe[]): Recipe[] => {
     if (!userAllergies.length) return recipeList;
     return recipeList.filter(recipe => {
-      const description = recipe.description?.toLowerCase() || '';
+      const description = recipe.recipe.description?.toLowerCase() || '';
       return !userAllergies.some(allergen =>
         description.includes(allergen.toLowerCase())
       );
@@ -173,10 +204,17 @@ export default function DiscoverScreen() {
         <Text style={[styles.noData, { color: isDark ? '#bbb' : '#777' }]}>Geen recepten gevonden die passen bij je allergieën.</Text>
       ) : (
         filterRecipesByAllergies(recipes).map((recipe) => (
-          <TouchableOpacity key={recipe.id} style={[styles.recipeCard, { backgroundColor: isDark ? '#1f3a25' : '#e8f5e9' }]} onPress={() => completeRecipe(recipe.id)}>
-            <Text style={[styles.recipeTitle, { color: isDark ? '#a5d6a7' : '#1b5e20' }]}>{recipe.title}</Text>
-            {recipe.description && <Text style={[styles.recipeText, { color: isDark ? '#ddd' : '#555' }]}>{recipe.description}</Text>}
-            {recipe.estimated_time && <Text style={[styles.recipeTime, { color: isDark ? '#ccc' : '#888' }]}>⏱️ {recipe.estimated_time} min</Text>}
+          <TouchableOpacity
+            key={recipe.recipe.id}
+            style={[styles.recipeCard, { backgroundColor: isDark ? '#1f3a25' : '#e8f5e9' }]}
+            onPress={() => completeRecipe(recipe.recipe.id)}
+          >
+            <Text style={[styles.recipeTitle, { color: isDark ? '#a5d6a7' : '#1b5e20' }]}>{recipe.recipe.title}</Text>
+            {recipe.recipe.description && <Text style={[styles.recipeText, { color: isDark ? '#ddd' : '#555' }]}>{recipe.recipe.description}{'\n'}</Text>}
+            {recipe.contains && <Text style={styles.recipeText}>Bevat: {[...new Set(recipe.contains)].join(', ')}</Text>}
+            {recipe.recipe.cookTime && (
+              <Text style={styles.recipeTime}>⏱️ {recipe.recipe.cookTime} min</Text>
+            )}
           </TouchableOpacity>
         ))
       )}

@@ -9,6 +9,7 @@ import {
   SafeAreaView,
   ScrollView,
   Platform,
+  FlatList,
 } from "react-native";
 import { useFonts } from "expo-font";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -17,6 +18,15 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 import { useTheme } from "../context/ThemeContext";
+
+
+const router = useRouter();
+
+interface Suggestion {
+  id: number;
+  "name.singular": string;
+  relevance: number;
+}
 
 const AddFoodPage = () => {
   const [name, setName] = useState("");
@@ -27,6 +37,7 @@ const AddFoodPage = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { theme } = useTheme();
   const isDark = theme === "dark";
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
 
   const [errors, setErrors] = useState({
     name: "",
@@ -73,6 +84,22 @@ const AddFoodPage = () => {
   };
 
   const router = useRouter();
+  const suggest = async (text: string) => {
+    setName(text);
+    const response = await fetch("https://edg5000.com/products/suggestions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+      body: JSON.stringify({ item_name: text }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      setSuggestions(data.products);
+    }
+    else {
+      setSuggestions([]);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!validateForm()) return;
@@ -101,7 +128,10 @@ const AddFoodPage = () => {
         });
 
         router.replace("/fridge");
-      } else {
+      } else if (result.message === "Product not found") {
+        Alert.alert("Fout", "Product niet gevonden.");
+      }
+      else {
         Alert.alert("Fout", "Toevoegen mislukt.");
       }
     } catch (error) {
@@ -124,6 +154,44 @@ const AddFoodPage = () => {
         <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Hoeveelheid</Text>
         <TextInput style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', color: isDark ? '#fff' : '#000' }]} placeholder="Bijv. 3 stuks / 1L" placeholderTextColor={isDark ? '#aaa' : '#888'} value={quantity} onChangeText={setQuantity} />
         {errors.quantity && <Text style={styles.errorText}>{errors.quantity}</Text>}
+        <Text style={styles.label}>Productnaam</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Bijv. Appel"
+          value={name}
+          onChangeText={suggest}
+        />
+        {errors.name && <Text style={styles.errorText}>{errors.name}</Text>}
+        {suggestions.length > 0 && (
+          <View style={styles.suggestionsContainer}>
+            <FlatList
+              data={suggestions}
+              keyExtractor={(item) => item.id.toString()}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={styles.suggestionItem}
+                  onPress={() => {
+                    setName(item["name.singular"]);
+                    setSuggestions([]);
+                  }}
+                >
+                  <Text style={styles.suggestionText}>{item["name.singular"]}</Text>
+                </TouchableOpacity>
+              )}
+              style={styles.suggestionsList}
+            />
+          </View>
+        )}
+        <Text style={styles.label}>Hoeveelheid</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Bijv. 3 stuks / 1L"
+          value={quantity}
+          onChangeText={setQuantity}
+        />
+        {errors.quantity && (
+          <Text style={styles.errorText}>{errors.quantity}</Text>
+        )}
 
         <Text style={[styles.label, { color: isDark ? '#ccc' : '#333' }]}>Eenheid</Text>
         <View style={[styles.input, { backgroundColor: isDark ? '#1e1e1e' : '#f5f5f5', borderColor: isDark ? '#444' : '#ccc' }]}> 
@@ -189,16 +257,112 @@ const AddFoodPage = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  content: { padding: 20 },
-  title: { fontSize: 24, fontFamily: "ABeeZee", fontWeight: "bold", marginBottom: 20 },
-  label: { fontSize: 16, marginBottom: 4, fontFamily: "ABeeZee" },
-  input: { borderWidth: 1, borderRadius: 8, padding: 12, marginBottom: 16, fontFamily: "ABeeZee" },
-  dateInput: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", borderWidth: 1, borderRadius: 8, padding: 12, marginBottom: 16 },
-  dateText: { fontFamily: "ABeeZee", fontSize: 14 },
-  errorText: { fontSize: 12, color: "red", marginBottom: 8, fontFamily: "ABeeZee" },
-  button: { backgroundColor: "#4CAF50", padding: 14, borderRadius: 8, alignItems: "center", marginTop: 10, shadowColor: "#000", shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.1, shadowRadius: 4 },
-  buttonText: { color: "#fff", fontSize: 16, fontFamily: "ABeeZee", fontWeight: "bold" },
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  content: {
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontFamily: "ABeeZee",
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#4CAF50",
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 4,
+    fontFamily: "ABeeZee",
+    color: "#333",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    backgroundColor: "#f5f5f5",
+    fontFamily: "ABeeZee",
+  },
+  picker: {
+    
+  },
+  dateInput: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+    backgroundColor: "#f5f5f5",
+  },
+  dateText: {
+    fontFamily: "ABeeZee",
+    fontSize: 14,
+    color: "#333",
+  },
+  errorText: {
+    fontSize: 12,
+    color: "red",
+    marginBottom: 8,
+    fontFamily: "ABeeZee",
+  },
+  dropdownContainer: {
+    backgroundColor: "#f5f5f5",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    overflow: "hidden",
+    marginBottom: 16,
+  },
+  dropdown: {
+    height: 50,
+    color: "#333",
+    paddingHorizontal: 10,
+    fontFamily: "ABeeZee",
+  },
+  button: {
+    backgroundColor: "#4CAF50",
+    padding: 14,
+    borderRadius: 8,
+    alignItems: "center",
+    marginTop: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontFamily: "ABeeZee",
+    fontWeight: "bold",
+  },
+  suggestionsContainer: {
+    maxHeight: 200,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+  },
+  suggestionsList: {
+    flexGrow: 0,
+  },
+  suggestionItem: {
+    padding: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  suggestionText: {
+    fontSize: 16,
+    fontFamily: 'ABeeZee',
+    color: '#333',
+  },
 });
 
 export default AddFoodPage;
