@@ -106,16 +106,38 @@ export default function DiscoverScreen() {
   }, []);
 
   const handleCategoryPress = async (category: string) => {
-    setSelectedCategory(category);
-    try {
-      const response = await fetch('https://edg5000.com/recipes/by-category', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ category }),
-      });
-      const data = await response.json();
-      setRecipes(data.recipes || []);
-    } catch (err) {
-      console.error('Fout bij ophalen recepten per categorie:', err);
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+
+      try {
+        const storedIngredients = await AsyncStorage.getItem('selectedIngredients');
+        if (storedIngredients) {
+          const parsed = JSON.parse(storedIngredients);
+          const response = await fetch('https://edg5000.com/recipes/from-ingredients', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ingredients: parsed }),
+          });
+          const data = await response.json();
+          setRecipes(data.recipes || []);
+        }
+      } catch (err) {
+        console.error('Fout bij herstellen recepten:', err);
+      }
+
+    } else {
+      setSelectedCategory(category);
+      try {
+        const response = await fetch('https://edg5000.com/recipes/by-category', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ category }),
+        });
+        const data = await response.json();
+        setRecipes(data.recipes || []);
+      } catch (err) {
+        console.error('Fout bij ophalen recepten per categorie:', err);
+      }
     }
   };
 
@@ -198,7 +220,9 @@ export default function DiscoverScreen() {
         )}
       />
 
-      <Text style={[styles.subheader, { color: isDark ? '#fff' : '#000' }]}> {selectedCategory ? `Aanbevolen: ${selectedCategory}` : 'Op basis van je voorraad'} </Text>
+      <Text style={[styles.subheader, { color: isDark ? '#fff' : '#000' }]}>
+        {selectedCategory ? `Aanbevolen: ${selectedCategory}` : 'Op basis van je voorraad'}
+      </Text>
 
       {filterRecipesByAllergies(recipes).length === 0 ? (
         <Text style={[styles.noData, { color: isDark ? '#bbb' : '#777' }]}>Geen recepten gevonden die passen bij je allergieën.</Text>
@@ -232,7 +256,6 @@ export default function DiscoverScreen() {
     </ScrollView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: { flex: 1, paddingTop: 60, paddingHorizontal: 20, backgroundColor: '#fff' },
@@ -278,13 +301,11 @@ const styles = StyleSheet.create({
   recipeText: { fontSize: 14, fontFamily: 'ABeeZee', color: '#555', marginTop: 4 },
   recipeTime: { fontSize: 13, fontFamily: 'ABeeZee', color: '#888', marginTop: 4 },
   aiButton: {
-    backgroundColor: '#EDE9FE',       
     padding: 15,
     borderRadius: 10,
     alignItems: 'center',
     marginVertical: 20,
     borderWidth: 2,
-    borderColor: '#7D5FFF',          
     shadowColor: '#7D5FFF',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -292,13 +313,12 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   aiButtonText: {
-    color: '#4B0082',                 
     fontSize: 16,
     fontFamily: 'ABeeZee',
     fontWeight: 'bold',
   },
-  aiCard: { backgroundColor: '#f1f8e9', borderRadius: 12, padding: 16, marginBottom: 20 },
+  aiCard: { borderRadius: 12, padding: 16, marginBottom: 20 },
   aiTitle: { fontSize: 18, fontWeight: 'bold', fontFamily: 'ABeeZee', marginBottom: 6 },
-  aiText: { fontSize: 15, fontFamily: 'ABeeZee', color: '#444' },
-  noData: { fontSize: 16, fontFamily: 'ABeeZee', color: '#777', textAlign: 'center' },
+  aiText: { fontSize: 15, fontFamily: 'ABeeZee' },
+  noData: { fontSize: 16, fontFamily: 'ABeeZee', textAlign: 'center' },
 });
