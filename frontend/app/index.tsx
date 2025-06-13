@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ImageBackground, Image, Dimen
 import * as SplashScreen from 'expo-splash-screen';
 import * as Font from 'expo-font';
 import { Link, useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';  // Voeg Ionicons toe voor iconen
+import { Ionicons } from '@expo/vector-icons';  
 
 SplashScreen.preventAutoHideAsync();
 
@@ -12,7 +12,7 @@ SplashScreen.setOptions({
   fade: true,
 });
 
-const { width, height } = Dimensions.get("window"); // Haal de schermgrootte op
+const { width, height } = Dimensions.get("window"); 
 
 export default function App() {
   return (
@@ -28,7 +28,6 @@ function Splash({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function prepare() {
       try {
-        // Pre-load fonts, maak eventuele API-aanroepen hier
         await Font.loadAsync({ 'ABeeZee': require('../assets/fonts/ABeeZee.ttf') });
       } catch (e) {
         console.warn(e);
@@ -42,7 +41,6 @@ function Splash({ children }: { children: React.ReactNode }) {
 
   const onLayoutRootView = useCallback(() => {
     if (appIsReady) {
-      // Dit vertelt het splash scherm om direct te verdwijnen!
       SplashScreen.hide();
     }
   }, [appIsReady]);
@@ -140,10 +138,10 @@ function MainScreen() {
 
 const styles = StyleSheet.create({
   backgroundImage: {
-    width: width,  // Maak de achtergrond net zo breed als het scherm
-    height: height, // Maak de achtergrond net zo hoog als het scherm
-    resizeMode: "cover", // Zorgt ervoor dat de afbeelding wordt geschaald zonder te vervormen
-    justifyContent: "center", // Zorgt dat de content in het midden blijft
+    width: width,  
+    height: height, 
+    resizeMode: "cover",
+    justifyContent: "center", 
     alignItems: "center",
   },
   overlay: {
@@ -151,7 +149,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    backgroundColor: "rgba(0, 0, 0, 0.3)", // Voeg een subtiele overlay toe voor betere leesbaarheid
+    backgroundColor: "rgba(0, 0, 0, 0.3)", 
   },
   logo: {
     width: 150,
