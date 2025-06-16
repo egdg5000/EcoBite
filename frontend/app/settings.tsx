@@ -10,7 +10,6 @@ import {
 import { useTheme } from './context/ThemeContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
-import i18n from './context/i18n'; 
 
 const SettingsPage = () => {
   const { theme, toggleTheme } = useTheme();
@@ -21,10 +20,6 @@ const SettingsPage = () => {
     if ((mode === 'dark' && !isDark) || (mode === 'light' && isDark)) {
       toggleTheme();
     }
-  };
-
-  const handleSelectLanguage = (lang: 'nl' | 'en') => {
-    i18n.changeLanguage(lang);
   };
 
   return (
@@ -67,37 +62,6 @@ const SettingsPage = () => {
         >
           <Ionicons name="moon-outline" size={20} color={isDark ? '#4CAF50' : '#333'} />
           <Text style={[styles.optionText, { color: isDark ? '#fff' : '#000' }]}>Donkere modus</Text>
-        </TouchableOpacity>
-
-        {/* 🌐 Taalinstellingen */}
-        <Text style={[styles.sectionTitle, { color: isDark ? '#aaa' : '#555' }]}>Taal</Text>
-
-        <TouchableOpacity
-          style={[
-            styles.option,
-            {
-              backgroundColor: i18n.language === 'nl' ? '#e6f4ea' : 'transparent',
-              borderColor: '#4CAF50',
-            },
-          ]}
-          onPress={() => handleSelectLanguage('nl')}
-        >
-          <Ionicons name="language-outline" size={20} color={'#4CAF50'} />
-          <Text style={[styles.optionText, { color: isDark ? '#fff' : '#000' }]}>Nederlands</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={[
-            styles.option,
-            {
-              backgroundColor: i18n.language === 'en' ? '#e6f4ea' : 'transparent',
-              borderColor: '#4CAF50',
-            },
-          ]}
-          onPress={() => handleSelectLanguage('en')}
-        >
-          <Ionicons name="language-outline" size={20} color={'#4CAF50'} />
-          <Text style={[styles.optionText, { color: isDark ? '#fff' : '#000' }]}>Engels</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
