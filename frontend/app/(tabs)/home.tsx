@@ -272,7 +272,7 @@ const HomeScreen = () => {
                   🔥 Streak behouden
                 </Text>
                 <Text style={[styles.modalText, isDark && { color: '#ddd' }]}>
-                  Behoud je streak door dagelijks een product te scannen en recepten te maken.
+                  Behoud je streak door dagelijks producten toe te voegen en recepten te maken.
                 </Text>
                 <Pressable
                   style={styles.modalButton}
