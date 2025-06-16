@@ -76,3 +76,10 @@ CREATE TABLE users_gamification (
   ALTER TABLE users_gamification ADD streak_days INT DEFAULT 0;
   ALTER TABLE users_gamification ADD last_activity DATE DEFAULT NULL;
 );
+
+CREATE TABLE weekly_challenges (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  challenge_text TEXT NOT NULL,
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL
+);

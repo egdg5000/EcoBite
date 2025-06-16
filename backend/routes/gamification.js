@@ -42,4 +42,29 @@ router.get('/leaderboard', async (req, res) => {
   }
 });
 
+router.get('/challenges/weekly', async (req, res) => {
+  try {
+    const today = new Date().toISOString().split("T")[0];
+
+    const [rows] = await db
+      .promise()
+      .query(
+        `SELECT id, challenge_text FROM weekly_challenges WHERE start_date <= ? AND end_date >= ?`,
+        [today, today]
+      );
+
+    res.json(rows);
+  } catch (err) {
+    console.error("Fout bij ophalen challenges:", err);
+    res.status(500).json({ error: "Serverfout bij ophalen challenges" });
+  }
+});
+
+router.post("/challenges/complete", async (req, res) => {
+  const { userId, challengeId } = req.body;
+  // log voortgang, update XP
+  await db.promise().query(`UPDATE users SET xp = xp + 50 WHERE id = ?`, [userId]);
+  res.json({ success: true });
+});
+
 module.exports = router;

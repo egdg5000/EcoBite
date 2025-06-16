@@ -8,6 +8,7 @@ const MySQLStore = require('express-mysql-session')(session);
 const helmet = require('helmet');
 const sendPushNotification = require('./utils/push');
 const axios = require("axios");
+const { getRandomChallenges } = require('./functions/challenges');
 
 app.use(express.json({ limit: "50mb" }));
 
@@ -106,6 +107,20 @@ cron.schedule("0 3 * * *", async () => {
     }
   } catch (err) {
     console.error("Cron-notificatie fout:", err);
+  }
+});
+
+cron.schedule("0 4 * * 1", async () => {
+  const selected = getRandomChallenges(3); // functie die 3 random uit de lijst kiest
+  const now = new Date();
+  const end = new Date(now);
+  end.setDate(now.getDate() + 7);
+
+  for (const text of selected) {
+    await db.promise().query(
+      `INSERT INTO weekly_challenges (challenge_text, start_date, end_date) VALUES (?, ?, ?)`,
+      [text, now.toISOString().split("T")[0], end.toISOString().split("T")[0]]
+    );
   }
 });
 

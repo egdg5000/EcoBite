@@ -47,6 +47,7 @@ const HomeScreen = () => {
 
   const greetingOpacity = useSharedValue(0);
   const greetingTranslateY = useSharedValue(10);
+  const [challenges, setChallenges] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchProgress = async () => {
@@ -117,6 +118,20 @@ const HomeScreen = () => {
 
     greetingOpacity.value = withTiming(1, { duration: 800 });
     greetingTranslateY.value = withTiming(0, { duration: 800 });
+
+    const fetchChallenges = async () => {
+      try {
+        const res = await fetch('https://edg5000.com/gamification/challenges/weekly');
+        const data = await res.json();
+        const texts = data.map((item: any) => item.challenge_text);
+        setChallenges(texts);
+      } catch (err) {
+        console.error('Fout bij ophalen challenges:', err);
+      }
+    };
+
+    fetchChallenges();
+
   }, []);
   const greetingStyle = useAnimatedStyle(() => ({
     opacity: greetingOpacity.value,
@@ -283,6 +298,26 @@ const HomeScreen = () => {
               </View>
             </View>
           </Modal>
+          {challenges.length > 0 && (
+            <View style={[
+              styles.challengeContainer,
+              isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
+            ]}>
+              <Text style={[styles.challengeTitle, isDark && { color: '#fff' }]}>
+                🎯 Weekchallenges
+              </Text>
+              {challenges.map((challenge, index) => (
+                <View key={index} style={[
+                  styles.challengeBox,
+                  isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
+                ]}>
+                  <Text style={[styles.challengeText, isDark && { color: '#eee' }]}>
+                    ✅ {challenge}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          )}
           <View style={[
             styles.leaderboardContainer,
             isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
@@ -624,6 +659,31 @@ const styles = StyleSheet.create({
     color: '#333',
     fontFamily: 'ABeeZee',
   },
+  challengeContainer: {
+    width: '100%',
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 20,
+  },
+  challengeTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    fontFamily: 'ABeeZee',
+    marginBottom: 10,
+  },
+  challengeBox: {
+    backgroundColor: '#ffffff22',
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 8,
+  },
+  challengeText: {
+    fontSize: 15,
+    color: '#333',
+    fontFamily: 'ABeeZee',
+  }
 });
 
  export default HomeScreen;
