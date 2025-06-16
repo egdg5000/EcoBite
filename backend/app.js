@@ -66,15 +66,15 @@ app.use('/gamification', require('./routes/gamification'));
 const cron = require("node-cron");
 const db = require("./database");
 
-cron.schedule("0 2 * * *", async () => {
-  console.log("Dagelijkse opruimactie gestart");
-  try {
-    await axios.delete("http://localhost:3000/products/expired/cleanup");
-    console.log("Verlopen producten automatisch verwijderd");
-  } catch (err) {
-    console.error("Fout bij automatisch opruimen:", err);
-  }
-});
+//cron.schedule("0 2 * * *", async () => {
+  //console.log("Dagelijkse opruimactie gestart");
+  //try {
+    //await axios.delete("http://localhost:3000/products/expired/cleanup");
+    //console.log("Verlopen producten automatisch verwijderd");
+  //} catch (err) {
+    //console.error("Fout bij automatisch opruimen:", err);
+  //}
+//});
 
 cron.schedule("0 3 * * *", async () => {
   const today = new Date();

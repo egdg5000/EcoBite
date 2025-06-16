@@ -14,4 +14,13 @@ searchProduct = async (req, res) => {
     });
 }
 
+async function getExpiredProductsByUser(userId) {
+  const [rows] = await db.promise().query(
+    `SELECT * FROM inventory WHERE user_id = ? AND expiration_date < CURDATE()`,
+    [userId]
+  );
+  return rows;
+}
+
+
 module.exports = { searchProduct }

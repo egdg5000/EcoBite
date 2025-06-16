@@ -51,8 +51,23 @@ const fetchProducts = async (): Promise<{ products: Product[], expiringSoon: Pro
   }
 };
 
+// 🔽 NIEUW: aparte fetch voor verlopen producten
+const fetchExpiredProducts = async (): Promise<Product[]> => {
+  try {
+    const response = await fetch("https://edg5000.com/products/expired", {
+      credentials: "include",
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching expired products:", error);
+    return [];
+  }
+};
+
 export default function FridgePage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [expiredProducts, setExpiredProducts] = useState<Product[]>([]); // 🆕
   const [favorites, setFavorites] = useState<number[]>([]);
   const [activeTab, setActiveTab] = useState<"all" | "favorites">("all");
   const [expiringSoon, setExpiringSoon] = useState<Product[]>([]);
@@ -69,37 +84,16 @@ export default function FridgePage() {
 
   const fetchAll = async () => {
     const { products, expiringSoon } = await fetchProducts();
+    const expired = await fetchExpiredProducts(); // 🆕
     setProducts(products);
-    setExpiringSoon(expiringSoon)
+    setExpiringSoon(expiringSoon);
+    setExpiredProducts(expired); // 🆕
   };
-
   useFocusEffect(
     useCallback(() => {
       fetchAll();
     }, [])
   );
-
-  useEffect(() => {
-    const fetchDeleted = async () => {
-      try {
-        const res = await fetch("https://edg5000.com/products/deleted/", {
-          credentials: "include",
-        });
-        const data = await res.json();
-        if (data.deleted.length > 0) {
-          Alert.alert(
-            "Verlopen producten verwijderd",
-            data.deleted
-              .map((p: any) => `• ${p.item_name} (${p.category})`)
-              .join("\n")
-          );
-        }
-      } catch (err) {
-        console.error("Fout bij ophalen verwijderde producten:", err);
-      }
-    };
-    fetchDeleted();
-  }, []);
 
   const toggleFavorite = (id: number) => {
     setFavorites((prev) =>
@@ -107,28 +101,43 @@ export default function FridgePage() {
     );
   };
 
+  // 🔁 NIEUW: bevestigingsdialoog bij verwijderen
   const deleteProduct = async (id: number) => {
-    try {
-      await fetch(`https://edg5000.com/products/delete/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-      setFavorites((prev) => prev.filter((f) => f !== id));
-    } catch (err) {
-      console.error("Verwijderen mislukt:", err);
-    }
+    Alert.alert(
+      "Bevestigen",
+      "Weet je zeker dat je dit product wilt verwijderen?",
+      [
+        { text: "Annuleren", style: "cancel" },
+        {
+          text: "Verwijderen",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              await fetch(`https://edg5000.com/products/delete/${id}`, {
+                method: "DELETE",
+                credentials: "include",
+              });
+              setProducts((prev) => prev.filter((p) => p.id !== id));
+              setExpiredProducts((prev) => prev.filter((p) => p.id !== id));
+              setFavorites((prev) => prev.filter((f) => f !== id));
+            } catch (err) {
+              console.error("Verwijderen mislukt:", err);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const onRefresh = async () => {
     setRefreshing(true);
-    const { products, expiringSoon } = await fetchProducts();
-    setProducts(products);
-    setExpiringSoon(expiringSoon);
+    await fetchAll();
     setRefreshing(false);
   };
 
-  const uniqueCategories = Array.from(new Set(products.map(p => p.category).filter(Boolean)));
+  const uniqueCategories = Array.from(
+    new Set(products.map((p) => p.category).filter(Boolean))
+  );
 
   const filteredProducts = products.filter((p) => {
     const matchesTab = activeTab === "favorites" ? favorites.includes(p.id) : true;
@@ -137,7 +146,6 @@ export default function FridgePage() {
   });
 
   if (!fontsLoaded) return null;
-
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: isDark ? '#121212' : '#fff' }]}>
       <View style={{ padding: 20 }}>
@@ -150,8 +158,7 @@ export default function FridgePage() {
             <Text style={[styles.alertTitle, { color: isDark ? '#FFB74D' : '#FF6F00' }]}>⏰ Let op!</Text>
             {expiringSoon.map((item) => {
               const daysLeft = Math.ceil(
-                (new Date(item.expiration_date).getTime() - new Date().getTime()) /
-                (1000 * 60 * 60 * 24)
+                (new Date(item.expiration_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
               );
               return (
                 <Text key={item.id} style={[styles.alertItem, { color: isDark ? '#eee' : '#444' }]}>
@@ -162,6 +169,25 @@ export default function FridgePage() {
           </View>
         )}
 
+        {/* NIEUW: verlopen producten */}
+        {expiredProducts.length > 0 && (
+          <View style={{ marginBottom: 16 }}>
+            <Text style={{ fontFamily: 'ABeeZee', fontSize: 18, fontWeight: 'bold', marginBottom: 8, color: isDark ? '#ef9a9a' : '#d32f2f' }}>
+              ❗ Overdatum
+            </Text>
+            {expiredProducts.map((item) => (
+              <View key={item.id} style={[styles.card, { backgroundColor: isDark ? '#2c2c2c' : '#fdecea' }]}>
+                <Text style={[styles.name, { color: isDark ? '#fff' : '#333' }]}>{item.item_name}</Text>
+                <Text style={[styles.details, { color: isDark ? '#ccc' : '#666' }]}>THT: {item.expiration_date}</Text>
+                <TouchableOpacity onPress={() => deleteProduct(item.id)}>
+                  <Text style={{ color: '#f44336', marginTop: 6 }}>🗑️ Verwijder</Text>
+                </TouchableOpacity>
+              </View>
+            ))}
+          </View>
+        )}
+
+        {/* Tabs en filters */}
         <View style={styles.tabs}>
           {["all", "favorites"].map((tab) => (
             <TouchableOpacity
@@ -211,31 +237,11 @@ export default function FridgePage() {
             renderItem={({ item }) => (
               <View style={[styles.card, { backgroundColor: isDark ? "#1e1e1e" : "#f1f1f1" }]}>
                 <Text style={[styles.name, { color: isDark ? "#fff" : "#333" }]}>{item.item_name}</Text>
-                <View style={styles.row}>
-                  <Icon name="scale" size={16} color="#4CAF50" />
-                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}> {item.quantity} {item.unit}</Text>
-                </View>
-                <View style={styles.row}>
-                  <Icon name="calendar-today" size={16} color="#4CAF50" />
-                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}> {item.expiration_date}</Text>
-                </View>
-                <View style={styles.row}>
-                  <Icon name="category" size={16} color="#4CAF50" />
-                  <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}> {item.category}</Text>
-                </View>
-
-                <View style={styles.actionRow}>
-                  <TouchableOpacity onPress={() => toggleFavorite(item.id)} style={styles.iconButton}>
-                    <Icon
-                      name={favorites.includes(item.id) ? "favorite" : "favorite-border"}
-                      size={22}
-                      color="#e91e63"
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => deleteProduct(item.id)} style={styles.iconButton}>
-                    <Icon name="delete" size={22} color="#f44336" />
-                  </TouchableOpacity>
-                </View>
+                <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}>{item.quantity} {item.unit}</Text>
+                <Text style={[styles.details, { color: isDark ? '#ccc' : '#444' }]}>{item.expiration_date}</Text>
+                <TouchableOpacity onPress={() => deleteProduct(item.id)}>
+                  <Text style={{ color: '#f44336', marginTop: 6 }}>🗑️ Verwijder</Text>
+                </TouchableOpacity>
               </View>
             )}
           />
@@ -248,57 +254,9 @@ export default function FridgePage() {
           <Text style={styles.recipeButtonText}>Ontdek Recepten</Text>
         </TouchableOpacity>
       </View>
-
-      <Modal
-        visible={categoryModalVisible}
-        animationType="slide"
-        transparent
-        onRequestClose={() => setCategoryModalVisible(false)}
-      >
-        <View style={{ flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' }}>
-          <View style={{ backgroundColor: isDark ? '#2c2c2c' : '#fff', padding: 20, borderTopLeftRadius: 16, borderTopRightRadius: 16 }}>
-            <Text style={{ fontFamily: 'ABeeZee', fontSize: 16, fontWeight: 'bold', marginBottom: 12, color: isDark ? '#fff' : '#333' }}>
-              Filter op categorie
-            </Text>
-
-            <TouchableOpacity onPress={() => { setSelectedCategory(null); setCategoryModalVisible(false); }}>
-              <Text style={{ paddingVertical: 10, fontFamily: "ABeeZee", color: isDark ? '#A5D6A7' : '#4CAF50' }}>Toon alles</Text>
-            </TouchableOpacity>
-
-            {uniqueCategories.length === 0 ? (
-              <Text style={{ color: isDark ? '#888' : '#999', fontStyle: 'italic', fontFamily: "ABeeZee", }}>Geen categorieën beschikbaar</Text>
-            ) : (
-              uniqueCategories.map(cat => (
-                <TouchableOpacity
-                  key={cat}
-                  onPress={() => {
-                    setSelectedCategory(cat);
-                    setCategoryModalVisible(false);
-                  }}
-                >
-                  <Text style={{ paddingVertical: 10, fontFamily: "ABeeZee", color: selectedCategory === cat ? (isDark ? '#A5D6A7' : '#4CAF50') : (isDark ? '#ccc' : '#333') }}>
-                    {cat}
-                  </Text>
-                </TouchableOpacity>
-              ))
-            )}
-          </View>
-        </View>
-      </Modal>
-
-      {products.length > 0 && (
-        <View style={[styles.tipsContainer, { backgroundColor: isDark ? '#2e7d32' : '#e6f4ea' }]}>
-          <Text style={[styles.tipsTitle, { color: isDark ? '#fff' : '#2e7d32' }]}>💡 Voedselbewaar Tips</Text>
-          <Text style={[styles.tip, { color: isDark ? '#ddd' : '#333' }]}>• Vaak is een product nog goed na de houdbaarheidsdatum.</Text>
-          <Text style={[styles.tip, { color: isDark ? '#ddd' : '#333' }]}>• Ruik, kijk en proef voordat je iets weggooit.</Text>
-          <Text style={[styles.tip, { color: isDark ? '#ddd' : '#333' }]}>• Bewaar producten koel en droog.</Text>
-          <Text style={[styles.tip, { color: isDark ? '#ddd' : '#333' }]}>• Gebruik eerst de oudste producten ("First In, First Out").</Text>
-        </View>
-      )}
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: { flex: 1 },
   title: {

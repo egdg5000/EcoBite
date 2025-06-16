@@ -148,4 +148,15 @@ router.get("/deleted", loginStatus, async (req, res) => {
   }
 });
 
+router.get('/expired', async (req, res) => {
+  const userId = req.session.userId;
+  if (!userId) return res.status(401).send('Niet ingelogd');
+  try {
+    const items = await getExpiredProductsByUser(userId);
+    res.json(items);
+  } catch (err) {
+    res.status(500).send('Serverfout');
+  }
+});
+
 module.exports = router;
