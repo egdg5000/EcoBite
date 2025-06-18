@@ -298,15 +298,16 @@ const HomeScreen = () => {
               </View>
             </View>
           </Modal>
-          {challenges.length > 0 && (
-            <View style={[
-              styles.challengeContainer,
-              isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
-            ]}>
-              <Text style={[styles.challengeTitle, isDark && { color: '#fff' }]}>
-                🎯 Weekchallenges
-              </Text>
-              {challenges.map((challenge, index) => (
+          <View style={[
+            styles.challengeContainer,
+            isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
+          ]}>
+            <Text style={[styles.challengeTitle, isDark && { color: '#fff' }]}>
+              🎯 Weekchallenges
+            </Text>
+
+            {challenges.length > 0 ? (
+              challenges.map((challenge, index) => (
                 <View key={index} style={[
                   styles.challengeBox,
                   isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
@@ -315,9 +316,20 @@ const HomeScreen = () => {
                     ✅ {challenge}
                   </Text>
                 </View>
-              ))}
-            </View>
-          )}
+              ))
+            ) : (
+              <>
+                <View style={[
+                  styles.challengeBox,
+                  isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
+                ]}>
+                  <Text style={[styles.challengeText, isDark && { color: '#888' }]}>
+                    Geen challenges beschikbaar 
+                  </Text>
+                </View>
+              </>
+            )}
+          </View>
           <View style={[
             styles.leaderboardContainer,
             isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
@@ -669,7 +681,7 @@ const styles = StyleSheet.create({
   challengeTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#fff',
     fontFamily: 'ABeeZee',
     marginBottom: 10,
   },
@@ -681,7 +693,7 @@ const styles = StyleSheet.create({
   },
   challengeText: {
     fontSize: 15,
-    color: '#333',
+    color: '#fff',
     fontFamily: 'ABeeZee',
   }
 });
