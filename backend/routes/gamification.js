@@ -43,6 +43,14 @@ router.get('/leaderboard', async (req, res) => {
   }
 });
 
+function getWeekStart() {
+  const now = new Date();
+  const day = now.getDay();
+  const diff = now.getDate() - day + (day === 0 ? -6 : 1); 
+  const monday = new Date(now.setDate(diff));
+  return monday.toISOString().split("T")[0]; 
+}
+
 router.get('/challenges/weekly', async (req, res) => {
   try {
     const today = new Date().toISOString().split("T")[0];
@@ -58,9 +66,34 @@ router.get('/challenges/weekly', async (req, res) => {
 
 router.post("/challenges/complete", async (req, res) => {
   const { userId, challengeId } = req.body;
-  // log voortgang, update XP
-  await db.promise().query(`UPDATE users SET xp = xp + 50 WHERE id = ?`, [userId]);
-  res.json({ success: true });
+  const weekStart = getWeekStart(); 
+
+  try {
+    const [existing] = await db.promise().query(
+      `SELECT * FROM user_challenges WHERE user_id = ? AND challenge_id = ? AND week_start = ?`,
+      [userId, challengeId, weekStart]
+    );
+
+    if (existing.length > 0) {
+      return res.status(400).json({ success: false, message: 'Challenge deze week al voltooid' });
+    }
+
+    await db.promise().query(
+      `UPDATE users SET xp = xp + 50 WHERE id = ?`,
+      [userId]
+    );
+
+    await db.promise().query(
+      `INSERT INTO user_challenges (user_id, challenge_id, week_start) VALUES (?, ?, ?)`,
+      [userId, challengeId, weekStart]
+    );
+
+    res.json({ success: true, message: 'Challenge voltooid en XP toegekend' });
+  } catch (err) {
+    console.error("Challenge voltooi-fout:", err);
+    res.status(500).json({ success: false, message: 'Serverfout' });
+  }
 });
+
 
 module.exports = router;
