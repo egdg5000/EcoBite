@@ -123,8 +123,7 @@ const HomeScreen = () => {
       try {
         const res = await fetch('https://edg5000.com/gamification/challenges/weekly');
         const data = await res.json();
-        const texts = data.map((item: any) => item.challenge_text);
-        setChallenges(texts);
+        setChallenges(data);
       } catch (err) {
         console.error('Fout bij ophalen challenges:', err);
       }
@@ -307,16 +306,14 @@ const HomeScreen = () => {
             </Text>
 
             {challenges.length > 0 ? (
-              challenges.map((challenge, index) => (
-                <View key={index} style={[
-                  styles.challengeBox,
-                  isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
-                ]}>
-                  <Text style={[styles.challengeText, isDark && { color: '#eee' }]}>
-                    ✅ {challenge}
-                  </Text>
-                </View>
-              ))
+              <View style={[
+                styles.challengeBox,
+                isDark && { backgroundColor: 'rgba(255,255,255,0.05)' }
+              ]}>
+                <Text style={[styles.challengeText, isDark && { color: '#eee' }]}>
+                  ✅ {challenges}
+                </Text>
+              </View>
             ) : (
               <>
                 <View style={[
