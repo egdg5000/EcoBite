@@ -55,7 +55,7 @@ router.get('/challenges/weekly', async (req, res) => {
   try {
     const today = new Date().toISOString().split("T")[0];
 
-    const [rows] = await getRandomChallenges();
+    const [rows] = await getRandomChallenges(3);
 
     res.json(rows);
   } catch (err) {
