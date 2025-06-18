@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getProgress, addXpForRecipe } = require('../functions/gamificationdb');
 const db = require('../database');
-const { getRandomChallenge } = require('../functions/challenges');
+const { getRandomChallenges } = require('../functions/challenges');
 
 router.get('/profile', async (req, res) => {
   const { userId } = req.params;
