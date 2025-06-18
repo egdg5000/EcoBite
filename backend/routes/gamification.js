@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getProgress, addXpForRecipe } = require('../functions/gamificationdb');
 const db = require('../database');
+const { getRandomChallenge } = require('../functions/challenges');
 
 router.get('/profile', async (req, res) => {
   const { userId } = req.params;
@@ -46,12 +47,7 @@ router.get('/challenges/weekly', async (req, res) => {
   try {
     const today = new Date().toISOString().split("T")[0];
 
-    const [rows] = await db
-      .promise()
-      .query(
-        `SELECT id, challenge_text FROM weekly_challenges WHERE start_date <= ? AND end_date >= ?`,
-        [today, today]
-      );
+    const [rows] = await getRandomChallenge();
 
     res.json(rows);
   } catch (err) {
