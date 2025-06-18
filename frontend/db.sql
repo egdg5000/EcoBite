@@ -83,3 +83,13 @@ CREATE TABLE weekly_challenges (
   start_date DATE NOT NULL,
   end_date DATE NOT NULL
 );
+
+CREATE TABLE user_challenges (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  challenge_id INT NOT NULL,
+  week_start DATE NOT NULL,
+  completed_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY unique_user_challenge_per_week (user_id, challenge_id, week_start)
+);
+
