@@ -41,6 +41,7 @@ const HomeScreen = () => {
 
   const progress = useSharedValue(0);
   const [greeting, setGreeting] = useState('');
+  const [username, setUsername] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [weetje, setWeetje] = useState('');
   const [showStreakPopup, setShowStreakPopup] = useState(false);
@@ -89,15 +90,34 @@ const HomeScreen = () => {
     };
 
     fetchProgress();
+    const fetchUsername = async () => {
+      try {
+        const res = await fetch('https://edg5000.com/users/profile', {
+          method: 'GET',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await res.json();
+        if (res.ok && data.username) {
+          setUsername(data.username);
+        } else {
+          console.warn('Geen gebruikersnaam gevonden');
+        }
+      } catch (error) {
+        console.error('Fout bij ophalen gebruikersnaam:', error);
+      }
+    };
+
+    fetchUsername();
     fetchLeaderboard();
 
     const currentHour = new Date().getHours();
     setGreeting(
-      currentHour < 12
+      (currentHour < 12
         ? 'Goedemorgen 🌅'
         : currentHour < 18
         ? 'Goedemiddag 🌤️'
-        : 'Goedenavond 🌙'
+        : 'Goedenavond 🌙') + (username ? `, ${username}` : '')
     );
 
     const today = new Date();
